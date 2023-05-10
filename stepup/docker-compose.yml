@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  haproxy:
+    image: ghcr.io/openconext/openconext-basecontainers/haproxy26:latest
+    ports:
+      - 80:8080
+      - 443:8443
+    networks:
+      openconextdev:
+
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/dbschema:/docker-entrypoint-initdb.d
+
+  webauthn:
+    image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:prod
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE_URL: "mysql://webauthn_user:secret@mariadb:3306/webauthn"
+    volumes:
+      - /dev/log:/dev/log
+      - ${PWD}/webauthn:/config
+    networks:
+      openconextdev:
+
+networks:
+  openconextdev:
+    driver: bridge
+
