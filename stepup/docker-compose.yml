@@ -23,13 +23,18 @@ services:
     ports:
       - 8080:8080
     environment:
-      DATABASE_URL: "mysql://webauthn_user:secret@mariadb:3306/webauthn"
+      DATABASE_URL: "mysql://webauthn_user:webauthn_secret@mariadb:3306/webauthn"
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/webauthn:/config
     networks:
       openconextdev:
-
+  ssp: 
+    image: ghcr.io/openconext/openconext-devssp/devssp:latest
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/ssp:/var/www/simplesaml/config/cert/
 networks:
   openconextdev:
     driver: bridge
