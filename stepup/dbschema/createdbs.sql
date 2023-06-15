@@ -19,8 +19,8 @@ CREATE USER IF NOT EXISTS 'mw_gateway_user'@'%' IDENTIFIED BY 'mw_gateway_secret
 GRANT SELECT,INSERT,DELETE,UPDATE ON gateway.* TO 'mw_gateway_user'@'%';
 
 CREATE USER IF NOT EXISTS 'mw_deploy_user'@'%' IDENTIFIED BY 'mw_deploy_secret';
-GRANT ALL PRIVILEGES ON gateway.* TO 'mw_deploy_user'@'%';
-GRANT ALL PRIVILEGES ON middleware.* TO 'mw_deploy_user'@'%';
+GRANT ALL PRIVILEGES ON gateway.* TO 'mw_deploy_user'@'%' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON middleware.* TO 'mw_deploy_user'@'%' WITH GRANT OPTION;
 
 CREATE USER IF NOT EXISTS 'gw_deploy_user'@'%' IDENTIFIED BY 'gw_deploy_secret';
 GRANT ALL PRIVILEGES ON gateway.* TO 'gw_deploy_user'@'%';
