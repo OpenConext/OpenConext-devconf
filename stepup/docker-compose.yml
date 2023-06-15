@@ -37,6 +37,20 @@ services:
     volumes:
       - ${PWD}/ssp:/var/www/simplesaml/config/cert/
 
+  middleware:
+    image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
+    networks:
+      openconextdev:
+
+  gateway:
+    image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+      - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
+
 networks:
   openconextdev:
     driver: bridge
