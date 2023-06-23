@@ -8,6 +8,11 @@ services:
       - 443:443
     networks:
       openconextdev:
+        aliases:
+          - ra.dev.openconext.local
+          - middleware.dev.openconext.local
+          - gateway.dev.openconext.local
+
 
   mariadb:
     image: mariadb:10.6
@@ -41,6 +46,9 @@ services:
     image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
     networks:
       openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
@@ -50,7 +58,23 @@ services:
       - ${PWD}/:/config
       - /dev/log:/dev/log
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
+  
+  ra:
+    image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
 
+  selfservice:
+    image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+  
 networks:
   openconextdev:
     driver: bridge
