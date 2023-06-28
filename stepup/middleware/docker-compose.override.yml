@@ -1,0 +1,4 @@
+services:
+  middleware:
+    volumes:
+      - ${CODE_PATH}:/var/www/html
