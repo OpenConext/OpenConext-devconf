@@ -1,0 +1,4 @@
+services:
+  stepupapi:
+    volumes:
+      - ${CODE_PATH}:/var/www/html

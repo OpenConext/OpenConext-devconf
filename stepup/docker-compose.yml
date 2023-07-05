@@ -51,6 +51,13 @@ services:
       - /dev/log:/dev/log
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
 
+  stepupapi:
+    image: ghcr.io/openconext/stepup-api/stepup-api:prod
+    volumes:
+      - /dev/log:/dev/log
+    networks:
+      openconextdev:
+
 networks:
   openconextdev:
     driver: bridge
