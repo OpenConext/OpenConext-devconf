@@ -1,0 +1,4 @@
+services:
+  ssp:
+    volumes:
+      - ${CODE_PATH}:/var/www/html

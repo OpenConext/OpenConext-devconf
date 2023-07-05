@@ -13,7 +13,6 @@ services:
           - middleware.dev.openconext.local
           - gateway.dev.openconext.local
 
-
   mariadb:
     image: mariadb:10.6
     environment:
@@ -34,8 +33,8 @@ services:
       - ${PWD}/webauthn:/config
     networks:
       openconextdev:
-  
-  ssp: 
+
+  ssp:
     image: ghcr.io/openconext/openconext-devssp/devssp:latest
     networks:
       openconextdev:
@@ -58,7 +57,7 @@ services:
       - ${PWD}/:/config
       - /dev/log:/dev/log
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
-  
+
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
     networks:
@@ -74,7 +73,7 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
-  
+
 networks:
   openconextdev:
     driver: bridge

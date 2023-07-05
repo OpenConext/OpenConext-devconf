@@ -1,0 +1,5 @@
+services:
+  middleware:
+    image: ghcr.io/openconext/stepup-middleware/stepup-middleware:dev
+    volumes:
+      - ${CODE_PATH}:/var/www/html
