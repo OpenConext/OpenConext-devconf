@@ -47,18 +47,24 @@ sh middleware-push-institution.sh
 ```
 Then, bootstrap the SRAA. For this, you will need to have a Yubikey. Replace Yubikey_ID with the number that is printed on your yubikey. It should be 8 characters. If it is less, prepend it with 0's
 ```
-docker compose exec middleware  /var/www/html/bin/console urn:collab:person:dev.openconext.local:admin dev.openconext.local "Your Name" Your@email nl_NL Yubikey_ID
+docker compose exec middleware  /var/www/html/bin/console middleware:bootstrap:identity-with-yubikey urn:collab:person:dev.openconext.local:admin dev.openconext.local "Your Name" Your@email nl_NL Yubikey_ID
 ```
 
 You also need a Yubikey API key for your Yubikey to work. You can get it here:
 https://upgrade.yubico.com/getapikey/
 Create the following file "stepup/gateway/surfnet_yubikey.yaml" which should contain:
 
+```
 surfnet_yubikey_api_client:
   credentials:
     client_id: 'YOUR_CLIENT_ID'
     client_secret: 'YOUR_SECRET'
+```
 
+After this, the cache of the gateway needs to be cleared:
+```
+docker compose exec gateway /var/www/html/bin/console cache:clear --env=prod
+```
 
 
 
