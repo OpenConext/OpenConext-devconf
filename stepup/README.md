@@ -64,7 +64,12 @@ surfnet_yubikey_api_client:
 After this, the cache of the gateway needs to be cleared:
 ```
 docker compose exec gateway rm -rf  var/cache/prod
+
 ```
+
+Mailcatcher is included. You can view the email by going to http://localhost:1080
+
+A SimpleSAMLPHP sp is included. It can be accessed at https://ssp.dev.openconext.local/simplesaml/sp.php
 
 
 
