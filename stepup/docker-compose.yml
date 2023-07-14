@@ -22,6 +22,7 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/dbschema:/docker-entrypoint-initdb.d
+      - stepup_mariadb:/var/lib/mysql
 
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:prod
@@ -32,7 +33,7 @@ services:
       APP_ENV: prod
     volumes:
       - /dev/log:/dev/log
-      - ${PWD}/webauthn:/config
+      - ${PWD}/:/config
     networks:
       openconextdev:
   
@@ -94,7 +95,18 @@ services:
       - ${PWD}/:/config
       - /dev/log:/dev/log
   
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - 1080:1080
+    command:
+      '--ip 0.0.0.0 --smtp-port 25'
+    networks:
+      openconextdev:
+
 networks:
   openconextdev:
     driver: bridge
 
+volumes:
+  stepup_mariadb:
