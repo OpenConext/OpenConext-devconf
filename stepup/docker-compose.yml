@@ -29,6 +29,7 @@ services:
       - 8080:8080
     environment:
       DATABASE_URL: "mysql://webauthn_user:webauthn_secret@mariadb:3306/webauthn"
+      APP_ENV: prod
     volumes:
       - /dev/log:/dev/log
       - ${PWD}/webauthn:/config
@@ -44,6 +45,8 @@ services:
 
   middleware:
     image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -52,6 +55,8 @@ services:
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -61,6 +66,8 @@ services:
   
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -69,6 +76,18 @@ services:
 
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
+    environment:
+      - APP_ENV=prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+
+  demogssp:
+    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
