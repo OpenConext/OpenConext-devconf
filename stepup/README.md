@@ -63,8 +63,9 @@ surfnet_yubikey_api_client:
 
 After this, the cache of the gateway needs to be cleared:
 ```
-docker compose exec gateway /var/www/html/bin/console cache:clear --env=prod
+docker compose exec gateway rm -rf  var/cache/prod
 ```
+
 
 
 
