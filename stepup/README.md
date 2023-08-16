@@ -72,7 +72,6 @@ Mailcatcher is included. You can view the email by going to http://localhost:108
 
 A SimpleSAMLPHP sp is included. It can be accessed at https://ssp.dev.openconext.local/simplesaml/sp.php
 
+# Starting a project in development mode
 
-
-
-
+You can mount your local directory inside a development container which contains the correct node and composer versions for your project. To do so use the script start-dev-env.sh. It takes two parameters: the service name and the local directory to mount. Example: start-dev-env.sh webauthn /home/dan/Stepup-webauthn (the recommended way would be to use absolute paths). The startup script uses these two parameters to read the docker compose override file from the service's directory and replace the code path in that file (by reading it as an env var)
