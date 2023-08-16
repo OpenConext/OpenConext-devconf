@@ -1,0 +1,5 @@
+services:
+  ra:
+    image: ghcr.io/openconext/stepup-ra/stepup-ra:dev
+    volumes:
+      - ${CODE_PATH}:/var/www/html

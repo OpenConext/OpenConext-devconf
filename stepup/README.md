@@ -38,6 +38,7 @@ Then the webauthn db
 docker compose exec webauthn /var/www/html/bin/console  doctrine:migrations:migrate --env=prod
 
 ```
+
 Then you will need to provision the middleware config:
 ```
 cd middleware

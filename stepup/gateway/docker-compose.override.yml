@@ -1,0 +1,5 @@
+services:
+  gateway:
+    image: ghcr.io/openconext/stepup-gateway/stepup-gateway:dev
+    volumes:
+      - ${CODE_PATH}:/var/www/html
