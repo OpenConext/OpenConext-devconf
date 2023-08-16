@@ -21,6 +21,7 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/dbschema:/docker-entrypoint-initdb.d
+      - stepup_mariadb:/var/lib/mysql
 
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:prod
@@ -28,9 +29,10 @@ services:
       - 8080:8080
     environment:
       DATABASE_URL: "mysql://webauthn_user:webauthn_secret@mariadb:3306/webauthn"
+      APP_ENV: prod
     volumes:
       - /dev/log:/dev/log
-      - ${PWD}/webauthn:/config
+      - ${PWD}/:/config
     networks:
       openconextdev:
 
@@ -43,6 +45,8 @@ services:
 
   middleware:
     image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -51,6 +55,8 @@ services:
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -60,6 +66,8 @@ services:
 
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
@@ -68,13 +76,36 @@ services:
 
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
+    environment:
+      - APP_ENV=prod
     networks:
       openconextdev:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
 
+  demogssp:
+    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:prod
+    environment:
+      - APP_ENV=prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+  
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - 1080:1080
+    command:
+      '--ip 0.0.0.0 --smtp-port 25'
+    networks:
+      openconextdev:
+
 networks:
   openconextdev:
     driver: bridge
 
+volumes:
+  stepup_mariadb:
