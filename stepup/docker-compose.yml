@@ -94,6 +94,26 @@ services:
       - ${PWD}/:/config
       - /dev/log:/dev/log
   
+  tiqr:
+    image: ghcr.io/openconext/stepup-tiqr/stepup-tiqr:prod
+    environment:
+      - APP_ENV=prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+  
+  azuremfa:
+    image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:prod
+    environment:
+      - APP_ENV=prod
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /dev/log:/dev/log
+  
   mailcatcher:
     image: sj26/mailcatcher:latest
     ports:
