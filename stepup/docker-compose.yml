@@ -35,6 +35,8 @@ services:
       - ${PWD}/:/config
     networks:
       openconextdev:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   ssp:
     image: ghcr.io/openconext/openconext-devssp/devssp:latest
@@ -52,6 +54,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
@@ -63,6 +67,9 @@ services:
       - ${PWD}/:/config
       - /dev/log:/dev/log
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
@@ -73,6 +80,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
@@ -83,6 +92,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   demogssp:
     image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:prod
@@ -93,6 +104,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   tiqr:
     image: ghcr.io/openconext/stepup-tiqr/stepup-tiqr:prod
@@ -103,6 +116,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   azuremfa:
     image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:prod
@@ -113,6 +128,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /dev/log:/dev/log
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   mailcatcher:
     image: sj26/mailcatcher:latest
