@@ -313,8 +313,12 @@
           "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
-        "second_factor_only": false,
-        "second_factor_only_nameid_patterns": [],
+        "second_factor_only": true,
+        "second_factor_only_nameid_patterns": [
+          "urn:collab:person:dev.openconext.local:admin",
+          "urn:collab:person:institution-a.example.com:*",
+          "urn:collab:person:institution-b.example.com:*"
+        ],
         "blacklisted_encryption_algorithms": []
       }
     ],
