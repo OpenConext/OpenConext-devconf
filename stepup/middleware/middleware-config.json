@@ -51,7 +51,7 @@
           "https://ra.dev.openconext.local/authentication/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -65,7 +65,7 @@
           "https://selfservice.dev.openconext.local/authentication/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -79,7 +79,7 @@
           "https://selfservice.dev.openconext.local/registration/gssf/tiqr/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -93,7 +93,7 @@
           "https://ra.dev.openconext.local/vetting-procedure/gssf/tiqr/verify"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -107,7 +107,7 @@
           "https://selfservice.dev.openconext.local/registration/gssf/webauthn/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -121,7 +121,7 @@
           "https://ra.dev.openconext.local/vetting-procedure/gssf/webauthn/verify"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -135,7 +135,7 @@
           "https://selfservice.dev.openconext.local/registration/gssf/azuremfa/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -149,7 +149,7 @@
           "https://ra.dev.openconext.local/vetting-procedure/gssf/azuremfa/verify"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -163,7 +163,7 @@
           "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -177,7 +177,7 @@
           "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp/verify"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -191,7 +191,7 @@
           "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp_2/consume-assertion"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -205,7 +205,7 @@
           "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp_2/verify"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -220,7 +220,7 @@
           "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -234,7 +234,7 @@
           "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/second-sp"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": true,
@@ -252,7 +252,7 @@
           "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/third-sp"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa2"
+          "__default__": "http://dev.openconext.local/assurance/loa2"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -266,9 +266,9 @@
           "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/fourth-sp"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1",
-          "institution-a.example.com": "https://dev.openconext.local/authentication/loa2",
-          "institution-d.example.com": "https://dev.openconext.local/authentication/loa2"
+          "__default__": "http://dev.openconext.local/assurance/loa1",
+          "institution-a.example.com": "http://dev.openconext.local/assurance/loa2",
+          "institution-d.example.com": "http://dev.openconext.local/assurance/loa2"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
@@ -282,7 +282,7 @@
           "https://dummy-sp/acs"
         ],
         "loa": {
-          "__default__": "https://dev.openconext.local/authentication/loa1"
+          "__default__": "http://dev.openconext.local/assurance/loa1"
         },
         "assertion_encryption_enabled": false,
         "second_factor_only": false,
