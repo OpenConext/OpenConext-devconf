@@ -2,4 +2,4 @@ services:
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:dev
     volumes:
-      - ${CODE_PATH}:/var/www/html
+      - ${WEBAUTHN_CODE_PATH}:/var/www/html

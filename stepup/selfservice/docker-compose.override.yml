@@ -2,4 +2,4 @@ services:
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:dev
     volumes:
-      - ${CODE_PATH}:/var/www/html
+      - ${SELFSERVICE_CODE_PATH}:/var/www/html
