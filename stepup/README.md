@@ -47,9 +47,9 @@ docker compose exec webauthn /var/www/html/bin/console  doctrine:migrations:migr
 Then you will need to provision the middleware config:
 ```
 cd middleware
-sh middleware-push-config.sh
-sh middleware-push-whitelist.sh
-sh middleware-push-institution.sh
+./middleware-push-config.sh
+./middleware-push-whitelist.sh
+./middleware-push-institution.sh
 ```
 Then, bootstrap the SRAA. For this, you will need to have a Yubikey. Replace Yubikey_ID with the number that is printed on your yubikey. It should be 8 characters. If it is less, prepend it with 0's
 ```
