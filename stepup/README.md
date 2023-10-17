@@ -35,8 +35,8 @@ You can then bring up the containers using docker compose:
 
 Initialise the middelware database:
 ```
+docker compose up -d
 docker compose exec middleware /var/www/html/bin/console  doctrine:migrations:migrate --env=prod --em=deploy
-docker-compose up -d
 ```
 
 Then the webauthn db
