@@ -11,9 +11,8 @@ done
 
 # Read the generated env file with the apps and their code paths
 source .start-dev-env-vars ; rm .start-dev-env-vars
-env
 
 # Use docker compose to start the environment but with the modified override file(s)
 echo -e "Starting the dev environment with the following command:\n"
 echo -e "docker compose -f docker-compose.yml ${docker_compose_args[@]} up "${@:3}"\n"
-docker compose -f docker-compose.yml ${docker_compose_args[@]} up "${@:3}
+docker compose -f docker-compose.yml ${docker_compose_args[@]} up "${@:3}"
