@@ -1,0 +1,5 @@
+services:
+  tiqr:
+    image: ghcr.io/openconext/stepup-middleware/stepup-tiqr:dev
+    volumes:
+      - ${TIQR_CODE_PATH}:/var/www/html
