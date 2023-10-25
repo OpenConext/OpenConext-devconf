@@ -1,0 +1,6 @@
+
+surfnet_yubikey_api_client:
+  credentials:
+    # Get your client_id and client_secret from https://upgrade.yubico.com/getapikey/
+    client_id: 'YOUR_CLIENT_ID'
+    client_secret: 'YOUR_SECRET'
