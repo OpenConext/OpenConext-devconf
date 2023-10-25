@@ -37,6 +37,7 @@ Initialise the middelware database:
 ```
 docker compose up -d
 docker compose exec middleware /var/www/html/bin/console  doctrine:migrations:migrate --env=prod --em=deploy
+docker-compose up -d
 ```
 
 Then the webauthn db
@@ -62,4 +63,13 @@ A SimpleSAMLPHP sp is included. It can be accessed at https://ssp.dev.openconext
 
 # Starting a project in development mode
 
-You can mount your local directory inside a development container which contains the correct node and composer versions for your project. To do so use the script start-dev-env.sh. It takes two parameters: the service name and the local directory to mount. Example: start-dev-env.sh webauthn /home/dan/Stepup-webauthn (the recommended way would be to use absolute paths). The startup script uses these two parameters to read the docker compose override file from the service's directory and replace the code path in that file (by reading it as an env var)
+You can mount your local directory inside a development container which contains the correct node and composer versions for your project. To do so use the script start-dev-env.sh. You can use this script to mount multiple directories in multiple containers, basically allowing you to start multiple containers in dev mode.
+
+To mount the code in just one container:
+`start-dev-env.sh webauthn:/home/dan/Stepup-webauthn`
+The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`.
+
+To mount the code in multiple containers:
+`start-dev-env.sh webauthn:/home/dan/Stepup-webauthn gateway:/home/dan/Stepup-gateway`
+You can add as many services+local code paths that you need.
+The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
