@@ -1,5 +1,5 @@
 services:
   gateway:
-    image: ghcr.io/openconext/stepup-gateway/stepup-gateway:dev
+    image: ghcr.io/openconext/openconext-basecontainers/php72-apache2-node14-composer2:latest
     volumes:
       - ${GATEWAY_CODE_PATH}:/var/www/html
