@@ -1,5 +1,5 @@
 services:
   azuremfa:
-    image: ghcr.io/openconext/stepup-middleware/stepup-azuremfa:dev
+    image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:dev
     volumes:
       - ${AZUREMFA_CODE_PATH}:/var/www/html

@@ -1,0 +1,5 @@
+services:
+  demogssp:
+    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:dev
+    volumes:
+      - ${CODE_PATH}:/var/www/html
