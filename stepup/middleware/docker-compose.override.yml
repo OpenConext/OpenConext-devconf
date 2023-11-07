@@ -1,5 +1,7 @@
 services:
   middleware:
-    image: ghcr.io/openconext/openconext-basecontainers/php72-apache2-node14-composer2:latest
+    image: ghcr.io/openconext/openconext-basecontainers/${MIDDLEWARE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
     volumes:
       - ${MIDDLEWARE_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=dev
