@@ -5,3 +5,4 @@ services:
       - ${WEBAUTHN_CODE_PATH}:/var/www/html
     environment:
       - APP_ENV=dev
+      - APP_DEBUG=true
