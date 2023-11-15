@@ -73,3 +73,7 @@ To mount the code in multiple containers:
 `start-dev-env.sh webauthn:/home/dan/Stepup-webauthn gateway:/home/dan/Stepup-gateway`
 You can add as many services+local code paths that you need.
 The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
+
+# PHP 8.2 for development
+The default development container is based on the base image with PHP7.2. You can override this on a per service basis. Uncomment the appropiate line for this in the file ".env" so it uses the PHP8.2 container. An .env.dist is included that you can use to have your own .env. file. .env is in .gitigore so you can make your own changes.
+

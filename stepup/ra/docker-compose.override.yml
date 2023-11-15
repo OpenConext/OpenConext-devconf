@@ -1,5 +1,8 @@
 services:
   ra:
-    image: ghcr.io/openconext/stepup-ra/stepup-ra:dev
+    image: ghcr.io/openconext/openconext-basecontainers/${RA_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
     volumes:
       - ${RA_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=true

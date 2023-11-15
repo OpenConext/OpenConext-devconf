@@ -1,5 +1,8 @@
 services:
   selfservice:
-    image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:dev
+    image: ghcr.io/openconext/openconext-basecontainers/${SELFSERVICE_PHP_IMAGE:-php72-apache2-node14-composer2:latest} 
     volumes:
       - ${SELFSERVICE_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=true

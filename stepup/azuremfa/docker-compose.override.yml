@@ -1,5 +1,8 @@
 services:
   azuremfa:
-    image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:dev
+    image: ghcr.io/openconext/openconext-basecontainers/${AZUREMFA_PHP_IMAGE:-php72-apache2-node14-composer2:latest} 
     volumes:
       - ${AZUREMFA_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=true

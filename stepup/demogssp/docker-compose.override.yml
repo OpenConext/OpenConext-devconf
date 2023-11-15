@@ -1,5 +1,8 @@
 services:
   demogssp:
-    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:dev
+    image: ghcr.io/openconext/openconext-basecontainers/${DEMOGSSP_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
     volumes:
-      - ${CODE_PATH}:/var/www/html
+      - ${DEMOGSSP_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=true
