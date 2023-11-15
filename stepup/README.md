@@ -37,7 +37,7 @@ Initialise the middelware database:
 ```
 docker compose up -d
 docker compose exec middleware /var/www/html/bin/console  doctrine:migrations:migrate --env=prod --em=deploy
-docker-compose up -d
+docker compose exec middleware chown -R www-data /var/www/html/var/cache/prod/
 ```
 
 Then the webauthn db
