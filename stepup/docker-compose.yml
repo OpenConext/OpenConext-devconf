@@ -31,7 +31,6 @@ services:
       DATABASE_URL: "mysql://webauthn_user:webauthn_secret@mariadb:3306/webauthn"
       APP_ENV: prod
     volumes:
-      - /dev/log:/dev/log
       - ${PWD}/:/config
     networks:
       openconextdev:
@@ -53,7 +52,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -65,7 +63,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -79,7 +76,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -91,7 +87,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -103,7 +98,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
   
@@ -115,7 +109,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
   
@@ -127,7 +120,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
-      - /dev/log:/dev/log
     extra_hosts:
       - "host.docker.internal:host-gateway"
   
