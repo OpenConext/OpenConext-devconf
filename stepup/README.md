@@ -18,7 +18,7 @@ The application config directories contain the SAML key material. Those are not 
 First, you need to create an entry in your hosts file (/etc/hosts on *nix systems)
 
 ```
-127.0.0.1 selfservice.dev.openconext.local webauthn.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local
+127.0.0.1 selfservice.dev.openconext.local webauthn.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local
 ```
 
 Secondly you need to create the `stepup/gateway/surfnet_yubikey.yaml` filewith your Yubikey API credentials. If you do not have API credentials, you can get them at <https://upgrade.yubico.com/getapikey/>. You require a Yubikey to get an API key.
