@@ -10,6 +10,8 @@ services:
       openconextdev:
         aliases:
           - ra.dev.openconext.local
+          - ssp.dev.openconext.local
+          - selfservice.dev.openconext.local
           - middleware.dev.openconext.local
           - gateway.dev.openconext.local
           - tiqr.dev.openconext.local
@@ -27,12 +29,11 @@ services:
     hostname: mariadb.docker
 
   webauthn:
-    image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:prod
+    image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:${STEPUP_VERSION:-prod}
     ports:
       - 8080:8080
     environment:
-      DATABASE_URL: "mysql://webauthn_user:webauthn_secret@mariadb:3306/webauthn"
-      APP_ENV: prod
+      - APP_ENV=${APP_ENV:-prod}
     volumes:
       - ${PWD}/:/config
     networks:
@@ -51,9 +52,9 @@ services:
 
 
   middleware:
-    image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
+    image: ghcr.io/openconext/stepup-middleware/stepup-middleware:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -63,9 +64,9 @@ services:
     hostname: middleware.docker
 
   gateway:
-    image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
+    image: ghcr.io/openconext/stepup-gateway/stepup-gateway:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -77,9 +78,9 @@ services:
 
 
   ra:
-    image: ghcr.io/openconext/stepup-ra/stepup-ra:prod
+    image: ghcr.io/openconext/stepup-ra/stepup-ra:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -89,9 +90,9 @@ services:
     hostname: ra.docker
 
   selfservice:
-    image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
+    image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -101,9 +102,9 @@ services:
     hostname: selfservice.docker
 
   demogssp:
-    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:prod
+    image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -115,7 +116,7 @@ services:
   tiqr:
     image: ghcr.io/openconext/stepup-tiqr/stepup-tiqr:prod
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
@@ -125,9 +126,9 @@ services:
     hostname: tiqr.docker
   
   azuremfa:
-    image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:prod
+    image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:${STEPUP_VERSION:-prod}
     environment:
-      - APP_ENV=prod
+      - APP_ENV=${APP_ENV:-prod}
     networks:
       openconextdev:
     volumes:
