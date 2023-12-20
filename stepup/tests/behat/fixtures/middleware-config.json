@@ -1,0 +1,295 @@
+{
+  "sraa": [
+    "urn:collab:person:dev.openconext.local:admin",
+    "urn:collab:person:dev.openconext.local:pieter",
+    "urn:collab:person:dev.openconext.local:joost"
+  ],
+  "email_templates": {
+    "confirm_email": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>Thank you for registering your token. Please visit this link to verify your email address:</p> <p><a href='{{ verificationUrl }}'>{{ verificationUrl }}</a></p> <p>If you can not click on the URL, please copy the link and paste it in the address bar of your browser.</p>",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Bedankt voor het registreren van je token. Klik op onderstaande link om je e-mailadres te bevestigen:</p> <p><a href='{{ verificationUrl }}'>{{ verificationUrl }}</a></p> <p>Is klikken op de link niet mogelijk? Kopieer dan de link en plak deze in de adresbalk van je browser.</p>"
+    },
+    "registration_code_with_ras": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>Thank you for registering your token. Please visit one of the locations below within 14 days to get your token activated. After {{ expirationDate | localizeddate('full', 'none', locale) }} your activation code is no longer valid.</p> <p>Please bring the following:</p> <ul> <li>Your token</li> <li>A valid proof of identity (passport, drivers license or national ID-card)</li> <li>The activation code from this e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activation code: <code>{{ registrationCode }}</code></p> <p>Location(s) to activate your token:</p> {% if ras is empty %} <p>No RAs are known.</p> {% else %} <ul> {% for ra in ras %} <li><address> <strong>{{ ra.commonName }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Bedankt voor het registreren van je token. Ga binnen 14 dagen naar een van de onderstaande locaties om je token te laten activeren. Je activatiecode is geldig tot en met {{ expirationDate | localizeddate('full', 'none', locale) }}.</p> <p>Neem daarbij het volgende mee:</p> <ul> <li>Je token</li> <li>Een geldig legitimatiebewijs (paspoort, rijbewijs of nationale ID-kaart)</li> <li>De activatiecode uit deze e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activatiecode: <code>{{ registrationCode }}</code></p> <p>Locatie(s) om je token te activeren:</p> {% if ras is empty %} <p>Er zijn geen RAs bekend.</p> {% else %} <ul> {% for ra in ras %} <li><address> <strong>{{ ra.commonName }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}"
+    },
+    "registration_code_with_ra_locations": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>Thank you for registering your token. Please visit one of the locations below within 14 days to get your token activated. After {{ expirationDate | localizeddate('full', 'none', locale) }} your activation code is no longer valid.</p> <p>Please bring the following:</p> <ul> <li>Your token</li> <li>A valid proof of identity (passport, drivers license or national ID-card)</li> <li>The activation code from this e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activation code: <code>{{ registrationCode }}</code></p> <p>Location(s) to activate your token:</p> {% if raLocations is empty %} <p>No locations known.</p> {% else %} <ul> {% for ra in raLocations %} <li><address> <strong>{{ ra.name }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }}</address> </li> {% endfor %} </ul> {% endif %}",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Bedankt voor het registreren van je token. Ga binnen 14 dagen naar een van de onderstaande locaties om je token te laten activeren. Je activatiecode is geldig tot en met {{ expirationDate | localizeddate('full', 'none', locale) }}.</p> <p>Neem daarbij het volgende mee:</p> <ul> <li>Je token</li> <li>Een geldig legitimatiebewijs (paspoort, rijbewijs of nationale ID-kaart)</li> <li>De activatiecode uit deze e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activatiecode: <code>{{ registrationCode }}</code></p> <p>Locatie(s) om je token te activeren:</p> {% if raLocations is empty %} <p>Er zijn geen Locaties bekend.</p> {% else %} <ul> {% for ra in raLocations %} <li><address> <strong>{{ ra.name }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}"
+    },
+    "vetted": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>Thank you for registering your token. Your token is ready to use. You can use this token for services connected to SURFconext that require two-step authentication. This e-mail contains more info on how to use your token.</p> <p><strong>Handle your token with care</strong></p> <ul> <li>Your token is private, do not share your token with others</li> <li>Never leave your token unattended</li> <li>Lock your phone, e.g. with a code or fingerprint</li> </ul> <p><strong>Token lost?</strong><br /> Did you lose your token? Please visit <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> and remove your token registration. This way no one can take advantage of your token.</p> <p><strong>Replace token</strong><br /> Do you want to replace your token? Please visit <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a>, remove your activated token and start the token registration process again.</p> <p><strong>Test token</strong><br /> Do you want to test your token? Please visit <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> and select the \"Test\" button next to the token you want to test.</p>",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Bedankt voor het registreren van je token. Je token is nu klaar voor gebruik. Je kunt dit token gebruiken wanneer op SURFconext aangesloten services een tweede inlogstap vereisen. In deze e-mail vind je meer informatie over het gebruik van je token.</p> <p><strong>Ga zorgvuldig om met je token</strong></p> <ul> <li>Je token is persoonlijk, deel deze niet met anderen</li> <li>Laat je token nooit onbeheerd achter</li> <li>Vergrendel je telefoon met bijvoorbeeld een code of vingerafdruk</li> </ul> <p><strong>Token verloren?</strong><br /> Wat moet je doen als je jouw token verloren bent? Ga naar <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> en verwijder je tokenregistratie. Zo kan niemand misbruik maken van jouw token.</p> <p><strong>Nieuw token aanvragen</strong><br /> Wil je jouw token vervangen? Log in op <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a>, verwijder je geactiveerde token en doorloop het registratieproces opnieuw.</p> <p><strong>Token testen</strong><br /> Wil je de werking van je token testen? Log in op <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> en selecteer de \"Testen\" knop naast het token dat je wil testen.</p>"
+    },
+    "second_factor_revoked": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p> {% if isRevokedByRa %} The registration of your {{ tokenType }} with ID {{ tokenIdentifier }} was deleted by an administrator. {% else %} You have deleted the registration of your {{ tokenType }} token with ID {{ tokenIdentifier }}. If you did not delete your token you must immediately contact the support desk of your institution, as this may indicate that your account has been compromised. {% endif %} </p> <p>You can no longer use this token to access services that require two-step authentication.</p> <p>Do you want to replace your token? Please visit <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> and register a new token.</p>",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p> {% if isRevokedByRa %} De registratie van je {{ tokenType }} token met ID {{ tokenIdentifier }} is verwijderd door een beheerder. {% else %} Je hebt de registratie voor je {{ tokenType }} token met ID {{ tokenIdentifier }} verwijderd. Neem direct contact op met de helpdesk van je instelling als je dit zelf niet gedaan hebt, omdat dit kan betekenen dat je account gecompromitteerd is. {% endif %} </p> <p>Je kunt dit token niet meer gebruiken om in te loggen bij services die een tweede inlogstap vereisen.</p> <p>Wil je een nieuw token aanvragen? Ga dan naar <a href='{{ selfServiceUrl }}'>{{ selfServiceUrl }}</a> en doorloop het registratieproces opnieuw.</p>"
+    },
+    "second_factor_verification_reminder_with_ras": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>You have registered, but not yet activated, a token. Please visit one of the locations below to get your token activated. After {{ expirationDate | localizeddate('full', 'none', locale) }} your activation code is no longer valid.</p> <p>Please bring the following:</p> <ul> <li>Your token</li> <li>A valid proof of identity (passport, drivers license or national ID-card).</li> <li>The activation code from this e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activation code: <code>{{ registrationCode }}</code></p> <p>Location(s) to activate your token:</p> {% if ras is empty %} <p>No RAs are known.</p> {% else %} <ul> {% for ra in ras %} <li><address> <strong>{{ ra.commonName }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Je hebt een token geregistreerd, maar het nog niet laten activeren. Je kunt tot en met {{ expirationDate | localizeddate('full', 'none', locale) }} bij een van de onderstaande locaties terecht om je token te laten activeren.</p> <p>Neem daarbij het volgende mee:</p> <ul> <li>Je token</li> <li>Een geldig legitimatiebewijs (paspoort, rijbewijs of nationale ID-kaart)</li> <li>De activatiecode uit deze e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activatiecode: <code>{{ registrationCode }}</code></p> <p>Locatie(s) om je token te activeren:</p> {% if ras is empty %} <p>Er zijn geen RAs bekend.</p> {% else %} <ul> {% for ra in ras %} <li><address> <strong>{{ ra.commonName }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}"
+    },
+    "second_factor_verification_reminder_with_ra_locations": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>You have registered, but not yet activated, a token. Please visit one of the locations below to get your token activated. After {{ expirationDate | localizeddate('full', 'none', locale) }} your activation code is no longer valid.</p> <p>Please bring the following:</p> <ul> <li>Your token</li> <li>A valid proof of identity (passport, drivers license or national ID-card)</li> <li>The activation code from this e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activation code: <code>{{ registrationCode }}</code></p> <p>Location(s) to activate your token:</p> {% if raLocations is empty %} <p>No locations known.</p> {% else %} <ul> {% for ra in raLocations %} <li><address> <strong>{{ ra.name }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Je hebt een token geregistreerd, maar het nog niet laten activeren. Je kunt tot en met {{ expirationDate | localizeddate('full', 'none', locale) }} bij een van de onderstaande locaties terecht om je token te laten activeren.</p> <p>Neem daarbij het volgende mee:</p> <ul> <li>Je token</li> <li>Een geldig legitimatiebewijs (paspoort, rijbewijs of nationale ID-kaart)</li> <li>De activatiecode uit deze e-mail</li> </ul> <p style='font-size: 150%; text-align: center'>Activatiecode: <code>{{ registrationCode }}</code></p> <p>Locatie(s) om je token te activeren:</p> {% if raLocations is empty %} <p>Er zijn geen Locaties bekend.</p> {% else %} <ul> {% for ra in raLocations %} <li><address> <strong>{{ ra.name }}</strong><br /> {{ ra.location }}<br /> {{ ra.contactInformation }} </address></li> {% endfor %} </ul> {% endif %}"
+    },
+    "recovery_token_created": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p>Thank you for registering a recovery method. You can use this method if you want to reactivate a token that you have lost.<p> <p>Always make sure you have at least one recovery method available.</p>",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p>Bedankt voor het registreren een herstelmethode. Je kunt deze methode gebruiken wanneer je een token dat je verloren bent opnieuw wilt activeren. </p> <p>Zorg er altijd voor dat je tenminste één herstelmethode beschikbaar hebt</p>"
+    },
+    "recovery_token_revoked": {
+      "en_GB": "<p>Dear {{ commonName }},</p> <p> {% if isRevokedByRa %} Your recovery method was removed by an administrator. {% else %} Your recovery method has been removed. Please contact your institution's helpdesk immediately if you did not do this yourself, as this could mean that your account has been compromised. {% endif %} </p> <p>You can no longer use this recovery method to activate a token.</p> <p>Always make sure you have at least one recovery method available.</p>",
+      "nl_NL": "<p>Beste {{ commonName }},</p> <p> {% if isRevokedByRa %} Je herstelmethode is verwijderd door een beheerder. {% else %} Je herstelmethode is verwijderd. Neem direct contact op met de helpdesk van je instelling als je dit niet zelf gedaan hebt, omdat dit kan betekenen dat je account gecompromitteerd is. {% endif %} </p> <p>Je kunt deze herstelmethode niet meer gebruiken om een token te activeren.</p> <p>Zorg er altijd voor dat je tenminste één herstelmethode beschikbaar hebt.</p>"
+    }
+  },
+  "gateway": {
+    "service_providers": [
+      {
+        "entity_id": "https://ra.dev.openconext.local/authentication/metadata",
+        "public_key": "MIIEAzCCAmsCFDltBS8n6pxyX9xVzHfEN7d0yRE0MA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIFNBTUwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTRaFw0yODA1MjMwOTMzMTRaMD4xEzARBgNVBAMMClJBIFNBTUwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMjj4GqkeIi+bIPEL+zIWtQJoo6EYGWjOaIemSApGXhbGZJfiuq3jxdtNxl7muqbr3U9//btMXSsEO/W6L+Ykl4tfSkwclKrJLSvMnMnIFOw2JfAYCf9fE+ipeGPT7pjxwCN1uIoKAyovhQkhyd0uTYPddat97EMbvpWCmcAQAJYvFLidqZKtKpkIKiDQ6dhBCC79OUexu+YUarwukyR1q7+wNHgEIX7GJIRkW2/2mD6cKyiDBeYWnKPvjJRISsHfpYCD5Uv47hHWpt6L8yxMgXBEJgLmmkpy8rNbQSQAYF8iZ8lSZSgCSMYCWZEt1qisUyE9+Rntf5ysg04IO/5s3tqtYnxMeXCixyYlBcrZuK6iJRurSoEjFfU8oMxLzQzQBeQ8eTK/3LrBuqbhnIxVYiBl2W2FxoPVY+Qr0IiMb7agEA0eSITrHV1ePdd/rKhs7WhlHZ1KOc7Mx4tbHgPYyoiqHnLvsj39MtDbxRRA+M64IDSUjLM//mAb7qMYc/mTwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAivjFDy7P6X6X7wTAv9nMsYxTMj8ynO+ojEnOD5Cpcn6jYNp30K2KU+KXJLUdow4W2b0YDKkbEc4xxim1+vjSqpdDk0e68Rw07ncs3yiaUAQa09VE7MNQPcwRJckmg7UvGrCLnO4LFSj/VonxZ7HdJwl2A6Cz5Otmjs9XffMOh6SI58xC37HVkSomZ9bXpZfUUuF2Nf02fpKgVoRfiqF1H7IWT3HbN2qr5zld9PzBJVD1CeOVGEpEj/6tUizqVrOmduGmNsRTgA10sKgyoteON4r+GRpGhA5tLtLCqEq7NThLTiUsJYjGVTHj9/Y+kWKMApCjwiC8/nI5VG3MevBwABcXnS312Paxa2C0TTpsNEVE32PaxGweuPv6zRDAEvTn+6H70eq1JKuQ9Sq/Z7VPWdhnp0JROOVZDZizfk9G/4R6Zkw4n1i3LcmFF2IYm7rrVQ/QjAYdcMwWBf3ox5gLrVWqMsSTUmgqLDExJsyjvdHGcm0v806QJFpIjMfwe8Vg=",
+        "acs": [
+          "https://ra.dev.openconext.local/authentication/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/authentication/metadata",
+        "public_key": "MIIEFTCCAn0CFAtJ5+HJEnBxgusIVRdsuNLn04t5MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIFNBTUwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTNaFw0yODA1MjMwOTMzMTNaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIFNBTUwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKOeP6weLhLXFQu8GtwcV4JQGCACgett4TyxDRL2HXxDvy8hoo5VzCGn5WXZhHcSCNz1mxryEPkpdmFarSsH1uaFyKEf2NJSbIcsVDfO7u2uwAKHGdaJVK/IBRK67DO5w2PTtX70nXiLiuVuf8ymt324OxD62KJ4Yl9NYBGOoUX013juVkQuW0nMrnIOnK+fs16aDiW9eEwXmBhxowXqcL/1elREFvRzBwhmJf37Vt/c9avXdSdPyOfB5icu6fkRQlAoppfWxtYJeI0DzTK+f6qx3JZak2XkfVk3nOANcmwahWB9qX4zP9TznXwz7jMMKWA9bZdh8X6FgZTmqgQMzhIJTvf+6YLHjkztgbIcqICNM7Jzkra0Jt4By8E8alzhTbR7KDKq1/tFivZPfncYoXft5unJYXhmy9Ziwzn1CjN40NSgP/B8TA3bVdBoCFhzIdqd8/CNPbvGY6GIj+cM5wsMT34eKMmvgcpN73qKBEw3sxeN0nWZADGT9IyWcCQoCQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAJtZL3DtSCmuPMNp1BBXw5NKimblwLwaBu6LSN2MfX85II14IXt9e7KPVyCl9Tl/bS97T1vdz/INm/B2A0B3P0CfPBGnsDntd+DTZSv6wW0+SfN5GXwDjRNinwzdbjqfhuc9oQGcMxtx1SG0WDIp3H3eJWduWn8VTDN7+WGnfjYFWKxcX7IMxhChQDbWHW0dfc9B21eL8JhLg0faLOv3KwR176+fvf6wVh+xU4GWJdw6pPB/50QS9he3oLoSR9gWPT8MNGBQraTmjv90Or+LHQSF0BdtT3/9ccJd1HhwDp9FPxCow17XAaxbh8iJr+fhHhWixQuzEnx8iYt6L9ycCnk9A+LX+dqIZpU6MK5Jb8E+1NrDzxI0Xc/7FIvEK1f20e2JsbIGcZH8T72EJqL0iu1yDydTXhJi8+0qHPLk9RoBqvFHfFVHQbxGHqhOMJTHHoAEbhLhfFNUL4j5N0aYgnTvc3KjdVrCvNh1J3tA9S8ry/OltkPxD71oVxN1IgPSk=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/authentication/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/registration/gssf/tiqr/metadata",
+        "public_key": "MIIEFTCCAn0CFAbzD4XZyyVVi0+cS0vXOOd+Hqd9MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTdaFw0yODA1MjMwOTMzMTdaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKLXUh/S3zNF1wgJmHyFj0uL/JX/rSjzWfGDikniur1ao3b90tdDI1D026PYV0R5HRQ7dNkVdY29xhOWR/oVwYuNjBffbqBKATn4agmPFIOVbbHb+W5tpTtES2lzW81yCEkQMKARVTQ+APIVam75LxdBrIhXEtpGSU2TN5G8mnC2/6+8cAJTPa9fWDH4T62y3UuzDEGb3HY2l+LF/ntYl1AI+eo68X3DNY4wk7EhCSorS6PtgErXR9L1lD+J/+rmsUsX+kHP/y6Qd+o5zcW6PYx02ezi+U9DjIZtQ19jVHVUBGjKWo1f01Q4CYDCy9DQNMwfdf9GN5b3CuqlMkcWUDFGjbStSxDGIAcFk1Qtgcs0zVX0tBeu+/4TJ4kJhAapemK4gBLcJuYzznTMXCF8/sV+Obtd45Rov3ywA78YKLq1LSca+IzQFNQ+F69wPQS5tU+EC1q48GO7IqyTsCSwcaZ9+rtyh0ORoOjX89wkwvFxh498PTSuwC8PhdEZfWo8iwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQA4VlUlqroir5HQDAeUhMeBEo40Apeoh190lVraITF57hLG7fS/GUZQGK8mpzscCWvDJQ+bS79IHVtDCKuNxX8erpBfwP2fF/zF/oqwFvyArOahCS30daYLIbrIkfA0Ap7FaTq8Uun0JxjqFt3TSdAr285HzbrxcvlHqaBxZRRISrRr5/6pJPnRkWezgwKbO4TvuvDUoOYgoUgMqJnfvZndgMjVZDY9BsRTp45b6avWzl3jem2Fq9ZIPkDzIgh7bmq6AvPekTVQouti9Bih6lAzU0uia/b12JKZzs9kiN93i26Wr+DUsC+T/P/12lbxCB0rOqRsQ4sFj8Ho/syqKCUX6pv8JeKgISx7Zdh08xPWYb5zjZhuHgthYyFhCv7vSu0pzIINhREb2NQjdcS7+NuAjxjnVdznTOqsusQZ85t7L3u5JwFTS1FPdkH1YAMuym5+pqXcdzDB0yJnRnmr05sZ/n0cZrrB7SZxWLLysIKGmptwqTFS2p7KFpiEc1HtQ+w=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/registration/gssf/tiqr/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ra.dev.openconext.local/vetting-procedure/gssf/tiqr/metadata",
+        "public_key": "MIIEAzCCAmsCFDrz7PoQddaSIAPs/6PswCyPCAylMA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMThaFw0yODA1MjMwOTMzMThaMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJ8uhX/MYhqLPnoHePLcEzlGHu/HABfqpJW6tu0PhHj9/ToE1OS46pSBeGCZE5MMInzLlPMlokb/uqdc+CXJkrX7ZaEGbhGYJUN4lFBqCyeeiSlVYPmI1+tmIBH59ZO2B56E0NLSWBfZr1cefPUxwtE2lDCRtJT7QpyJJAblbzUlGa5FqboVsMrH5VeDaw3+i9Jdn+QReWwNnZhqHWGDyBoFb7Tc7PzHOZeM8pS0wCdX+mPJvNvYs4/zptYvOgqqpQVHkN4aAwn0/GSGjIzxb/r+5wO7UPyNEy5yOKlijubeDFp/9tPpkkfgXdeOcvL1mXNNm3rNC9DXOFAK8bkCb1Tr9Mu+YZtqwY6Z1VFH+XZZ1jmws9DQIBQ4+oEhPzF4Nk+I0U5V7HtCgsGL3AnAF6eontaF/u4w3X3S2TvnGM/FJ/YLwX5LcXZfaDdW5TTva1kudyHa60HskPzTQrx1UMdXTl6MixQ0naFVYIWNEXSny/b5YuWWjedaAETP8AvHMQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQBk6Ieq3tZ72RpLfoXvPx2+aP40UqIQCPMp9qVHlHGcHwaHe14r4yin+98P0/fc+kDi+KxYJB15uW/YzMDXMPJIlPZZL6FCBAZKqXxpEWHtev1Sx8FuJ4tuWxEXpwrAjuVY+cbvob0IIlfR/iVXJ87ztJlMX7Vq/9kY5trXVCtkdyPZeCYi3uOKG1ipN+4Ct9rfBS/wOyytc75RH7oSDsOrDGhbv3WPaj4wnGqOuVRmqswN89pWk9HFdPc7TI5w4EVHL9djjVcc9tS+iznxr4I8eHPS0OodnaktN6VN6xomVvPkX5sITLSMl/AGExKucdezvuJp6KMa4sHwC9QGI1+U6VolJXSjBIDWPtBrCXwGGV587WD/drafymxI3YZWe0RW2jhmpQIUrbSgjLntwZy1CfjA9ubJCfKS5clxGoFhyRBqMl8lcw5knDAbcpiS9ktP4L6nHsr/KccIX3U1iovn77Fenr6xt/yXh11k30Q/cfBjlDg054sLNCzhNx9MD4s=",
+        "acs": [
+          "https://ra.dev.openconext.local/vetting-procedure/gssf/tiqr/verify"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/registration/gssf/webauthn/metadata",
+        "public_key": "MIIEFTCCAn0CFAbzD4XZyyVVi0+cS0vXOOd+Hqd9MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTdaFw0yODA1MjMwOTMzMTdaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKLXUh/S3zNF1wgJmHyFj0uL/JX/rSjzWfGDikniur1ao3b90tdDI1D026PYV0R5HRQ7dNkVdY29xhOWR/oVwYuNjBffbqBKATn4agmPFIOVbbHb+W5tpTtES2lzW81yCEkQMKARVTQ+APIVam75LxdBrIhXEtpGSU2TN5G8mnC2/6+8cAJTPa9fWDH4T62y3UuzDEGb3HY2l+LF/ntYl1AI+eo68X3DNY4wk7EhCSorS6PtgErXR9L1lD+J/+rmsUsX+kHP/y6Qd+o5zcW6PYx02ezi+U9DjIZtQ19jVHVUBGjKWo1f01Q4CYDCy9DQNMwfdf9GN5b3CuqlMkcWUDFGjbStSxDGIAcFk1Qtgcs0zVX0tBeu+/4TJ4kJhAapemK4gBLcJuYzznTMXCF8/sV+Obtd45Rov3ywA78YKLq1LSca+IzQFNQ+F69wPQS5tU+EC1q48GO7IqyTsCSwcaZ9+rtyh0ORoOjX89wkwvFxh498PTSuwC8PhdEZfWo8iwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQA4VlUlqroir5HQDAeUhMeBEo40Apeoh190lVraITF57hLG7fS/GUZQGK8mpzscCWvDJQ+bS79IHVtDCKuNxX8erpBfwP2fF/zF/oqwFvyArOahCS30daYLIbrIkfA0Ap7FaTq8Uun0JxjqFt3TSdAr285HzbrxcvlHqaBxZRRISrRr5/6pJPnRkWezgwKbO4TvuvDUoOYgoUgMqJnfvZndgMjVZDY9BsRTp45b6avWzl3jem2Fq9ZIPkDzIgh7bmq6AvPekTVQouti9Bih6lAzU0uia/b12JKZzs9kiN93i26Wr+DUsC+T/P/12lbxCB0rOqRsQ4sFj8Ho/syqKCUX6pv8JeKgISx7Zdh08xPWYb5zjZhuHgthYyFhCv7vSu0pzIINhREb2NQjdcS7+NuAjxjnVdznTOqsusQZ85t7L3u5JwFTS1FPdkH1YAMuym5+pqXcdzDB0yJnRnmr05sZ/n0cZrrB7SZxWLLysIKGmptwqTFS2p7KFpiEc1HtQ+w=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/registration/gssf/webauthn/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ra.dev.openconext.local/vetting-procedure/gssf/webauthn/metadata",
+        "public_key": "MIIEAzCCAmsCFDrz7PoQddaSIAPs/6PswCyPCAylMA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMThaFw0yODA1MjMwOTMzMThaMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJ8uhX/MYhqLPnoHePLcEzlGHu/HABfqpJW6tu0PhHj9/ToE1OS46pSBeGCZE5MMInzLlPMlokb/uqdc+CXJkrX7ZaEGbhGYJUN4lFBqCyeeiSlVYPmI1+tmIBH59ZO2B56E0NLSWBfZr1cefPUxwtE2lDCRtJT7QpyJJAblbzUlGa5FqboVsMrH5VeDaw3+i9Jdn+QReWwNnZhqHWGDyBoFb7Tc7PzHOZeM8pS0wCdX+mPJvNvYs4/zptYvOgqqpQVHkN4aAwn0/GSGjIzxb/r+5wO7UPyNEy5yOKlijubeDFp/9tPpkkfgXdeOcvL1mXNNm3rNC9DXOFAK8bkCb1Tr9Mu+YZtqwY6Z1VFH+XZZ1jmws9DQIBQ4+oEhPzF4Nk+I0U5V7HtCgsGL3AnAF6eontaF/u4w3X3S2TvnGM/FJ/YLwX5LcXZfaDdW5TTva1kudyHa60HskPzTQrx1UMdXTl6MixQ0naFVYIWNEXSny/b5YuWWjedaAETP8AvHMQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQBk6Ieq3tZ72RpLfoXvPx2+aP40UqIQCPMp9qVHlHGcHwaHe14r4yin+98P0/fc+kDi+KxYJB15uW/YzMDXMPJIlPZZL6FCBAZKqXxpEWHtev1Sx8FuJ4tuWxEXpwrAjuVY+cbvob0IIlfR/iVXJ87ztJlMX7Vq/9kY5trXVCtkdyPZeCYi3uOKG1ipN+4Ct9rfBS/wOyytc75RH7oSDsOrDGhbv3WPaj4wnGqOuVRmqswN89pWk9HFdPc7TI5w4EVHL9djjVcc9tS+iznxr4I8eHPS0OodnaktN6VN6xomVvPkX5sITLSMl/AGExKucdezvuJp6KMa4sHwC9QGI1+U6VolJXSjBIDWPtBrCXwGGV587WD/drafymxI3YZWe0RW2jhmpQIUrbSgjLntwZy1CfjA9ubJCfKS5clxGoFhyRBqMl8lcw5knDAbcpiS9ktP4L6nHsr/KccIX3U1iovn77Fenr6xt/yXh11k30Q/cfBjlDg054sLNCzhNx9MD4s=",
+        "acs": [
+          "https://ra.dev.openconext.local/vetting-procedure/gssf/webauthn/verify"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/registration/gssf/azuremfa/metadata",
+        "public_key": "MIIEFTCCAn0CFAbzD4XZyyVVi0+cS0vXOOd+Hqd9MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTdaFw0yODA1MjMwOTMzMTdaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKLXUh/S3zNF1wgJmHyFj0uL/JX/rSjzWfGDikniur1ao3b90tdDI1D026PYV0R5HRQ7dNkVdY29xhOWR/oVwYuNjBffbqBKATn4agmPFIOVbbHb+W5tpTtES2lzW81yCEkQMKARVTQ+APIVam75LxdBrIhXEtpGSU2TN5G8mnC2/6+8cAJTPa9fWDH4T62y3UuzDEGb3HY2l+LF/ntYl1AI+eo68X3DNY4wk7EhCSorS6PtgErXR9L1lD+J/+rmsUsX+kHP/y6Qd+o5zcW6PYx02ezi+U9DjIZtQ19jVHVUBGjKWo1f01Q4CYDCy9DQNMwfdf9GN5b3CuqlMkcWUDFGjbStSxDGIAcFk1Qtgcs0zVX0tBeu+/4TJ4kJhAapemK4gBLcJuYzznTMXCF8/sV+Obtd45Rov3ywA78YKLq1LSca+IzQFNQ+F69wPQS5tU+EC1q48GO7IqyTsCSwcaZ9+rtyh0ORoOjX89wkwvFxh498PTSuwC8PhdEZfWo8iwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQA4VlUlqroir5HQDAeUhMeBEo40Apeoh190lVraITF57hLG7fS/GUZQGK8mpzscCWvDJQ+bS79IHVtDCKuNxX8erpBfwP2fF/zF/oqwFvyArOahCS30daYLIbrIkfA0Ap7FaTq8Uun0JxjqFt3TSdAr285HzbrxcvlHqaBxZRRISrRr5/6pJPnRkWezgwKbO4TvuvDUoOYgoUgMqJnfvZndgMjVZDY9BsRTp45b6avWzl3jem2Fq9ZIPkDzIgh7bmq6AvPekTVQouti9Bih6lAzU0uia/b12JKZzs9kiN93i26Wr+DUsC+T/P/12lbxCB0rOqRsQ4sFj8Ho/syqKCUX6pv8JeKgISx7Zdh08xPWYb5zjZhuHgthYyFhCv7vSu0pzIINhREb2NQjdcS7+NuAjxjnVdznTOqsusQZ85t7L3u5JwFTS1FPdkH1YAMuym5+pqXcdzDB0yJnRnmr05sZ/n0cZrrB7SZxWLLysIKGmptwqTFS2p7KFpiEc1HtQ+w=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/registration/gssf/azuremfa/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ra.dev.openconext.local/vetting-procedure/gssf/azuremfa/metadata",
+        "public_key": "MIIEAzCCAmsCFDrz7PoQddaSIAPs/6PswCyPCAylMA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMThaFw0yODA1MjMwOTMzMThaMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJ8uhX/MYhqLPnoHePLcEzlGHu/HABfqpJW6tu0PhHj9/ToE1OS46pSBeGCZE5MMInzLlPMlokb/uqdc+CXJkrX7ZaEGbhGYJUN4lFBqCyeeiSlVYPmI1+tmIBH59ZO2B56E0NLSWBfZr1cefPUxwtE2lDCRtJT7QpyJJAblbzUlGa5FqboVsMrH5VeDaw3+i9Jdn+QReWwNnZhqHWGDyBoFb7Tc7PzHOZeM8pS0wCdX+mPJvNvYs4/zptYvOgqqpQVHkN4aAwn0/GSGjIzxb/r+5wO7UPyNEy5yOKlijubeDFp/9tPpkkfgXdeOcvL1mXNNm3rNC9DXOFAK8bkCb1Tr9Mu+YZtqwY6Z1VFH+XZZ1jmws9DQIBQ4+oEhPzF4Nk+I0U5V7HtCgsGL3AnAF6eontaF/u4w3X3S2TvnGM/FJ/YLwX5LcXZfaDdW5TTva1kudyHa60HskPzTQrx1UMdXTl6MixQ0naFVYIWNEXSny/b5YuWWjedaAETP8AvHMQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQBk6Ieq3tZ72RpLfoXvPx2+aP40UqIQCPMp9qVHlHGcHwaHe14r4yin+98P0/fc+kDi+KxYJB15uW/YzMDXMPJIlPZZL6FCBAZKqXxpEWHtev1Sx8FuJ4tuWxEXpwrAjuVY+cbvob0IIlfR/iVXJ87ztJlMX7Vq/9kY5trXVCtkdyPZeCYi3uOKG1ipN+4Ct9rfBS/wOyytc75RH7oSDsOrDGhbv3WPaj4wnGqOuVRmqswN89pWk9HFdPc7TI5w4EVHL9djjVcc9tS+iznxr4I8eHPS0OodnaktN6VN6xomVvPkX5sITLSMl/AGExKucdezvuJp6KMa4sHwC9QGI1+U6VolJXSjBIDWPtBrCXwGGV587WD/drafymxI3YZWe0RW2jhmpQIUrbSgjLntwZy1CfjA9ubJCfKS5clxGoFhyRBqMl8lcw5knDAbcpiS9ktP4L6nHsr/KccIX3U1iovn77Fenr6xt/yXh11k30Q/cfBjlDg054sLNCzhNx9MD4s=",
+        "acs": [
+          "https://ra.dev.openconext.local/vetting-procedure/gssf/azuremfa/verify"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp/metadata",
+        "public_key": "MIIEFTCCAn0CFAbzD4XZyyVVi0+cS0vXOOd+Hqd9MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTdaFw0yODA1MjMwOTMzMTdaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKLXUh/S3zNF1wgJmHyFj0uL/JX/rSjzWfGDikniur1ao3b90tdDI1D026PYV0R5HRQ7dNkVdY29xhOWR/oVwYuNjBffbqBKATn4agmPFIOVbbHb+W5tpTtES2lzW81yCEkQMKARVTQ+APIVam75LxdBrIhXEtpGSU2TN5G8mnC2/6+8cAJTPa9fWDH4T62y3UuzDEGb3HY2l+LF/ntYl1AI+eo68X3DNY4wk7EhCSorS6PtgErXR9L1lD+J/+rmsUsX+kHP/y6Qd+o5zcW6PYx02ezi+U9DjIZtQ19jVHVUBGjKWo1f01Q4CYDCy9DQNMwfdf9GN5b3CuqlMkcWUDFGjbStSxDGIAcFk1Qtgcs0zVX0tBeu+/4TJ4kJhAapemK4gBLcJuYzznTMXCF8/sV+Obtd45Rov3ywA78YKLq1LSca+IzQFNQ+F69wPQS5tU+EC1q48GO7IqyTsCSwcaZ9+rtyh0ORoOjX89wkwvFxh498PTSuwC8PhdEZfWo8iwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQA4VlUlqroir5HQDAeUhMeBEo40Apeoh190lVraITF57hLG7fS/GUZQGK8mpzscCWvDJQ+bS79IHVtDCKuNxX8erpBfwP2fF/zF/oqwFvyArOahCS30daYLIbrIkfA0Ap7FaTq8Uun0JxjqFt3TSdAr285HzbrxcvlHqaBxZRRISrRr5/6pJPnRkWezgwKbO4TvuvDUoOYgoUgMqJnfvZndgMjVZDY9BsRTp45b6avWzl3jem2Fq9ZIPkDzIgh7bmq6AvPekTVQouti9Bih6lAzU0uia/b12JKZzs9kiN93i26Wr+DUsC+T/P/12lbxCB0rOqRsQ4sFj8Ho/syqKCUX6pv8JeKgISx7Zdh08xPWYb5zjZhuHgthYyFhCv7vSu0pzIINhREb2NQjdcS7+NuAjxjnVdznTOqsusQZ85t7L3u5JwFTS1FPdkH1YAMuym5+pqXcdzDB0yJnRnmr05sZ/n0cZrrB7SZxWLLysIKGmptwqTFS2p7KFpiEc1HtQ+w=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp/metadata",
+        "public_key": "MIIEAzCCAmsCFDrz7PoQddaSIAPs/6PswCyPCAylMA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMThaFw0yODA1MjMwOTMzMThaMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJ8uhX/MYhqLPnoHePLcEzlGHu/HABfqpJW6tu0PhHj9/ToE1OS46pSBeGCZE5MMInzLlPMlokb/uqdc+CXJkrX7ZaEGbhGYJUN4lFBqCyeeiSlVYPmI1+tmIBH59ZO2B56E0NLSWBfZr1cefPUxwtE2lDCRtJT7QpyJJAblbzUlGa5FqboVsMrH5VeDaw3+i9Jdn+QReWwNnZhqHWGDyBoFb7Tc7PzHOZeM8pS0wCdX+mPJvNvYs4/zptYvOgqqpQVHkN4aAwn0/GSGjIzxb/r+5wO7UPyNEy5yOKlijubeDFp/9tPpkkfgXdeOcvL1mXNNm3rNC9DXOFAK8bkCb1Tr9Mu+YZtqwY6Z1VFH+XZZ1jmws9DQIBQ4+oEhPzF4Nk+I0U5V7HtCgsGL3AnAF6eontaF/u4w3X3S2TvnGM/FJ/YLwX5LcXZfaDdW5TTva1kudyHa60HskPzTQrx1UMdXTl6MixQ0naFVYIWNEXSny/b5YuWWjedaAETP8AvHMQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQBk6Ieq3tZ72RpLfoXvPx2+aP40UqIQCPMp9qVHlHGcHwaHe14r4yin+98P0/fc+kDi+KxYJB15uW/YzMDXMPJIlPZZL6FCBAZKqXxpEWHtev1Sx8FuJ4tuWxEXpwrAjuVY+cbvob0IIlfR/iVXJ87ztJlMX7Vq/9kY5trXVCtkdyPZeCYi3uOKG1ipN+4Ct9rfBS/wOyytc75RH7oSDsOrDGhbv3WPaj4wnGqOuVRmqswN89pWk9HFdPc7TI5w4EVHL9djjVcc9tS+iznxr4I8eHPS0OodnaktN6VN6xomVvPkX5sITLSMl/AGExKucdezvuJp6KMa4sHwC9QGI1+U6VolJXSjBIDWPtBrCXwGGV587WD/drafymxI3YZWe0RW2jhmpQIUrbSgjLntwZy1CfjA9ubJCfKS5clxGoFhyRBqMl8lcw5knDAbcpiS9ktP4L6nHsr/KccIX3U1iovn77Fenr6xt/yXh11k30Q/cfBjlDg054sLNCzhNx9MD4s=",
+        "acs": [
+          "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp/verify"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp_2/metadata",
+        "public_key": "MIIEFTCCAn0CFAbzD4XZyyVVi0+cS0vXOOd+Hqd9MA0GCSqGSIb3DQEBCwUAMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTdaFw0yODA1MjMwOTMzMTdaMEcxHDAaBgNVBAMME1NlbGZTZXJ2aWNlIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKLXUh/S3zNF1wgJmHyFj0uL/JX/rSjzWfGDikniur1ao3b90tdDI1D026PYV0R5HRQ7dNkVdY29xhOWR/oVwYuNjBffbqBKATn4agmPFIOVbbHb+W5tpTtES2lzW81yCEkQMKARVTQ+APIVam75LxdBrIhXEtpGSU2TN5G8mnC2/6+8cAJTPa9fWDH4T62y3UuzDEGb3HY2l+LF/ntYl1AI+eo68X3DNY4wk7EhCSorS6PtgErXR9L1lD+J/+rmsUsX+kHP/y6Qd+o5zcW6PYx02ezi+U9DjIZtQ19jVHVUBGjKWo1f01Q4CYDCy9DQNMwfdf9GN5b3CuqlMkcWUDFGjbStSxDGIAcFk1Qtgcs0zVX0tBeu+/4TJ4kJhAapemK4gBLcJuYzznTMXCF8/sV+Obtd45Rov3ywA78YKLq1LSca+IzQFNQ+F69wPQS5tU+EC1q48GO7IqyTsCSwcaZ9+rtyh0ORoOjX89wkwvFxh498PTSuwC8PhdEZfWo8iwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQA4VlUlqroir5HQDAeUhMeBEo40Apeoh190lVraITF57hLG7fS/GUZQGK8mpzscCWvDJQ+bS79IHVtDCKuNxX8erpBfwP2fF/zF/oqwFvyArOahCS30daYLIbrIkfA0Ap7FaTq8Uun0JxjqFt3TSdAr285HzbrxcvlHqaBxZRRISrRr5/6pJPnRkWezgwKbO4TvuvDUoOYgoUgMqJnfvZndgMjVZDY9BsRTp45b6avWzl3jem2Fq9ZIPkDzIgh7bmq6AvPekTVQouti9Bih6lAzU0uia/b12JKZzs9kiN93i26Wr+DUsC+T/P/12lbxCB0rOqRsQ4sFj8Ho/syqKCUX6pv8JeKgISx7Zdh08xPWYb5zjZhuHgthYyFhCv7vSu0pzIINhREb2NQjdcS7+NuAjxjnVdznTOqsusQZ85t7L3u5JwFTS1FPdkH1YAMuym5+pqXcdzDB0yJnRnmr05sZ/n0cZrrB7SZxWLLysIKGmptwqTFS2p7KFpiEc1HtQ+w=",
+        "acs": [
+          "https://selfservice.dev.openconext.local/registration/gssf/demo_gssp_2/consume-assertion"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp_2/metadata",
+        "public_key": "MIIEAzCCAmsCFDrz7PoQddaSIAPs/6PswCyPCAylMA0GCSqGSIb3DQEBCwUAMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMThaFw0yODA1MjMwOTMzMThaMD4xEzARBgNVBAMMClJBIEdTU1AgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJ8uhX/MYhqLPnoHePLcEzlGHu/HABfqpJW6tu0PhHj9/ToE1OS46pSBeGCZE5MMInzLlPMlokb/uqdc+CXJkrX7ZaEGbhGYJUN4lFBqCyeeiSlVYPmI1+tmIBH59ZO2B56E0NLSWBfZr1cefPUxwtE2lDCRtJT7QpyJJAblbzUlGa5FqboVsMrH5VeDaw3+i9Jdn+QReWwNnZhqHWGDyBoFb7Tc7PzHOZeM8pS0wCdX+mPJvNvYs4/zptYvOgqqpQVHkN4aAwn0/GSGjIzxb/r+5wO7UPyNEy5yOKlijubeDFp/9tPpkkfgXdeOcvL1mXNNm3rNC9DXOFAK8bkCb1Tr9Mu+YZtqwY6Z1VFH+XZZ1jmws9DQIBQ4+oEhPzF4Nk+I0U5V7HtCgsGL3AnAF6eontaF/u4w3X3S2TvnGM/FJ/YLwX5LcXZfaDdW5TTva1kudyHa60HskPzTQrx1UMdXTl6MixQ0naFVYIWNEXSny/b5YuWWjedaAETP8AvHMQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQBk6Ieq3tZ72RpLfoXvPx2+aP40UqIQCPMp9qVHlHGcHwaHe14r4yin+98P0/fc+kDi+KxYJB15uW/YzMDXMPJIlPZZL6FCBAZKqXxpEWHtev1Sx8FuJ4tuWxEXpwrAjuVY+cbvob0IIlfR/iVXJ87ztJlMX7Vq/9kY5trXVCtkdyPZeCYi3uOKG1ipN+4Ct9rfBS/wOyytc75RH7oSDsOrDGhbv3WPaj4wnGqOuVRmqswN89pWk9HFdPc7TI5w4EVHL9djjVcc9tS+iznxr4I8eHPS0OodnaktN6VN6xomVvPkX5sITLSMl/AGExKucdezvuJp6KMa4sHwC9QGI1+U6VolJXSjBIDWPtBrCXwGGV587WD/drafymxI3YZWe0RW2jhmpQIUrbSgjLntwZy1CfjA9ubJCfKS5clxGoFhyRBqMl8lcw5knDAbcpiS9ktP4L6nHsr/KccIX3U1iovn77Fenr6xt/yXh11k30Q/cfBjlDg054sLNCzhNx9MD4s=",
+        "acs": [
+          "https://ra.dev.openconext.local/vetting-procedure/gssf/demo_gssp_2/verify"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/metadata.php/default-sp",
+        "public_key": "MIIECTCCAnECFCUUC/wBq6SyLyGi8sMZl2bB0cFmMA0GCSqGSIb3DQEBCwUAMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTZaFw0yODA1MjMwOTMzMTZaMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKY41F7F6YJrqUTHJw45X1Y3gsN0ZgryOZfPXGSOq2xEttVU8RIzWNJmtVZc6j3NlffKp8HOTgko5JAjSN3sK36K8a0yY4aOrPfwv67/8XkHbaQCH/CiCOigSyE2BJIskMToaamPXjWRl3K+ma/kShw7lMGmvmQxnHsc79zmJDPrT9chC4Ypkq828/DiEkRNXThvfe+61tI0rvXY4HQZ4BPlag7/oMUng4AehPe4r5GEpdh5b4872fIiTxOMUSjIt2zl8OFAazhigmZwk48MiYyCUbUvaAAqZ7ewX4/DmMdfqdSW7gscwIWV02k27lJzhNSqt1iR92e58tf377Ufl46JCvAzrtol4lwmMgoDIqe9WCMDrraEZ1jvDrHuX+sJjEe0qIbzSjQBa+jZc1AN6Gdrzf1HYCBr+wj75NtwP0La2o6p8yJbNsTcs8nE4GBrdVJF87BxI1OdoWjNLwhhDJsVsY1BUJtQGmyEWffVI1qPBPuv4H99cUNwlCS/I1TEgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAdCxhHPfexwQwQXMhliZ1G3nxEedQ6rnvi2wA9yHxHBeKqX5TnIZUh2OYIdNon0x4XveLYUdAhoG6mBxk2QeQ3xNanwAuWnCRB5ssYqf7Jyu1EXMycZDkhVl9r01ApCFNFkF1p6wEgmXDG5A3KRsIWK4eU6ZLsywXksgCi0Hl63Rdz9+wVCqOBdufxgG0dxNA3GtE37Yz0pKuNJYch7onsfX5OCnI/lwbJc+A/500Rp01leYOx58KJGCyrVS5fuQmwuG7FC9ok8uSnS0gODCxQw26K+/uVK0X9HBJDn5DkXI2fsXChUV7rT12ZUukrn9CYZ2i71VMIopJI6DBQ7g4n7tljz5DcXbdHkHrrjHz2owXKKSFMOvEQ/216oxKaT8dF8BW2/EmXYd6Rnchyf4vmTFR/WaY2cg3k0leIXwPMI2sCBfgLoJHUBWh/RqaACMGdqhq93kzjy/FIzJvId3gcrUbK3NsFCVf5bXc32TkalocvEyZ4Id81IUcTi6RepEA=",
+        "acs": [
+          "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp",
+          "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/metadata.php/second-sp",
+        "public_key": "MIIECTCCAnECFCUUC/wBq6SyLyGi8sMZl2bB0cFmMA0GCSqGSIb3DQEBCwUAMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTZaFw0yODA1MjMwOTMzMTZaMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKY41F7F6YJrqUTHJw45X1Y3gsN0ZgryOZfPXGSOq2xEttVU8RIzWNJmtVZc6j3NlffKp8HOTgko5JAjSN3sK36K8a0yY4aOrPfwv67/8XkHbaQCH/CiCOigSyE2BJIskMToaamPXjWRl3K+ma/kShw7lMGmvmQxnHsc79zmJDPrT9chC4Ypkq828/DiEkRNXThvfe+61tI0rvXY4HQZ4BPlag7/oMUng4AehPe4r5GEpdh5b4872fIiTxOMUSjIt2zl8OFAazhigmZwk48MiYyCUbUvaAAqZ7ewX4/DmMdfqdSW7gscwIWV02k27lJzhNSqt1iR92e58tf377Ufl46JCvAzrtol4lwmMgoDIqe9WCMDrraEZ1jvDrHuX+sJjEe0qIbzSjQBa+jZc1AN6Gdrzf1HYCBr+wj75NtwP0La2o6p8yJbNsTcs8nE4GBrdVJF87BxI1OdoWjNLwhhDJsVsY1BUJtQGmyEWffVI1qPBPuv4H99cUNwlCS/I1TEgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAdCxhHPfexwQwQXMhliZ1G3nxEedQ6rnvi2wA9yHxHBeKqX5TnIZUh2OYIdNon0x4XveLYUdAhoG6mBxk2QeQ3xNanwAuWnCRB5ssYqf7Jyu1EXMycZDkhVl9r01ApCFNFkF1p6wEgmXDG5A3KRsIWK4eU6ZLsywXksgCi0Hl63Rdz9+wVCqOBdufxgG0dxNA3GtE37Yz0pKuNJYch7onsfX5OCnI/lwbJc+A/500Rp01leYOx58KJGCyrVS5fuQmwuG7FC9ok8uSnS0gODCxQw26K+/uVK0X9HBJDn5DkXI2fsXChUV7rT12ZUukrn9CYZ2i71VMIopJI6DBQ7g4n7tljz5DcXbdHkHrrjHz2owXKKSFMOvEQ/216oxKaT8dF8BW2/EmXYd6Rnchyf4vmTFR/WaY2cg3k0leIXwPMI2sCBfgLoJHUBWh/RqaACMGdqhq93kzjy/FIzJvId3gcrUbK3NsFCVf5bXc32TkalocvEyZ4Id81IUcTi6RepEA=",
+        "acs": [
+          "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/second-sp"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": true,
+        "second_factor_only_nameid_patterns": [
+          "urn:collab:person:dev.openconext.local:admin",
+          "urn:collab:person:institution-a.example.com:*",
+          "urn:collab:person:Institution-D.EXAMPLE.COM:*"
+        ],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/metadata.php/third-sp",
+        "public_key": "MIIECTCCAnECFCUUC/wBq6SyLyGi8sMZl2bB0cFmMA0GCSqGSIb3DQEBCwUAMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTZaFw0yODA1MjMwOTMzMTZaMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKY41F7F6YJrqUTHJw45X1Y3gsN0ZgryOZfPXGSOq2xEttVU8RIzWNJmtVZc6j3NlffKp8HOTgko5JAjSN3sK36K8a0yY4aOrPfwv67/8XkHbaQCH/CiCOigSyE2BJIskMToaamPXjWRl3K+ma/kShw7lMGmvmQxnHsc79zmJDPrT9chC4Ypkq828/DiEkRNXThvfe+61tI0rvXY4HQZ4BPlag7/oMUng4AehPe4r5GEpdh5b4872fIiTxOMUSjIt2zl8OFAazhigmZwk48MiYyCUbUvaAAqZ7ewX4/DmMdfqdSW7gscwIWV02k27lJzhNSqt1iR92e58tf377Ufl46JCvAzrtol4lwmMgoDIqe9WCMDrraEZ1jvDrHuX+sJjEe0qIbzSjQBa+jZc1AN6Gdrzf1HYCBr+wj75NtwP0La2o6p8yJbNsTcs8nE4GBrdVJF87BxI1OdoWjNLwhhDJsVsY1BUJtQGmyEWffVI1qPBPuv4H99cUNwlCS/I1TEgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAdCxhHPfexwQwQXMhliZ1G3nxEedQ6rnvi2wA9yHxHBeKqX5TnIZUh2OYIdNon0x4XveLYUdAhoG6mBxk2QeQ3xNanwAuWnCRB5ssYqf7Jyu1EXMycZDkhVl9r01ApCFNFkF1p6wEgmXDG5A3KRsIWK4eU6ZLsywXksgCi0Hl63Rdz9+wVCqOBdufxgG0dxNA3GtE37Yz0pKuNJYch7onsfX5OCnI/lwbJc+A/500Rp01leYOx58KJGCyrVS5fuQmwuG7FC9ok8uSnS0gODCxQw26K+/uVK0X9HBJDn5DkXI2fsXChUV7rT12ZUukrn9CYZ2i71VMIopJI6DBQ7g4n7tljz5DcXbdHkHrrjHz2owXKKSFMOvEQ/216oxKaT8dF8BW2/EmXYd6Rnchyf4vmTFR/WaY2cg3k0leIXwPMI2sCBfgLoJHUBWh/RqaACMGdqhq93kzjy/FIzJvId3gcrUbK3NsFCVf5bXc32TkalocvEyZ4Id81IUcTi6RepEA=",
+        "acs": [
+          "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/third-sp"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa2"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/metadata.php/fourth-sp",
+        "public_key": "MIIECTCCAnECFCUUC/wBq6SyLyGi8sMZl2bB0cFmMA0GCSqGSIb3DQEBCwUAMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDAeFw0yMzA1MjUwOTMzMTZaFw0yODA1MjMwOTMzMTZaMEExFjAUBgNVBAMMDXNpbXBsZXNhbWwgU1AxJzAlBgNVBAoMHkRldmVsb3BtZW50IERvY2tlciBlbnZpcm9ubWVudDCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKY41F7F6YJrqUTHJw45X1Y3gsN0ZgryOZfPXGSOq2xEttVU8RIzWNJmtVZc6j3NlffKp8HOTgko5JAjSN3sK36K8a0yY4aOrPfwv67/8XkHbaQCH/CiCOigSyE2BJIskMToaamPXjWRl3K+ma/kShw7lMGmvmQxnHsc79zmJDPrT9chC4Ypkq828/DiEkRNXThvfe+61tI0rvXY4HQZ4BPlag7/oMUng4AehPe4r5GEpdh5b4872fIiTxOMUSjIt2zl8OFAazhigmZwk48MiYyCUbUvaAAqZ7ewX4/DmMdfqdSW7gscwIWV02k27lJzhNSqt1iR92e58tf377Ufl46JCvAzrtol4lwmMgoDIqe9WCMDrraEZ1jvDrHuX+sJjEe0qIbzSjQBa+jZc1AN6Gdrzf1HYCBr+wj75NtwP0La2o6p8yJbNsTcs8nE4GBrdVJF87BxI1OdoWjNLwhhDJsVsY1BUJtQGmyEWffVI1qPBPuv4H99cUNwlCS/I1TEgQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBgQAdCxhHPfexwQwQXMhliZ1G3nxEedQ6rnvi2wA9yHxHBeKqX5TnIZUh2OYIdNon0x4XveLYUdAhoG6mBxk2QeQ3xNanwAuWnCRB5ssYqf7Jyu1EXMycZDkhVl9r01ApCFNFkF1p6wEgmXDG5A3KRsIWK4eU6ZLsywXksgCi0Hl63Rdz9+wVCqOBdufxgG0dxNA3GtE37Yz0pKuNJYch7onsfX5OCnI/lwbJc+A/500Rp01leYOx58KJGCyrVS5fuQmwuG7FC9ok8uSnS0gODCxQw26K+/uVK0X9HBJDn5DkXI2fsXChUV7rT12ZUukrn9CYZ2i71VMIopJI6DBQ7g4n7tljz5DcXbdHkHrrjHz2owXKKSFMOvEQ/216oxKaT8dF8BW2/EmXYd6Rnchyf4vmTFR/WaY2cg3k0leIXwPMI2sCBfgLoJHUBWh/RqaACMGdqhq93kzjy/FIzJvId3gcrUbK3NsFCVf5bXc32TkalocvEyZ4Id81IUcTi6RepEA=",
+        "acs": [
+          "https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/fourth-sp"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1",
+          "institution-a.example.com": "http://dev.openconext.local/assurance/loa2",
+          "institution-d.example.com": "http://dev.openconext.local/assurance/loa2"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      },
+      {
+        "entity_id": "https://dummy-sp",
+        "public_key": "MIICojCCAYoCCQD8o3774sHUMDANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDDAhkdW1teS1zcDAeFw0xODEwMTcxMjA2NDhaFw0yMzEwMTYxMjA2NDhaMBMxETAPBgNVBAMMCGR1bW15LXNwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3yzbWio94u8uqmc0yeyh1fOwl0L3PYfjhq3W1R++Cs6Cm3JzW5j7uuGZi71l0TNH1f2kPa9pcgQc0kBRmzn1Em5n1swMM589PEL2x49z4l6NeuRB3RPx69GOFBD0N5jcnoIQsGI0hQxX5gw8XOtRQrREAUQNTFmmWnzMoXkZMbJrpIuZSnHX3DWBdadooEDIkak29y+E+dKM9Za7rj/GT+uXJZJCY29CrIAUeltSdv00R8bB3BS3VQAexGxcAT+sfZyo7I9O6d/YVdDDePdTqGJ0GDOCoTBfhA+QDkHCh9yaF9NwAgIZVpVdLSx2KzVFAg9Ll2OHBTTWYd/bLfJZ3wIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCvejcTBa15nmU6OQHUF7cozXbeUEUFE+ysCulAJA9L9JmukEd9FYLBmZDpYJ3YilQVAcsnuPHfFA47q/B0CxS28jWu87WcqdSUh87nqKjYISZJ1x+qa6JpLX2E6+bXWJuawOcL+t/9iOwr/jt1IQM+pVdxSkqbPalMu0j4C4eI7zwd+/cLrqkM+hXnPvRzD9A5hiPxM9KO+b9GitSAThe82PsnBMGg8xpWnUs+vDr3Vn047u1GbEWGDo/eMT/BO6/1sG44niL9/yzivIuwCBURAEyDjxtkErZ5q0zN35C6K9NALryD856rbhzuzOyftRERpsZ/pX9u6UbWNi9CfDEz",
+        "acs": [
+          "https://dummy-sp/acs"
+        ],
+        "loa": {
+          "__default__": "http://dev.openconext.local/assurance/loa1"
+        },
+        "assertion_encryption_enabled": false,
+        "second_factor_only": false,
+        "second_factor_only_nameid_patterns": [],
+        "blacklisted_encryption_algorithms": []
+      }
+    ],
+    "identity_providers": []
+  }
+}
