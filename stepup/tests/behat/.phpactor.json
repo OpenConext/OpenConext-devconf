@@ -1,0 +1,5 @@
+{
+    "$schema": "/home/bart/.local/share/nvim/mason/packages/phpactor/phpactor.schema.json",
+    "prophecy.enabled": false,
+    "behat.enabled": true
+}
