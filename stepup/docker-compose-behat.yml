@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+ 
+  behat: 
+    image: ghcr.io/openconext/openconext-devconf/openconext-devconf:test
+    environment:
+      - APP_ENV=${APP_ENV:-prod}
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /var/run/docker.sock:/var/run/docker.sock
