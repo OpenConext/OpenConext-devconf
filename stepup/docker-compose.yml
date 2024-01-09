@@ -12,6 +12,7 @@ services:
           - ra.dev.openconext.local
           - middleware.dev.openconext.local
           - gateway.dev.openconext.local
+          - tiqr.dev.openconext.local
 
   mariadb:
     image: mariadb:10.6
