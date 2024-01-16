@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# A convenience script to run the behat tests with the correct config
+# For now the only feature is that it pipes on any argument provided
+# to the script, into the behat command
+
+./vendor/bin/behat --config config/behat.yml $1

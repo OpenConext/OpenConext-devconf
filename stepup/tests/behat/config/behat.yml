@@ -1,7 +1,9 @@
 default:
     autoload:
         - '%paths.base%/../features/bootstrap/'
-
+    formatters:
+      progress:
+        paths: false
     suites:
         default:
             paths:
