@@ -306,7 +306,9 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->fillField('password', $userName);
 
         $this->minkContext->pressButton('Login');
-        $this->passTroughIdentityProviderAssertionConsumerService();
+        $this->minkContext->pressButton('Yes, continue');
+        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/authentication/consume-assertion');
+        $this->minkContext->assertPageNotContainsText('Incorrect username or password');
     }
 
     private function passTroughIdentityProviderAssertionConsumerService()
@@ -437,5 +439,12 @@ class SecondFactorAuthContext implements Context
     public function theVerificationCodeIsInvalid()
     {
         $this->minkContext->assertResponseContains('This code is not correct. Please try again or request a new code.');
+    }
+
+    private function diePrintingContent()
+    {
+        echo $this->minkContext->getSession()->getCurrentUrl();
+        echo $this->minkContext->getSession()->getPage()->getContent();
+        die;
     }
 }

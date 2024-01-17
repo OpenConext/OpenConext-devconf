@@ -109,15 +109,11 @@ class RaContext implements Context
      */
     public function iTryToLoginIntoTheRaPortalAs($userName, $tokenType)
     {
-        $this->minkContext->getSession()->stop();
-        $this->minkContext->getSession()->setCookie('testcookie', 'testcookie');
-
         // We visit the RA location url
         $this->minkContext->visit($this->raUrl);
 
         // The admin user logs in and gives a Yubikey second factor
         $this->authContext->authenticateWithIdentityProviderFor($userName);
-
         switch ($tokenType) {
             case "yubikey":
                 $this->authContext->verifyYuikeySecondFactor();
@@ -129,7 +125,6 @@ class RaContext implements Context
                         $tokenType
                     )
                 );
-                break;
         }
     }
 
@@ -643,5 +638,12 @@ class RaContext implements Context
         $this->minkContext->fillField('ra_verify_identity_documentNumber', '654321');
         $this->minkContext->checkOption('ra_verify_identity_identityVerified');
         $this->minkContext->pressButton('Verify identity');
+    }
+
+    private function diePrintingContent()
+    {
+        echo $this->minkContext->getSession()->getCurrentUrl();
+        echo $this->minkContext->getSession()->getPage()->getContent();
+        die;
     }
 }

@@ -28,6 +28,16 @@ services:
       - stepup_mariadb:/var/lib/mysql
     hostname: mariadb.docker
 
+  behat:
+    image: ghcr.io/openconext/openconext-devconf/openconext-devconf:test
+    environment:
+      - APP_ENV=${APP_ENV:-prod}
+    networks:
+      openconextdev:
+    volumes:
+      - ${PWD}/:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:${STEPUP_VERSION:-prod}
     ports:
