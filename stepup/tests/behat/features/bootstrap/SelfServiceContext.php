@@ -352,4 +352,11 @@ class SelfServiceContext implements Context
     {
         return $this->verifiedSecondFactorId;
     }
+
+    private function diePrintingContent()
+    {
+        echo $this->minkContext->getSession()->getCurrentUrl();
+        echo $this->minkContext->getSession()->getPage()->getContent();
+        die;
+    }
 }

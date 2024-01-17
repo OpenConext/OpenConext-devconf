@@ -4,4 +4,4 @@
 # For now the only feature is that it pipes on any argument provided
 # to the script, into the behat command
 
-./vendor/bin/behat --config config/behat.yml $1
+./vendor/bin/behat --config config/behat.yml --strict $1

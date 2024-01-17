@@ -62,10 +62,6 @@ class FeatureContext implements Context
         shell_exec("./fixtures/middleware-push-config.sh");
         // Perform an event replay
         shell_exec("docker exec -ti stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -q");
-
-        echo "Update the keys\n";
-        // Update the `saml_entities` projection in `gateway_test`
-//        shell_exec("/vagrant/deploy/tests/behat/fixtures/bin/override_sp_public_keys");
     }
 
     /**
@@ -78,10 +74,6 @@ class FeatureContext implements Context
         $this->minkContext = $environment->getContext(MinkContext::class);
         $this->apiContext = $environment->getContext(ApiFeatureContext::class);
         $this->serlfServiceContext = $environment->getContext(SelfServiceContext::class);
-
-        // Set the testcookie for both sessions, effectively putting the Stepup suite in test mode
-        $this->minkContext->getSession()->setCookie('testcookie', 'testcookie');
-        $this->minkContext->getSession('second')->setCookie('testcookie', 'testcookie');
 
         $this->payloadFactory = new CommandPayloadFactory();
         $this->repository = new SecondFactorRepository();

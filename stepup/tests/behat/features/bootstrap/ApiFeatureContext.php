@@ -123,16 +123,9 @@ class ApiFeatureContext implements Context
      */
     public function __construct($apiUrl)
     {
-        // Configure the testcookie for the guzzle client that will be handling the Api calls.
-        $domain = 'middleware.dev.openconext.local';
-        $values = ['testcookie' => 'testcookie'];
-
-        $cookieJar = CookieJar::fromArray($values, $domain);
-
         $this->client = new Client(
             [
                 'base_uri' => $apiUrl,
-                'cookies' => $cookieJar,
             ]
         );
     }
