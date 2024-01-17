@@ -4,5 +4,5 @@ services:
     volumes:
       - ${AZUREMFA_CODE_PATH}:/var/www/html
     environment:
-      - APP_ENV=dev
+      - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=true
