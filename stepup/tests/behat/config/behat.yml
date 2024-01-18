@@ -14,7 +14,7 @@ default:
                   spTestUrl: 'https://ssp.dev.openconext.local/simplesaml/sp.php'
               - SelfServiceContext:
                   selfServiceUrl: 'https://selfservice.dev.openconext.local'
-                  mailCatcherUrl: 'http://selfservice.dev.openconext.local:1080/messages'
+                  mailCatcherUrl: 'http://mailcatcher:1080/messages'
               - RaContext:
                   raUrl: 'https://ra.dev.openconext.local'
               - ApiFeatureContext:
