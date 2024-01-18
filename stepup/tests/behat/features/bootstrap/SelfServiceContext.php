@@ -83,63 +83,64 @@ class SelfServiceContext implements Context
     }
 
     /**
-     * @When I register a new Dummy token
+     * @When I register a new :tokenType token
      */
-    public function registerNewToken()
-    {
-        // Click 'add token' on the overview page
-        $this->minkContext->clickLink('Add token');
-
-        $this->minkContext->assertPageAddress('/registration/select-token');
-
-        // Select the dummy second factor type
-        $this->minkContext->getSession()
-            ->getPage()
-            ->find('css', '[href="/registration/gssf/dummy/initiate"]')->click();
-
-        $this->minkContext->assertPageAddress('/registration/gssf/dummy/initiate');
-
-        // Start registration
-        $this->minkContext->assertPageContainsText('Register with Dummy');
-        $this->minkContext->pressButton('Register with Dummy');
-
-        // Register onthe dummy application
-        $this->minkContext->assertPageAddress('http://localhost:1234/app_dev.php/registration');
-        $this->minkContext->pressButton('Register user');
-
-        // Pass trough GSSP return action
-        $this->minkContext->pressButton('Submit');
-
-        // Pass trough gateway
-        $this->authContext->passTroughGatewayProxyAssertionConsumerService();
-
-        $this->minkContext->assertPageContainsText('Verify your e-mail');
-        $this->minkContext->assertPageContainsText('Check your inbox');
-    }
-
-    /**
-     * @When I register a new SMS token
-     */
-    public function registerNewSmsToken()
+    public function registerNewToken(string $tokenType)
     {
         $this->minkContext->assertPageAddress('/registration/select-token');
 
-        // Select the SMS second factor type
-        $this->minkContext->getSession()
-            ->getPage()
-            ->find('css', '[href="/registration/sms/send-challenge"]')->click();
+        switch ($tokenType) {
+            case 'Yubikey':
+                $this->minkContext->getSession()
+                    ->getPage()
+                    ->find('css', '[href="/registration/yubikey/prove-possession"]')->click();
+                $this->minkContext->assertPageAddress('/registration/yubikey/prove-possession');
+                $this->minkContext->assertPageContainsText('Link your YubiKey');
+                $this->minkContext->fillField('ss_prove_yubikey_possession_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
+                $page = $this->minkContext->getSession()->getPage();
+                $form = $page->find('css', 'form[name="ss_prove_yubikey_possession"]');
+                $form->submit();
+                break;
+            case 'SMS':
+                // Select the SMS second factor type
+                $this->minkContext->getSession()
+                    ->getPage()
+                    ->find('css', '[href="/registration/sms/send-challenge"]')->click();
 
-        $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
-        // Start registration
-        $this->minkContext->assertPageContainsText('Send SMS code');
-        $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
-        $this->minkContext->pressButton('Send code');
-        // Now we should be on the prove possession page where we enter our OTP
-        $this->minkContext->assertPageAddress('/registration/sms/prove-possession');
-        $this->minkContext->assertPageContainsText('Enter SMS code');
-        $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
+                $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
+                // Start registration
+                $this->minkContext->assertPageContainsText('Send SMS code');
+                $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
+                $this->minkContext->pressButton('Send code');
+                // Now we should be on the prove possession page where we enter our OTP
+                $this->minkContext->assertPageAddress('/registration/sms/prove-possession');
+                $this->minkContext->assertPageContainsText('Enter SMS code');
+                $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
 
-        $this->minkContext->pressButton('Verify');
+                $this->minkContext->pressButton('Verify');
+                break;
+            case 'Demo GSSP':
+                // Select the SMS second factor type
+                $page = $this->minkContext->getSession()->getPage();
+                $form = $page->find('css', 'form[action="/registration/gssf/demo_gssp/authenticate"]');
+                $form->submit();
+
+                $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/registration');
+                // Start registration
+                $this->minkContext->assertPageContainsText('Register user');
+                $this->minkContext->pressButton('Register user');
+
+                // Pass through the demogssp
+                $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/saml/sso_return');
+                $this->minkContext->pressButton('Submit');
+                // Pass through the gateway
+                $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/gssp/demo_gssp/consume-assertion');
+                $this->minkContext->pressButton('Submit');
+                // Now we should be back at the SelfService
+                break;
+            default:
+                throw new Exception(sprintf('The %s token type is not supported', $tokenType));
+        }
 
         ## And we should now be on the mail verification page
         $this->minkContext->assertPageContainsText('Verify your e-mail');
@@ -231,7 +232,7 @@ class SelfServiceContext implements Context
         $this->minkContext->visit(
             $this->getEmailVerificationUrl()
         );
-
+        $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
         $this->minkContext->printCurrentUrl();
         $this->minkContext->assertPageContainsText('Thank you for registering your token.');
 
@@ -254,6 +255,13 @@ class SelfServiceContext implements Context
             throw new Exception('Could not find a valid activation code');
         }
     }
+
+    public function iChooseToActivateMyTokenUsingServiceDeskVetting()
+    {
+        $this->minkContext->assertPageContainsText('Activate your token');
+        $this->minkContext->pressButton('ra-vetting-button');
+    }
+
 
     /**
      * @Given /^I visit the "([^"]*)" page in the selfservice portal$/

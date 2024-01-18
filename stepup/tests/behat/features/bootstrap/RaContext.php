@@ -49,15 +49,27 @@ class RaContext implements Context
     }
 
     /**
-     * @Given /^I vet my second factor at the information desk$/
+     * @Given I vet my :tokenType second factor :vettingType
      */
-    public function iVetMySecondFactorAtTheInformationDesk()
+    public function iVetMySecondFactor(string $tokenType, string $vettingType)
     {
-        // We visit the RA location url
-        $this->minkContext->visit($this->raUrl);
+        switch ($vettingType) {
+            case "at the information desk":
+                // We visit the RA location url
+                $this->minkContext->visit($this->raUrl);
 
-        $this->iAmLoggedInIntoTheRaPortalAs('admin', 'yubikey');
-        $this->iVetASecondFactor($this->selfServiceContext->getVerifiedSecondFactorId(), $this->selfServiceContext->getActivationCode());
+                $this->iAmLoggedInIntoTheRaPortalAs('admin', 'yubikey');
+                $this->iVetASpecificSecondFactor(
+                    $tokenType,
+                    $this->selfServiceContext->getVerifiedSecondFactorId(),
+                    $this->selfServiceContext->getActivationCode()
+                );
+                break;
+            case "using self asserted token registration":
+                break;
+            default:
+                throw new Exception(sprintf('The %s vettingType type is not supported', $vettingType));
+        }
     }
 
 
@@ -71,6 +83,29 @@ class RaContext implements Context
 
         $this->findsTokenForActivation($activationCode);
         $this->userProvesPosessionOfSmsToken($secondFactorId);
+        $this->adminVerifiesUserIdentity($secondFactorId);
+        $this->vettingProcessIsCompleted($secondFactorId);
+    }
+
+    public function iVetASpecificSecondFactor($tokenType, $secondFactorId, $activationCode)
+    {
+        // We visit the RA location url
+        $this->minkContext->visit($this->raUrl);
+
+        $this->findsTokenForActivation($activationCode);
+        switch ($tokenType) {
+            case "Yubikey":
+                $this->userProvesPosessionOfYubikeyToken($secondFactorId);
+                break;
+            case "SMS":
+                $this->userProvesPosessionOfSmsToken($secondFactorId);
+                break;
+            case "Demo GSSP":
+                $this->userProvesPosessionOfDemoGsspToken($secondFactorId);
+                break;
+            default:
+                throw new Exception(sprintf('The %s token type is not supported', $tokenType));
+        }
         $this->adminVerifiesUserIdentity($secondFactorId);
         $this->vettingProcessIsCompleted($secondFactorId);
     }
@@ -97,9 +132,9 @@ class RaContext implements Context
     {
         // Login into RA
         $this->iTryToLoginIntoTheRaPortalAs($userName, $tokenType);
-
         // We are now on the RA homepage
         $this->minkContext->assertPageAddress('https://ra.dev.openconext.local');
+        $this->iSwitchLocaleTo('English');
         $this->minkContext->assertPageContainsText('RA Management Portal');
         $this->minkContext->assertPageContainsText('Token activation');
     }
@@ -110,10 +145,11 @@ class RaContext implements Context
     public function iTryToLoginIntoTheRaPortalAs($userName, $tokenType)
     {
         // We visit the RA location url
+        $this->minkContext->getSession()->reset();
         $this->minkContext->visit($this->raUrl);
 
         // The admin user logs in and gives a Yubikey second factor
-        $this->authContext->authenticateWithIdentityProviderFor($userName);
+        $this->authContext->authenticateWithIdentityProviderForWithStepup($userName);
         switch ($tokenType) {
             case "yubikey":
                 $this->authContext->verifyYuikeySecondFactor();
@@ -157,24 +193,30 @@ class RaContext implements Context
 
     }
 
-    private function userProvesPosessionOfDummyToken()
+    private function userProvesPosessionOfDemoGsspToken(string $secondFactorId)
     {
-        $vettingProcedureUrl = 'https://ra.dev.openconext.local/vetting-procedure/%s/gssf/dummy/initiate-verification';
+        $vettingProcedureUrl = 'https://ra.dev.openconext.local/vetting-procedure/%s/gssf/demo_gssp/initiate-verification';
 
         $this->minkContext->assertPageAddress(
             sprintf(
                 $vettingProcedureUrl,
-                $this->selfServiceContext->getVerifiedSecondFactorId()
+                $secondFactorId
             )
         );
-
         // Press the initiate vetting procedure button in the search results
         $this->minkContext->pressButton('ra_initiate_gssf_submit');
-        // Press the Authenticate button on the Dummy authentication page
+
+        // Ensure we have the english translation
+        $this->minkContext->clickLink('EN');
+
+        // Press the Authenticate button on the Demo authentication page
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
         $this->minkContext->pressButton('button_authenticate');
-        // Pass through the Dummy Gssp redirection page.
+        // Pass through the Demo Gssp redirection page.
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/saml/sso_return');
         $this->minkContext->pressButton('Submit');
         // Pass through the 'return to sp' redirection page.
+        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/gssp/demo_gssp/consume-assertion');
         $this->minkContext->pressButton('Submit');
     }
 
@@ -194,6 +236,23 @@ class RaContext implements Context
         // Fill the Code field with an arbitrary verification code
         $this->minkContext->fillField('ra_verify_phone_number_challenge', '999');
         $this->minkContext->pressButton('Verify code');
+    }
+
+    private function userProvesPosessionOfYubikeyToken($secondFactorId)
+    {
+        $vettingProcedureUrl = 'https://ra.dev.openconext.local/vetting-procedure/%s/verify-yubikey';
+
+        $this->minkContext->assertPageAddress(
+            sprintf(
+                $vettingProcedureUrl,
+                $secondFactorId
+            )
+        );
+        // Fill the Code field with an arbitrary verification code
+        $this->minkContext->fillField('ra_verify_yubikey_public_id_otp', '999');
+        $page = $this->minkContext->getSession()->getPage();
+        $form = $page->find('css', 'form[name="ra_verify_yubikey_public_id"]');
+        $form->submit();
     }
 
     private function adminVerifiesUserIdentity($verifiedSecondFactorId)
@@ -638,6 +697,15 @@ class RaContext implements Context
         $this->minkContext->fillField('ra_verify_identity_documentNumber', '654321');
         $this->minkContext->checkOption('ra_verify_identity_identityVerified');
         $this->minkContext->pressButton('Verify identity');
+    }
+
+    private function iSwitchLocaleTo(string $newLocale): void
+    {
+        $page = $this->minkContext->getSession()->getPage();
+        $selectElement = $page->find('css', '#stepup_switch_locale_locale');
+        $selectElement->selectOption($newLocale);
+        $form = $page->find('css', 'form[name="stepup_switch_locale"]');
+        $form->submit();
     }
 
     private function diePrintingContent()

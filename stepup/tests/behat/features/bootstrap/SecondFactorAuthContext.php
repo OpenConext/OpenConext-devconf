@@ -311,6 +311,17 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->assertPageNotContainsText('Incorrect username or password');
     }
 
+    public function authenticateWithIdentityProviderForWithStepup($userName)
+    {
+        $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
+
+        $this->minkContext->fillField('username', $userName);
+        $this->minkContext->fillField('password', $userName);
+
+        $this->minkContext->pressButton('Login');
+        $this->minkContext->pressButton('Yes, continue');
+    }
+
     private function passTroughIdentityProviderAssertionConsumerService()
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
