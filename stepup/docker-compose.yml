@@ -13,6 +13,7 @@ services:
           - middleware.dev.openconext.local
           - gateway.dev.openconext.local
           - tiqr.dev.openconext.local
+    hostname: haproxy.docker
 
   mariadb:
     image: mariadb:10.6
@@ -23,6 +24,7 @@ services:
     volumes:
       - ${PWD}/dbschema:/docker-entrypoint-initdb.d
       - stepup_mariadb:/var/lib/mysql
+    hostname: mariadb.docker
 
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:prod
@@ -37,6 +39,7 @@ services:
       openconextdev:
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: webauthn.docker
 
   ssp:
     image: ghcr.io/openconext/openconext-devssp/devssp:latest
@@ -44,6 +47,8 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/ssp:/var/www/simplesaml/config/cert/
+    hostname: ssp.docker
+
 
   middleware:
     image: ghcr.io/openconext/stepup-middleware/stepup-middleware:prod
@@ -55,6 +60,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: middleware.docker
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:prod
@@ -67,6 +73,7 @@ services:
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: gateway.docker
 
 
   ra:
@@ -79,6 +86,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: ra.docker
 
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:prod
@@ -90,6 +98,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: selfservice.docker
 
   demogssp:
     image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:prod
@@ -101,6 +110,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: demogssp.docker
   
   tiqr:
     image: ghcr.io/openconext/stepup-tiqr/stepup-tiqr:prod
@@ -112,6 +122,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: tiqr.docker
   
   azuremfa:
     image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:prod
@@ -123,6 +134,7 @@ services:
       - ${PWD}/:/config
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: azuremfa.docker
   
   mailcatcher:
     image: sj26/mailcatcher:latest
@@ -132,6 +144,7 @@ services:
       '--ip 0.0.0.0 --smtp-port 25'
     networks:
       openconextdev:
+    hostname: mailcatcher.docker
 
 networks:
   openconextdev:
