@@ -168,7 +168,7 @@ class SelfServiceContext implements Context
         $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
         $this->minkContext->pressButton('Send code');
 
-        $this->minkContext->assertPageContainsText('Please validate that you can receive SMS messages on this phone');
+        $this->minkContext->assertPageContainsText('Enter the code that was sent to your phone');
         $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
         $this->minkContext->pressButton('Verify');
 
@@ -180,6 +180,7 @@ class SelfServiceContext implements Context
         $page = $this->minkContext->getSession()->getPage();
         $form = $page->find('css', 'form[action$="self-vet"]');
         $form->submit();
+        $this->minkContext->pressButton('Yes, continue');
         $this->minkContext->pressButton('Submit');
         $this->authContext->authenticateUserYubikeyInGateway();
     }
@@ -193,7 +194,8 @@ class SelfServiceContext implements Context
         $this->minkContext->assertPageAddress('/overview');
 
         $this->minkContext->assertPageContainsText('The following tokens are registered for your account');
-        $this->minkContext->assertPageContainsText('Yubikey');
+        $this->minkContext->assertPageContainsText('SMS');
+        $this->minkContext->assertPageContainsText('+31 (0) 612345678');
 
         $this->minkContext->visit('/registration/select-token');
 
@@ -205,19 +207,11 @@ class SelfServiceContext implements Context
 
         // Start registration
         $this->minkContext->assertPageContainsText('Link your YubiKey');
-        $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
-        $this->minkContext->pressButton('Send code');
-
-        $this->minkContext->assertPageContainsText('Please validate that you can receive SMS messages on this phone');
-        $this->minkContext->fillField('ss_prove_yubikey_possession_otp', 'scvcb234cv3234213abas41');
+        $this->minkContext->fillField('ss_prove_yubikey_possession_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
         $page = $this->minkContext->getSession()->getPage();
         $form = $page->find('css', 'form[name="ss_prove_yubikey_possession"]');
         $form->submit();
 
-        $this->minkContext->visit(
-            $this->getEmailVerificationUrl()
-        );
-        $this->verifyEmailAddress();
     }
 
     /**
@@ -257,6 +251,25 @@ class SelfServiceContext implements Context
                 }
                 break;
             case "Self Asserted Token registration":
+                $this->iChooseToActivateMyTokenUsingSat();
+                break;
+            case "Self vetting":
+                // Select the sms second factor type
+                $this->minkContext->getSession()
+                    ->getPage()
+                    ->find('css', '[href="/registration/sms/send-challenge"]')->click();
+                $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
+
+                // Start registration
+                $this->minkContext->assertPageContainsText('Send SMS code');
+                $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
+                $this->minkContext->pressButton('Send code');
+
+                $this->minkContext->assertPageContainsText('Enter the code that was sent to your phone');
+                $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
+                $this->minkContext->pressButton('Verify');
+
+
                 $this->iChooseToActivateMyTokenUsingSat();
                 break;
             default:

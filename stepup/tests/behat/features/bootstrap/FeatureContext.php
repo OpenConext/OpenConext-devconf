@@ -268,8 +268,8 @@ class FeatureContext implements Context
                 )
             );
         }
-
-        $actorId = 'dc4cc738-5f1c-4d8c-84a2-d6faf8aded89';
+        // TODO: Improve this. At this moment this is the hardcoded actor Id (identity_id) of the admin
+        $actorId = 'e9ab38c3-84a8-47e6-b371-4da5c303669a';
         $identityData = $this->identityStore[$nameId];
         $payload = $this->payloadFactory->buildRolePayload($actorId, $identityData->identityId, $identityData->institution, $role, $institution);
         $this->setPayload($payload);
@@ -313,14 +313,18 @@ class FeatureContext implements Context
         // 3.1. Retrieve the registration code
         $activationContext = new ActivationContext();
         $activationContext->registrationCode = $this->repository->getRegistrationCodeByIdentity($identityData->identityId);
-        $activationContext->actorId = 'dc4cc738-5f1c-4d8c-84a2-d6faf8aded89';
+
+        // TODO: Improve this. At this moment this is the hardcoded actor Id (identity_id) of the admin
+        $activationContext->actorId = 'e9ab38c3-84a8-47e6-b371-4da5c303669a';
 
         // 3.2  Vet the second factor device
         $identityData->activationContext = $activationContext;
         $payload = $this->payloadFactory->build('Identity:VetSecondFactor', $identityData);
         $this->setPayload($payload);
         $this->connectToApi('ra', 'secret');
+
         $this->apiContext->iRequest('POST', '/command');
+
     }
 
     private function vetSmsToken($identityData)
@@ -328,7 +332,8 @@ class FeatureContext implements Context
         // 3.1. Retrieve the registration code
         $activationContext = new ActivationContext();
         $activationContext->registrationCode = $this->repository->getRegistrationCodeByIdentity($identityData->identityId);
-        $activationContext->actorId = 'dc4cc738-5f1c-4d8c-84a2-d6faf8aded89';
+        // TODO: Improve this. At this moment this is the hardcoded actor Id (identity_id) of the admin
+        $activationContext->actorId = 'e9ab38c3-84a8-47e6-b371-4da5c303669a';
 
         // 3.2  Vet the second factor device
         $identityData->activationContext = $activationContext;
