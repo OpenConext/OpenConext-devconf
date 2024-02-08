@@ -228,7 +228,10 @@ class SelfServiceContext implements Context
         );
         switch ($vettingType) {
             case "RA vetting":
-                $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
+                $url = $this->minkContext->getSession()->getCurrentUrl();
+                if (strpos($url, '/registration-email-sent') === false) {
+                    $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
+                }
                 $this->minkContext->assertPageContainsText('Thank you for registering your token.');
 
                 $page  = $this->minkContext->getSession()->getPage();

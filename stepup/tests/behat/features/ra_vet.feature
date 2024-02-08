@@ -1,4 +1,3 @@
-@SKIP
 Feature: A RA manages tokens tokens registered in the selfservice portal
   In order to manage tokens
   As a RA
@@ -8,14 +7,14 @@ Feature: A RA manages tokens tokens registered in the selfservice portal
     Given institution "institution-a.example.com" can "use_ra" from institution "institution-a.example.com"
       And institution "institution-a.example.com" can "select_raa" from institution "institution-a.example.com"
       And institution "institution-d.example.com" can "use_ra" from institution "institution-a.example.com"
-      And a user "Jane Toppan" identified by "urn:collab:person:institution-a.example.com:jane-a-ra" from institution "institution-a.example.com"
-      And the user "urn:collab:person:institution-a.example.com:jane-a-ra" has a vetted "yubikey"
+      And a user "Jane Toppan" identified by "urn:collab:person:institution-a.example.com:jane-a-ra" from institution "institution-a.example.com" with UUID "00000000-0000-4000-a000-000000000001"
+    And the user "urn:collab:person:institution-a.example.com:jane-a-ra" has a vetted "yubikey" with identifier "00000001"
       And the user "urn:collab:person:institution-a.example.com:jane-a-ra" has the role "ra" for institution "institution-a.example.com"
 
   Scenario: RA user can vet a token from an institution it is RA for
     Given I am logged in into the selfservice portal as "joe-a1"
     And I register a new SMS token
-    And I verify my e-mail address
+    And I verify my e-mail address and choose the "RA vetting" vetting type
     When I am logged in into the ra portal as "jane-a-ra" with a "yubikey" token
      And I vet the last added second factor
 
