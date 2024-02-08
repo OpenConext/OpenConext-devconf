@@ -1,4 +1,3 @@
-@SKIP
 Feature: Use case E: Institution that uses multiple SHOs
   An institution IdP that issues multiple SHOs, e.g. institution.org and some-related-part.institution.org. From the
   perspective of Stepup these would currently become multiple institutions, which each have and manage their own RA(A)s.

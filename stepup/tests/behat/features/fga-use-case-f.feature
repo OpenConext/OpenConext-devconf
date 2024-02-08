@@ -1,4 +1,3 @@
-@SKIP
 Feature: Use case F: An institution that manages Stepup for a (a group of) sister and/or daughter institutions
   An institution that manages Stepup for (a group of) sister and/or daughter institutions. This use-case appears similar
   to use-case A. The differences lie in the relation that the managing institution has with the institutions being
