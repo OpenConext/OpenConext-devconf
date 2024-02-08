@@ -1,4 +1,4 @@
-@SKIP
+@SKIP Skipped awaiting a fix of the SSP, allowing for SFO authentications
 Feature: A user authenticates with a service provider configured for second-factor-only
   In order to login on a service provider
   As a user
