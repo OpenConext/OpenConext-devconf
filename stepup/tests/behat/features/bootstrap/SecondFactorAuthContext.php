@@ -164,7 +164,7 @@ class SecondFactorAuthContext implements Context
     {
         switch ($tokenType){
             case "yubikey":
-                $this->cancelYubikeyAuthentication();
+                $this->cancelYubikeySsoAuthentication();
                 break;
             case "dummy":
                 $this->cancelAuthenticationInDummyGsspApplication();
@@ -256,12 +256,11 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->pressButton('Submit');
     }
 
-    public function cancelYubikeyAuthentication()
+    public function cancelYubikeySsoAuthentication()
     {
-        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/yubikey');
+        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sso/yubikey');
         // Cancel the yubikey authentication action.
         $this->minkContext->pressButton('Cancel');
-
         // Pass through the 'return to sp' redirection page.
         $this->minkContext->pressButton('Submit');
     }
@@ -287,12 +286,12 @@ class SecondFactorAuthContext implements Context
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
 
-        $this->minkContext->fillField('username', 'joe-a1');
-        $this->minkContext->fillField('password', 'joe-a1');
+        $this->minkContext->fillField('username', 'user-a1');
+        $this->minkContext->fillField('password', 'user-a1');
 
         $this->minkContext->pressButton('Login');
+        $this->minkContext->pressButton('Yes, continue');
 
-        $this->passTroughIdentityProviderAssertionConsumerService();
     }
 
     /**
@@ -307,8 +306,7 @@ class SecondFactorAuthContext implements Context
 
         $this->minkContext->pressButton('Login');
         $this->minkContext->pressButton('Yes, continue');
-        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/authentication/consume-assertion');
-        $this->minkContext->assertPageNotContainsText('Incorrect username or password');
+
     }
 
     public function authenticateWithIdentityProviderForWithStepup($userName)
@@ -324,7 +322,8 @@ class SecondFactorAuthContext implements Context
 
     private function passTroughIdentityProviderAssertionConsumerService()
     {
-        $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
+        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/authentication/consume-assertion');
+
         $this->minkContext->assertPageNotContainsText('Incorrect username or password');
         $this->minkContext->pressButton('Submit');
     }
@@ -336,9 +335,7 @@ class SecondFactorAuthContext implements Context
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/sp.php');
 
-        $this->minkContext->assertPageContainsText(
-            sprintf('You are logged in to SP')
-        );
+        $this->minkContext->assertPageContainsText('You are logged in to SP');
     }
 
     /**

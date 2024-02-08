@@ -1,4 +1,3 @@
-@SKIP
 Feature: A user signs in on a service provider
   In order to login on a service provider
   As a user
