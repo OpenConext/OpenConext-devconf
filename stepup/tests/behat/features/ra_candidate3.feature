@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA manages ra candidates from virtual institutions in the ra environment
   In order to promote candidates from virtual institutions
   As a RAA

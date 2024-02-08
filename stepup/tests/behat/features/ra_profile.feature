@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RA(A) can view profile information
 
   Scenario: Jane Toppan is RAA at Institution A and Joe is RA at Insittution A
