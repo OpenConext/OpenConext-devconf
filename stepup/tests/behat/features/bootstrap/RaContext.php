@@ -181,7 +181,6 @@ class RaContext implements Context
         $this->minkContext->visit($this->raUrl);
         $this->minkContext->fillField('ra_start_vetting_procedure_registrationCode', $registrationCode);
         $this->minkContext->pressButton('Search');
-
     }
 
     private function userProvesPosessionOfDemoGsspToken(string $secondFactorId)
@@ -445,7 +444,6 @@ class RaContext implements Context
         $this->minkContext->assertPageAddress('https://ra.dev.openconext.local/management/search-ra-candidate');
         $this->minkContext->fillField('ra_search_ra_candidates_name', $userName);
         $this->minkContext->pressButton('ra_search_ra_candidates_search');
-
         $page = $this->minkContext->getSession()->getPage();
 
         // There should be a td with the username in it, select that TR to press that button on.
