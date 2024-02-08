@@ -53,17 +53,17 @@ Feature: Use case C: Closely cooperating institutions
       And a user "RAA institution D" identified by "urn:collab:person:institution-d.example.com:joe-d-raa" from institution "institution-d.example.com"
       And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has a vetted "yubikey" with identifier "00000005"
       And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has the role "raa" for institution "institution-d.example.com"
-      And a user "Jane Jackson" identified by "urn:collab:person:institution-a.example.com:jane-a1" from institution "institution-a.example.com"
+      And a user "jane-a1" identified by "urn:collab:person:institution-a.example.com:jane-a1" from institution "institution-a.example.com"
       And the user "urn:collab:person:institution-a.example.com:jane-a1" has a vetted "yubikey" with identifier "00000006"
-      And a user "Joe Satriani" identified by "urn:collab:person:institution-d.example.com:joe-d1" from institution "institution-d.example.com"
+      And a user "joe-d1" identified by "urn:collab:person:institution-d.example.com:joe-d1" from institution "institution-d.example.com"
       And the user "urn:collab:person:institution-d.example.com:joe-d1" has a vetted "yubikey" with identifier "00000007"
 
   Scenario: The institution A RAA can promote identities from institution D
     Given I am logged in into the ra portal as "joe-a-raa" with a "yubikey" token
      When I visit the RA promotion page
-     Then I change the role of "Joe Satriani" to become "RA" for institution "institution-d.example.com"
+     Then I change the role of "joe-d1" to become "RA" for institution "institution-d.example.com"
 
   Scenario: The institution D RAA can promote identities from institution A
     Given I am logged in into the ra portal as "joe-d-raa" with a "yubikey" token
      When I visit the RA promotion page
-     Then I change the role of "Jane Jackson" to become "RA" for institution "institution-a.example.com"
+     Then I change the role of "jane-a1" to become "RA" for institution "institution-a.example.com"
