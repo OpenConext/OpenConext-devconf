@@ -6,26 +6,26 @@ Feature: A user manages his tokens in the SelfService portal
   Scenario: A user registers a SMS token in selfservice using RA vetting
     Given I am logged in into the selfservice portal as "joe-a1"
     When I register a new "SMS" token
-    And I verify my e-mail address
+    And I verify my e-mail address and choose the "RA vetting" vetting type
     And I vet my "SMS" second factor at the information desk
 
   Scenario: A user registers a Yubikey token in selfservice using RA vetting
     Given I am logged in into the selfservice portal as "joe-a2"
     When I register a new "Yubikey" token
-    And I verify my e-mail address
+    And I verify my e-mail address and choose the "RA vetting" vetting type
     And I vet my "Yubikey" second factor at the information desk
 
   Scenario: A user registers a Demo GSSP token in selfservice using RA vetting
     Given I am logged in into the selfservice portal as "joe-a3"
     When I register a new "Demo GSSP" token
-    And I verify my e-mail address
+    And I verify my e-mail address and choose the "RA vetting" vetting type
     And I vet my "Demo GSSP" second factor at the information desk
 
-  Scenario: A user registers a Demo GSSP token in selfservice using RA vetting
-    Given I am logged in into the selfservice portal as "joe-a3"
-    When I register a new "Demo GSSP" token
-    And I verify my e-mail address
-    And I vet my "Demo GSSP" second factor at the information desk
+  Scenario: A user registers a SMS token in selfservice using RA vetting without mail verification
+    Given I am logged in into the selfservice portal as "joe-b1"
+    When I register a new "Yubikey" token
+    And I choose the "RA vetting" vetting type
+    And I vet my "Yubikey" second factor at the information desk
 
   Scenario: After token registration, the token can be viewed on the token overview page
     Given I am logged in into the selfservice portal as "joe-a1"
