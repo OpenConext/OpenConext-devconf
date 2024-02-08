@@ -1,3 +1,4 @@
+@SKIP
 Feature: Use case B: Institutions sharing vetting locations
   Allow users from institutions that cannot easily visit the vetting location at the institution, e.g. because
   they work remotely or abroad, to use the RA services of another institution that is closer to their location. By

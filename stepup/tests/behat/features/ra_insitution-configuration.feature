@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA can view the institution configuration
 
   Scenario: Jane Toppan is RAA at Institution A

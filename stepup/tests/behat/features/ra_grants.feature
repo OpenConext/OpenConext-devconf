@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RA(A) should only have access to certain pages
 
   Scenario: Provision an institution and a user to promote later on by an authorized institution

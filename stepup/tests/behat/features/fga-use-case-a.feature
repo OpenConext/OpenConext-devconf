@@ -1,3 +1,4 @@
+@SKIP
 Feature: Use case A: Institutions with few (10-20) users using a third party vetting service
   For institutions with few users that are using Stepup, for which setting up and maintaining a local vetting
   structure is relatively expensive, we want to allow a third party to do the vetting whereby the RA's

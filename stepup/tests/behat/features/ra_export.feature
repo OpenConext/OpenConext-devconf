@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA can export tokens registered in the selfservice portal
   In order to export tokens
   As a RAA

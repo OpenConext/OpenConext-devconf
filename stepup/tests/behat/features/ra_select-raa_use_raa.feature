@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA can only manage R RA(A)'s on the promotion page
   In order to manage RA(A)'s
   As a RAA

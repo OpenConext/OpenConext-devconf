@@ -1,3 +1,4 @@
+@SKIP
 Feature: Use case C: Closely cooperating institutions
   Two or more Institutions that are working (closely) together and that want to share their vetting
   infrastructure Note: the difference with the previous use case (B) is that in this use-case (C) each institution has

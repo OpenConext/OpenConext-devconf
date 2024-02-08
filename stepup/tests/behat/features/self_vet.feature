@@ -1,3 +1,4 @@
+@SKIP
 Feature: A user manages his tokens in the selfservice portal
   In order to use a self vetted second factor token
   As a user

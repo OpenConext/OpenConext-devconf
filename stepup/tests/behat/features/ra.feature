@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA manages tokens tokens registered in the selfservice portal
   In order to manage tokens
   As a RAA

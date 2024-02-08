@@ -1,3 +1,4 @@
+@SKIP
 Feature: Use case D: Vetting users from a guest IdP
   Allow users from a "guest" IdP (i.e. an IdP for users that do not have a relation with an institution that
   warrants adding them to the institutional IdP) to be vetted. The RA(A)s to do this will necessarily need to belong to

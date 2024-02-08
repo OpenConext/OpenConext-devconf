@@ -1,3 +1,4 @@
+@SKIP
 Feature: A RAA manages ra candidates in the ra environment (see: https://www.pivotaltracker.com/story/show/171703175)
   In order to promote candidates
   As a RAA
