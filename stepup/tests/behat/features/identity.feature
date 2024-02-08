@@ -17,13 +17,13 @@ Feature: A (S)RA(A) user reads identities of StepUp users in the middleware API
 
   Scenario: The admin SRAA user reads identities with authorization context
     Given I authenticate with user "ra" and password "secret"
-    When I request "GET /identity?institution=institution-a.example.com&actorId=dc4cc738-5f1c-4d8c-84a2-d6faf8aded89&actorInstitution=dev.openconext.local"
+    When I request "GET /identity?institution=institution-a.example.com&actorId=e9ab38c3-84a8-47e6-b371-4da5c303669a&actorInstitution=dev.openconext.local"
     Then the api response status code should be 200
     And the "items" property should contain 3 items
 
   Scenario: The admin SRAA user reads identities with authorization context of a non existent institution
     Given I authenticate with user "ra" and password "secret"
-    When I request "GET /identity?institution=institution-x.example.com&actorId=dc4cc738-5f1c-4d8c-84a2-d6faf8aded89&actorInstitution=dev.openconext.local"
+    When I request "GET /identity?institution=institution-x.example.com&actorId=e9ab38c3-84a8-47e6-b371-4da5c303669a&actorInstitution=dev.openconext.local"
     Then the api response status code should be 200
     And the "items" property should be an empty array
 
