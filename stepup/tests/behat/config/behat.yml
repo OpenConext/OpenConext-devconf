@@ -6,6 +6,8 @@ default:
         paths: false
     suites:
         default:
+            filters:
+              tags: "~@wip&&~@skip"
             paths:
               - '%paths.base%/../features'
             contexts:

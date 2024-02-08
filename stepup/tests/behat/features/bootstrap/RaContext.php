@@ -49,29 +49,20 @@ class RaContext implements Context
     }
 
     /**
-     * @Given I vet my :tokenType second factor :vettingType
+     * @Given I vet my :tokenType second factor at the information desk
      */
-    public function iVetMySecondFactor(string $tokenType, string $vettingType)
+    public function iVetMySecondFactorAtTheInformationDesk(string $tokenType)
     {
-        switch ($vettingType) {
-            case "at the information desk":
-                // We visit the RA location url
-                $this->minkContext->visit($this->raUrl);
+        // We visit the RA location url
+        $this->minkContext->visit($this->raUrl);
+        $this->iAmLoggedInIntoTheRaPortalAs('admin', 'yubikey');
 
-                $this->iAmLoggedInIntoTheRaPortalAs('admin', 'yubikey');
-                $this->iVetASpecificSecondFactor(
-                    $tokenType,
-                    $this->selfServiceContext->getVerifiedSecondFactorId(),
-                    $this->selfServiceContext->getActivationCode()
-                );
-                break;
-            case "using self asserted token registration":
-                break;
-            default:
-                throw new Exception(sprintf('The %s vettingType type is not supported', $vettingType));
-        }
+        $this->iVetASpecificSecondFactor(
+            $tokenType,
+            $this->selfServiceContext->getVerifiedSecondFactorId(),
+            $this->selfServiceContext->getActivationCode()
+        );
     }
-
 
     /**
      * @Given /^I vet the last added second factor$/

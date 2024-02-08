@@ -106,12 +106,12 @@ class SelfServiceContext implements Context
                 $this->minkContext->getSession()
                     ->getPage()
                     ->find('css', '[href="/registration/sms/send-challenge"]')->click();
-
                 $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
                 // Start registration
-                $this->minkContext->assertPageContainsText('Send SMS code');
+                $this->minkContext->assertPageContainsText('Send code');
                 $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
                 $this->minkContext->pressButton('Send code');
+
                 // Now we should be on the prove possession page where we enter our OTP
                 $this->minkContext->assertPageAddress('/registration/sms/prove-possession');
                 $this->minkContext->assertPageContainsText('Enter SMS code');
@@ -141,10 +141,6 @@ class SelfServiceContext implements Context
             default:
                 throw new Exception(sprintf('The %s token type is not supported', $tokenType));
         }
-
-        ## And we should now be on the mail verification page
-        $this->minkContext->assertPageContainsText('Verify your e-mail');
-        $this->minkContext->assertPageContainsText('Check your inbox');
     }
 
     /**
@@ -225,35 +221,123 @@ class SelfServiceContext implements Context
     }
 
     /**
-     * @When I verify my e-mail address
+     * @When I verify my e-mail address and choose the :vettingType vetting type
      */
-    public function verifyEmailAddress()
+    public function verifyEmailAddress(string $vettingType)
     {
+        ## And we should now be on the mail verification page
+        $this->minkContext->assertPageContainsText('Verify your e-mail');
+        $this->minkContext->assertPageContainsText('Check your inbox');
+
         $this->minkContext->visit(
             $this->getEmailVerificationUrl()
         );
-        $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
-        $this->minkContext->printCurrentUrl();
-        $this->minkContext->assertPageContainsText('Thank you for registering your token.');
+        switch ($vettingType) {
+            case "RA vetting":
+                $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
+                $this->minkContext->assertPageContainsText('Thank you for registering your token.');
 
-        $page  = $this->minkContext->getSession()->getPage();
-        $activationCodeCell = $page->find('xpath', '//th[text()="Activation code"]/../td');
-        if (!$activationCodeCell) {
-            throw new Exception('Could not find a activation code table on the page');
+                $page  = $this->minkContext->getSession()->getPage();
+                $activationCodeCell = $page->find('xpath', '//th[text()="Activation code"]/../td');
+                if (!$activationCodeCell) {
+                    throw new Exception('Could not find a activation code table on the page');
+                }
+
+                $url  = $this->minkContext->getSession()->getCurrentUrl();
+                $matches = [];
+                preg_match('#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}#', $url, $matches);
+                if (empty($matches)) {
+                    throw new Exception('Could not find a valid second factor verification id in the url');
+                }
+                $this->activationCode = $activationCodeCell->getText();
+                $this->verifiedSecondFactorId = reset($matches);
+
+                if (!preg_match('#[A-Z0-9]{8}#', $this->activationCode)) {
+                    throw new Exception('Could not find a valid activation code');
+                }
+                break;
+            case "Self Asserted Token registration":
+                $this->iChooseToActivateMyTokenUsingSat();
+                break;
+            default:
+                throw new Exception(sprintf('Vetting type "%s" is not supported', $vettingType));
         }
+    }
 
-        $url  = $this->minkContext->getSession()->getCurrentUrl();
+    /**
+     * @When I choose the :vettingType vetting type
+     */
+    public function chooseVettingType(string $vettingType)
+    {
+        switch ($vettingType) {
+            case "RA vetting":
+                $this->iChooseToActivateMyTokenUsingServiceDeskVetting();
+                $this->minkContext->assertPageContainsText('Thank you for registering your token.');
+
+                $page  = $this->minkContext->getSession()->getPage();
+                $activationCodeCell = $page->find('xpath', '//th[text()="Activation code"]/../td');
+                if (!$activationCodeCell) {
+                    throw new Exception('Could not find a activation code table on the page');
+                }
+
+                $url  = $this->minkContext->getSession()->getCurrentUrl();
+                $matches = [];
+                preg_match('#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}#', $url, $matches);
+                if (empty($matches)) {
+                    throw new Exception('Could not find a valid second factor verification id in the url');
+                }
+                $this->activationCode = $activationCodeCell->getText();
+                $this->verifiedSecondFactorId = reset($matches);
+
+                if (!preg_match('#[A-Z0-9]{8}#', $this->activationCode)) {
+                    throw new Exception('Could not find a valid activation code');
+                }
+                break;
+            case "Self Asserted Token registration":
+                $this->iChooseToActivateMyTokenUsingSat();
+                break;
+            default:
+                throw new Exception(sprintf('Vetting type "%s" is not supported', $vettingType));
+        }
+    }
+
+    /**
+     * @Given I vet my :tokenType second factor in selfservice
+     */
+    public function iVetMySecondFactorInSelfService(string $tokenType)
+    {
+        $url = $this->minkContext->getSession()->getCurrentUrl();
         $matches = [];
         preg_match('#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}#', $url, $matches);
         if (empty($matches)) {
             throw new Exception('Could not find a valid second factor verification id in the url');
         }
-        $this->activationCode = $activationCodeCell->getText();
-        $this->verifiedSecondFactorId = reset($matches);
+        $secondFactorId = reset($matches);
+        $this->minkContext->assertPageAddress(sprintf('/second-factor/%s/new-recovery-token', $secondFactorId));
 
-        if (!preg_match('#[A-Z0-9]{8}#', $this->activationCode)) {
-            throw new Exception('Could not find a valid activation code');
+        $page = $this->minkContext->getSession()->getPage();
+        $form = $page->find('css', 'form[name="safe-store"]');
+        $form->submit();
+        // Todo store the safe store password for later use?
+
+        $this->minkContext->assertPageAddress(sprintf('/second-factor/%s/safe-store', $secondFactorId));
+        // Promise we safely stored the secret
+        $this->minkContext->checkOption('ss_promise_recovery_token_possession_promisedPossession');
+        preg_match('#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}#', $url, $matches);
+        if (empty($matches)) {
+            throw new Exception('Could not find a valid second factor verification id in the url');
         }
+        // Update the SF id, it now refers to the vetted second factor id
+        $secondFactorId = reset($matches);
+        $this->minkContext->pressButton('Continue');
+        // We are back on the overview page. The revoke button is on the page (indicating the token was vetted)
+        $this->minkContext->assertPageAddress('/overview');
+        echo $secondFactorId;
+        $this->minkContext->assertResponseContains(sprintf('/second-factor/vetted/%s/revoke', $secondFactorId));
+        // The recovery token should also be present
+        $this->minkContext->assertPageContainsText('Recovery methods');
+        $this->minkContext->assertPageContainsText('Recovery code');
+        $this->minkContext->assertResponseContains('/recovery-token/delete/');
     }
 
     public function iChooseToActivateMyTokenUsingServiceDeskVetting()
@@ -261,7 +345,108 @@ class SelfServiceContext implements Context
         $this->minkContext->assertPageContainsText('Activate your token');
         $this->minkContext->pressButton('ra-vetting-button');
     }
+    public function iChooseToActivateMyTokenUsingSAT()
+    {
+        $this->minkContext->assertPageContainsText('Activate your token yourself');
+        $this->minkContext->pressButton('sat-button');
+    }
 
+    /**
+     * @Then I can add an :recoveryTokenType recovery token using :tokenType
+     */
+    public function iCanAddAnRecoveryToken(string $recoveryTokenType, string $tokenType)
+    {
+        $this->minkContext->assertPageContainsText('Add recovery method');
+        $this->minkContext->clickLink('Add recovery method');
+        switch ($recoveryTokenType){
+            case 'SMS':
+                $this->minkContext->assertPageContainsText('You\'ll receive a text message with a verification code');
+                $page = $this->minkContext->getSession()->getPage();
+                $form = $page->find('css', 'form[name="sms"]');
+                $form->submit();
+                $this->provePossession($tokenType);
+                // Now you need to register your SMS recovery token
+                $this->minkContext->assertPageContainsText('Register an SMS recovery token');
+                $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '615056898');
+                $this->minkContext->pressButton('Send code');
+
+                $this->minkContext->assertPageAddress('/recovery-token/prove-sms-possession');
+                $this->minkContext->assertPageContainsText('Enter the code that was sent to your phone');
+                $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '123456');
+                $this->minkContext->pressButton('Verify');
+                break;
+            default:
+                throw new Exception(sprintf('Recovery token type %s is not supported', $recoveryTokenType));
+        }
+    }
+
+    private function provePossession(string $tokenType)
+    {
+        switch ($tokenType) {
+            case "Demo GSSP":
+                // We first need to prove we are in possession of our 2nd factor
+                $this->minkContext->pressButton('Yes, continue');
+                // Press the Authenticate button on the Demo authentication page
+                $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
+                $this->minkContext->pressButton('button_authenticate');
+                // Pass through the Demo Gssp redirection page.
+                $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/saml/sso_return');
+                $this->minkContext->pressButton('Submit');
+                // Pass through the 'return to sp' redirection page.
+                $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/gssp/demo_gssp/consume-assertion');
+                $this->minkContext->pressButton('Submit');
+
+                break;
+            case "Yubikey":
+                $this->minkContext->pressButton('Yes, continue');
+                $this->performYubikeyAuthentication();
+                break;
+
+            default:
+                throw new Exception(sprintf('Prove possession is not yet supported for token type %s', $tokenType));
+        }
+    }
+
+    /**
+     * @Then I can not add a :recoveryTokenType recovery token
+     */
+    public function iCanNotAddARecoveryToken($recoveryTokenType)
+    {
+        $this->minkContext->visit('/overview');
+        $this->minkContext->assertPageNotContainsText('Add recovery method');
+    }
+
+    /**
+     * @Then :nofRecoveryTokens recovery tokens are activated
+     */
+    public function numberOfTokensRegistered(int $nofRecoveryTokens)
+    {
+        $page = $this->minkContext->getMink()->getSession()->getPage();
+        $tokenTypes = $page->findAll('css', 'tr[data-test_tokentype]');
+
+        if (empty($tokenTypes)) {
+            throw new Exception('No active recovery tokens found on the page');
+        }
+
+        if (count($tokenTypes) != $nofRecoveryTokens) {
+            throw new Exception(
+                sprintf(
+                    'Excpected to find %d recovery tokens on the page, actually found %d tokens',
+                    $nofRecoveryTokens,
+                    count($tokenTypes)
+                )
+            );
+        }
+    }
+
+    private function performYubikeyAuthentication()
+    {
+        $this->minkContext->fillField('gateway_verify_yubikey_otp_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
+        $page = $this->minkContext->getSession()->getPage();
+        $form = $page->find('css', 'form[name="gateway_verify_yubikey_otp"]');
+        $form->submit();
+        $this->minkContext->pressButton('Submit');
+    }
 
     /**
      * @Given /^I visit the "([^"]*)" page in the selfservice portal$/
