@@ -495,7 +495,6 @@ class RaContext implements Context
     public function iRelieveOfHisRole($userName, $institution, $role)
     {
         $page = $this->minkContext->getSession()->getPage();
-
         // There should be a td with the username in it, select that TR to press that button on.
         $searchResult = $page->findAll('xpath', sprintf("//tr[./td[contains(.,'%s')]]", $userName));
 
