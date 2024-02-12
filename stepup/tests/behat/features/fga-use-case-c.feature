@@ -1,4 +1,3 @@
-@SKIP
 Feature: Use case C: Closely cooperating institutions
   Two or more Institutions that are working (closely) together and that want to share their vetting
   infrastructure Note: the difference with the previous use case (B) is that in this use-case (C) each institution has
@@ -25,7 +24,12 @@ Feature: Use case C: Closely cooperating institutions
                     "institution-d.example.com"
                 ],
                 "use_raa": [
-                    "institution-a.example.com"
+                    "institution-a.example.com",
+                    "institution-d.example.com"
+                ],
+                "use_ra": [
+                    "institution-a.example.com",
+                    "institution-d.example.com"
                 ]
             },
             "institution-d.example.com": {
@@ -40,17 +44,22 @@ Feature: Use case C: Closely cooperating institutions
                     "institution-d.example.com"
                 ],
                 "use_raa": [
-                    "institution-d.example.com"
+                    "institution-d.example.com",
+                    "institution-a.example.com"
+                ],
+                "use_ra": [
+                    "institution-d.example.com",
+                    "institution-a.example.com"
                 ]
             }
         }
         """
       And I authenticate to the Middleware API
       And I request "POST /management/institution-configuration"
-      And a user "RAA institution A" identified by "urn:collab:person:institution-a.example.com:joe-a-raa" from institution "institution-a.example.com"
+      And a user "joe-a-raa" identified by "urn:collab:person:institution-a.example.com:joe-a-raa" from institution "institution-a.example.com"
       And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has a vetted "yubikey" with identifier "00000004"
       And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has the role "raa" for institution "institution-a.example.com"
-      And a user "RAA institution D" identified by "urn:collab:person:institution-d.example.com:joe-d-raa" from institution "institution-d.example.com"
+      And a user "joe-d-raa" identified by "urn:collab:person:institution-d.example.com:joe-d-raa" from institution "institution-d.example.com"
       And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has a vetted "yubikey" with identifier "00000005"
       And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has the role "raa" for institution "institution-d.example.com"
       And a user "jane-a1" identified by "urn:collab:person:institution-a.example.com:jane-a1" from institution "institution-a.example.com"
