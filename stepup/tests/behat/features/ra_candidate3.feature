@@ -1,4 +1,3 @@
-@SKIP
 Feature: A RAA manages ra candidates from virtual institutions in the ra environment
   In order to promote candidates from virtual institutions
   As a RAA
@@ -12,13 +11,13 @@ Feature: A RAA manages ra candidates from virtual institutions in the ra environ
       And institution "institution-d.example.com" can "select_raa" from institution "institution-a.example.com"
 
     And a user "joe-a-raa institution-a" identified by "urn:collab:person:institution-a.example.com:joe-a-raa" from institution "institution-a.example.com" with UUID "00000000-0000-4000-8000-000000000010"
-      And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has a vetted "yubikey"
+      And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has a vetted "yubikey" identified by "00000004"
 
   Scenario: RAA from institution a should see "joe-a-raa" as an RA(A) candidate from "institution-d"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
       And I visit the "management/create-ra/00000000-0000-4000-8000-000000000010" page in the RA environment
     Then the "#ra_management_create_ra_roleAtInstitution_institution" element should contain "institution-a.example.com"
-      And the "#ra_management_create_ra_roleAtInstitution_institution" element should contain "institution-d.example.com"
+      And the "#ra_management_create_ra_roleAtInstitution_institution" element should contain "institution-b.example.com"
 
   Scenario: SRAA user promotes "joe-a-raa" to be a RA for "institution-d"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -29,7 +28,7 @@ Feature: A RAA manages ra candidates from virtual institutions in the ra environ
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
     And I visit the "management/create-ra/00000000-0000-4000-8000-000000000010" page in the RA environment
     Then the "#ra_management_create_ra_roleAtInstitution_institution" element should contain "institution-a.example.com"
-    And the "#ra_management_create_ra_roleAtInstitution_institution" element should not contain "institution-d.example.com"
+    And the "#ra_management_create_ra_roleAtInstitution_institution" element should not contain "institution-c.example.com"
 
   Scenario: SRAA user demotes "joe-a-raa" from a RA of "institution-d"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
