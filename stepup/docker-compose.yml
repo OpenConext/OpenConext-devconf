@@ -26,6 +26,8 @@ services:
     image: mariadb:10.6
     environment:
       MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - 3306:3306
     networks:
       openconextdev:
     volumes:
