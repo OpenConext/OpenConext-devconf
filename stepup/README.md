@@ -74,6 +74,16 @@ To mount the code in multiple containers:
 You can add as many services+local code paths that you need.
 The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
 
+# Accessing the database from your IDE
+The Maria DB container exposes her 3306 port to the outside. So you should be able to connect to the database with 
+your favorite DBA tool. In PHPStorm I was able to connect to the `mariadb` host by using these setting.
+
+```
+host: localhost
+user: root
+password: you know the secret ;)
+```
+
 # PHP 8.2 for development
 The default development container is based on the base image with PHP7.2. You can override this on a per service basis. Uncomment the appropiate line for this in the file ".env" so it uses the PHP8.2 container. An .env.dist is included that you can use to have your own .env. file. .env is in .gitigore so you can make your own changes.
 
