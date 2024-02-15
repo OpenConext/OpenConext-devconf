@@ -20,10 +20,10 @@ Feature: A RAA can export tokens registered in the selfservice portal
       And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has the role "ra" for institution "institution-a.example.com"
       And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has the role "raa" for institution "institution-b.example.com"
 
-#  TODO: Scenario: an RA user can not export tokens
-#    Given I am logged in into the ra portal as "user-a-ra" with a "yubikey" token
-#    When I visit the Tokens page
-#    Then I should not see a token export button
+  Scenario: an RA user can not export tokens
+    Given I am logged in into the ra portal as "user-a-ra" with a "yubikey" token
+    When I visit the Tokens page
+    Then I should not see a token export button
 
   Scenario: an RAA user can export tokens
    Given I am logged in into the ra portal as "jane-a-raa" with a "yubikey" token
