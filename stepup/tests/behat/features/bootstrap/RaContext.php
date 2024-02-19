@@ -145,6 +145,9 @@ class RaContext implements Context
             case "yubikey":
                 $this->authContext->verifyYuikeySecondFactor();
                 break;
+            case "demo-gssp":
+                $this->authContext->verifyGsspSecondFactor();
+                break;
             default:
                 throw new Exception(
                     sprintf(

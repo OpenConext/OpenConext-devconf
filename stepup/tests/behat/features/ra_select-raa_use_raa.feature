@@ -1,4 +1,3 @@
-@SKIP
 Feature: A RAA can only manage R RA(A)'s on the promotion page
   In order to manage RA(A)'s
   As a RAA
@@ -6,18 +5,15 @@ Feature: A RAA can only manage R RA(A)'s on the promotion page
 
   Scenario: Provision an institution and a user to promote later on by an authorized institution without "institution-d" having "select_raa" rights from "instituition-d"
     Given a user "joe-a-raa" identified by "urn:collab:person:institution-a.example.com:joe-a-raa" from institution "institution-a.example.com" with UUID "00000000-0000-4000-a000-000000000001"
-    And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has a vetted "yubikey" with identifier "00000004"
-    Given a user "jane-d-user" identified by "urn:collab:person:institution-d.example.com:jane-d-user" from institution "institution-d.example.com" with UUID "00000000-0000-4000-a000-000000000002"
-    And the user "urn:collab:person:institution-d.example.com:jane-d-user" has a vetted "yubikey" with identifier "00000005"
-
+    And the user "urn:collab:person:institution-a.example.com:joe-a-raa" has a vetted "yubikey" with identifier "00000010"
+    And a user "jane-d-user" identified by "urn:collab:person:institution-d.example.com:jane-d-user" from institution "institution-d.example.com" with UUID "00000000-0000-4000-a000-000000000002"
+    And the user "urn:collab:person:institution-d.example.com:jane-d-user" has a vetted "yubikey" with identifier "183928174"
     And institution "institution-a.example.com" can "use_raa" from institution "institution-a.example.com"
     And institution "institution-a.example.com" can "use_raa" from institution "institution-d.example.com"
     And institution "institution-a.example.com" can "select_raa" from institution "institution-a.example.com"
     And institution "institution-a.example.com" can "select_raa" from institution "institution-d.example.com"
-
     And institution "institution-d.example.com" can "use_raa" from institution "institution-a.example.com"
     And institution "institution-d.example.com" can "use_raa" from institution "institution-d.example.com"
-#    And institution "institution-d.example.com" can "select_raa" from institution "institution-d.example.com"
     And institution "institution-d.example.com" can "select_raa" from institution "institution-a.example.com"
 
   Scenario: SRAA user promotes "joe-a-raa" to be an RAA

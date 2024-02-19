@@ -157,6 +157,11 @@ class SecondFactorAuthContext implements Context
         $this->authenticateUserYubikeyInGateway();
     }
 
+    public function verifyGsspSecondFactor()
+    {
+        $this->authenticateUserGsspInGateway();
+    }
+
     /**
      * @When I cancel the :arg1 second factor authentication
      */
@@ -225,14 +230,13 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->pressButton('Submit');
     }
 
-    private function debugOut($arg = null)
+    public function authenticateUserGsspInGateway()
     {
-        if ($arg !== null) {
-            var_dump($arg);
-        }
-        echo $this->minkContext->getSession()->getCurrentUrl();
-        echo PHP_EOL . PHP_EOL;
-        die($this->minkContext->getSession()->getPage()->getHtml());
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
+        $this->minkContext->pressButton('button_authenticate');
+        // Pass through the 'return to sp' redirection page.
+        $this->minkContext->pressButton('Submit');
+        $this->minkContext->pressButton('Submit');
     }
 
     public function authenticateUserSmsInGateway(string $challenge)
