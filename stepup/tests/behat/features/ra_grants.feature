@@ -1,4 +1,3 @@
-@SKIP
 Feature: A RA(A) should only have access to certain pages
 
   Scenario: Provision an institution and a user to promote later on by an authorized institution
@@ -12,14 +11,13 @@ Feature: A RA(A) should only have access to certain pages
     And a user "RAA institution B" identified by "urn:collab:person:dev.openconext.local:joe--raa" from institution "dev.openconext.local" with UUID "00000000-0000-4000-a000-000000000002"
     And a user "RAA institution D" identified by "urn:collab:person:institution-d.example.com:joe-d-raa" from institution "institution-d.example.com" with UUID "00000000-0000-4000-a000-000000000003"
     And a user "RA(A) candidate" identified by "urn:collab:person:institution-d.example.com:joe--candidate" from institution "dev.openconext.local" with UUID "00000000-0000-4000-a000-000000000004"
-    And the user "urn:collab:person:dev.openconext.local:joe--ra" has a vetted "yubikey"
-    And the user "urn:collab:person:dev.openconext.local:joe--raa" has a vetted "yubikey"
-    And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has a vetted "yubikey"
-    And the user "urn:collab:person:institution-d.example.com:joe--candidate" has a vetted "yubikey"
+    And the user "urn:collab:person:dev.openconext.local:joe--ra" has a vetted "yubikey" with identifier "00000001"
+    And the user "urn:collab:person:dev.openconext.local:joe--raa" has a vetted "yubikey" with identifier "00000002"
+    And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has a vetted "yubikey" with identifier "00000003"
+    And the user "urn:collab:person:institution-d.example.com:joe--candidate" has a vetted "yubikey" with identifier "00000004"
     And the user "urn:collab:person:dev.openconext.local:joe--ra" has the role "ra" for institution "dev.openconext.local"
     And the user "urn:collab:person:dev.openconext.local:joe--raa" has the role "raa" for institution "dev.openconext.local"
     And the user "urn:collab:person:institution-d.example.com:joe-d-raa" has the role "raa" for institution "institution-d.example.com"
-
 
   # Token page
   Scenario: An anonymous user can not view the tokens page
