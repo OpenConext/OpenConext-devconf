@@ -1,4 +1,3 @@
-@SKIP
 Feature: A RAA can view the institution configuration
 
   Scenario: Jane Toppan is RAA at Institution A
@@ -27,7 +26,7 @@ Feature: A RAA can view the institution configuration
     And I authenticate to the Middleware API
     And I request "POST /management/institution-configuration"
     And a user "Jane Toppan" identified by "urn:collab:person:institution-a.example.com:jane-a-raa" from institution "institution-a.example.com" with UUID "00000000-0000-4000-8000-000000000001"
-    And the user "urn:collab:person:institution-a.example.com:jane-a-raa" has a vetted "yubikey"
+    And the user "urn:collab:person:institution-a.example.com:jane-a-raa" has a vetted "yubikey" with identifier "00000001"
     And the user "urn:collab:person:institution-a.example.com:jane-a-raa" has the role "raa" for institution "institution-a.example.com"
 
   Scenario: A user sees the locations of institutions it's RAA for
