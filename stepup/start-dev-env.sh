@@ -16,6 +16,15 @@ number_of_dev_envs=0
 for arg in "$@"; do
 	app=$(echo $arg | cut -d ':' -f 1)
 	path=$(echo $arg | cut -d ':' -f 2)
+	# Test if the specified path(s) exist. If they do not, halt the script and warn
+	# the user of this mistake
+	if [ ! -d ${path} ]; then
+	  # Not going to start the env, so clear the env listing
+	  rm .start-dev-env-listing
+    echo  -e "The specified path for app '${app}' is not a directory. \n";
+    echo  -e "Please review: '${path}'";
+    exit 1;
+  fi
 	echo "export ${app^^}_CODE_PATH=${path}" >>.start-dev-env-vars
 	# Keep a listing of all apps that are started in dev mode, for feedback purposes
 	echo "${app^^}: ${path}" >>.start-dev-env-listing
@@ -39,17 +48,16 @@ rm .start-dev-env-listing
 echo -e "Starting the dev environment with the following command:\n"
 
 while true; do
-    read -p "Do you wish to run Docker compose in the foreground? " yn
+    read -p "Do you wish to run Docker compose in the foreground? (press ENTER for Yes) " yn
     case $yn in
-        [Yy]* )
-          echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
-          docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
-          break;;
         [Nn]* )
           echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
                     docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
           break;;
-        * ) echo "Please answer yes or no.";;
+        * )
+          echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
+          docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
+          break;;
     esac
 done
 
