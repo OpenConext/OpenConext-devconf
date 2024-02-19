@@ -102,6 +102,38 @@ class CommandPayloadFactory
                     $token->identifier
                 );
 
+            case "Identity:ProveGssfPossession":
+
+                /** @var SecondFactorToken $token */
+                $token = $context->tokens[0];
+
+                $payload = '{
+                    "meta": {
+                        "actor_id": "%s",
+                        "actor_institution": "%s"
+                    },
+                    "command": {
+                        "name":"Identity:ProveGssfPossession",
+                        "uuid":"%s",
+                        "payload": {
+                            "identity_id": "%s",
+                            "second_factor_id": "%s",
+                            "stepup_provider": "demo_gssp",
+                            "gssf_id": "%s"
+                        }
+                    }
+                }';
+
+                return sprintf(
+                    $payload,
+                    $context->identityId,
+                    $context->institution,
+                    (string)Uuid::uuid4(),
+                    $context->identityId,
+                    $token->tokenId,
+                    $token->identifier
+                );
+
             case "Identity:VerifyEmail":
                 /** @var SecondFactorToken $token */
                 $token = $context->tokens[0];

@@ -182,6 +182,10 @@ class FeatureContext implements Context
                 // 1: Prove possession of the token
                 $this->proveSmsPosession($identityData);
                 break;
+            case "demo-gssp":
+                // 1: Prove possession of the token
+                $this->proveGsspPossession($identityData);
+                break;
             default:
                 throw new InvalidArgumentException("This token type is not yet supported");
                 break;
@@ -198,8 +202,12 @@ class FeatureContext implements Context
                 // 3 Vet the yubikey
                 $this->vetSmsToken($identityData);
                 break;
+            case "demo-gssp":
+                // 3 Vet the demogssp token
+                $this->vetGsspToken($identityData);
+                break;
             default:
-                throw new InvalidArgumentException("This token type is not yet supported");
+                throw new InvalidArgumentException("This token type is not yet supported for vetting");
                 break;
         }
 
@@ -286,6 +294,15 @@ class FeatureContext implements Context
         $this->apiContext->iRequest('POST', '/command');
     }
 
+    private function proveGsspPossession($identityData)
+    {
+        // 1.1 prove possession of a yubikey token
+        $payload = $this->payloadFactory->build('Identity:ProveGssfPossession', $identityData);
+        $this->setPayload($payload);
+        $this->connectToApi('ss', 'secret');
+        $this->apiContext->iRequest('POST', '/command');
+    }
+
     private function proveSmsPosession($identityData)
     {
         // 1.1 prove possession of a yubikey token
@@ -328,6 +345,23 @@ class FeatureContext implements Context
     }
 
     private function vetSmsToken($identityData)
+    {
+        // 3.1. Retrieve the registration code
+        $activationContext = new ActivationContext();
+        $activationContext->registrationCode = $this->repository->getRegistrationCodeByIdentity($identityData->identityId);
+        // TODO: Improve this. At this moment this is the hardcoded actor Id (identity_id) of the admin
+        $activationContext->actorId = 'e9ab38c3-84a8-47e6-b371-4da5c303669a';
+
+        // 3.2  Vet the second factor device
+        $identityData->activationContext = $activationContext;
+        $payload = $this->payloadFactory->build('Identity:VetSecondFactor', $identityData);
+
+        $this->setPayload($payload);
+        $this->connectToApi('ra', 'secret');
+        $this->apiContext->iRequest('POST', '/command');
+    }
+
+    private function vetGsspToken($identityData)
     {
         // 3.1. Retrieve the registration code
         $activationContext = new ActivationContext();
