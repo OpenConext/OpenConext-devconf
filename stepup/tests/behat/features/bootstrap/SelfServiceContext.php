@@ -382,6 +382,7 @@ class SelfServiceContext implements Context
                 $form->submit();
                 $this->provePossession($tokenType);
                 // Now you need to register your SMS recovery token
+
                 $this->minkContext->assertPageContainsText('Register an SMS recovery token');
                 $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '615056898');
                 $this->minkContext->pressButton('Send code');
