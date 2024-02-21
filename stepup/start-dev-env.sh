@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 # source .env so that we know when to start in test mode
+GREEN="\e[1;32m"
+ENDCOLOR="\e[0m"
+MODE="dev"
+
 source .env
 if [ "${STEPUP_VERSION}" == "test" ]; then
 	extra_compose_args="-f docker-compose-behat.yml"
-	echo "starting in test mode"
+	MODE="test"
+	echo -e "${GREEN}Starting in test mode${ENDCOLOR}"
 else
 	extra_compose_args=""
 fi
@@ -34,27 +39,36 @@ done
 
 # Because numbering is off by one, reference the next arg
 let number_of_dev_envs=number_of_dev_envs+1
-# Read the generated env file with the apps and their code paths
-source .start-dev-env-vars
-rm .start-dev-env-vars
-# Use docker compose to start the environment but with the modified override file(s)
 
-echo -e "Dev overrides:\n"
-cat .start-dev-env-listing
+# See if there are .start-dev-env-vars
+if [ -f .start-dev-env-vars ]; then
+  # Read the generated env file with the apps and their code paths
+  source .start-dev-env-vars
+  rm .start-dev-env-vars
+fi
 
-# Remove the listing
-rm .start-dev-env-listing
+if [ -f .start-dev-env-listing ]; then
+  echo -e "${MODE} overrides:\n"
+  cat .start-dev-env-listing
+  # Remove the listing
+  rm .start-dev-env-listing
+fi
 
-echo -e "Starting the dev environment with the following command:\n"
 
 while true; do
-    read -p "Do you wish to run Docker compose in the foreground? (press ENTER for Yes) " yn
+    read -p "Do you wish to run Docker compose in the foreground? (press ENTER for Yes)" yn
     case $yn in
         [Nn]* )
+          # Use docker compose to start the environment but with the modified override file(s)
+          echo -e "\nStarting the ${MODE} environment with the following command:\n"
+
           echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
                     docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
           break;;
         * )
+          # Use docker compose to start the environment but with the modified override file(s)
+          echo -e "Starting the ${MODE} environment with the following command:\n"
+
           echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
           docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
           break;;
