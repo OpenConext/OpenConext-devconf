@@ -87,3 +87,57 @@ password: you know the secret ;)
 # PHP 8.2 for development
 The default development container is based on the base image with PHP7.2. You can override this on a per service basis. Uncomment the appropiate line for this in the file ".env" so it uses the PHP8.2 container. An .env.dist is included that you can use to have your own .env. file. .env is in .gitigore so you can make your own changes.
 
+# Functional testing
+The stepup application suite comes with a set of Behat (Gherkin) features. These features test the stepup applications
+functionally. These tests range from simple smoketests (can we still vet a token), to more bug report driven 
+functional tests. And everything in between.
+
+These tests live in this folder: `stepup/tests/behat/features`
+
+Custom Contexts where created to perform Stepup specific actions. Some details about these contexts can be read about below.
+
+## Running the tests
+1. The tests are automatically triggered on GitHub Actions when building a Pull Request. The action is named: [`stepup-behat`](https://github.com/OpenConext/OpenConext-devconf/actions/workflows/stepup-behat.yml)
+2. Run them manually.
+
+Step two can be achieved by following these actions.
+
+1: You must instruct the `devconf` environment that you want to run functional tests.
+1. Option 1: Copy the `.env.test` to be the `.env`
+2. Option 2: Add these two lines to your existing `.env` file
+
+```shell
+APP_ENV=smoketest
+STEPUP_VERSION=test
+```
+
+2: Next you should start the devconf containers in test mode
+1. `$ ./start-dev-env.sh` will start the environment using test images for every component.
+2. `$ ./start-dev-env.sh selfservice:/path/to/SelfService` to start certain components with local code mounted (useful during development)
+3. Choose if you want to run the containers in the back- or foreground.
+
+3: Once the containers are up and running, you can run the behat tests
+1. Open a shell in the `behat` container `$ docker exec -it stepup-behat-1 bash`
+2. Run the tests:
+   1. `./behat` will run all available behat tests that are not excluded using the `@SKIP` tag
+   2. `./behat features/ra.feature` will only run the `ra.feature` found in the features folder
+   3. `./behat features/ra.feature:20` will only run the scenario found on line 20 of the `ra.feature`
+   4. TODO: `./behat --filter=selfservice` will only run features marked with the `@selfservice` tag
+
+## Writing tests
+Many of the step definitions are coded in our own Contexts. These contexts are divided into five main contexts.
+It should be straightforward where to add new definitions. The contexts are not following all the clean code or solid principles. This code is messy, be warned. 
+
+It can be useful during debugging to use the `$this->diePrintingContent();` statement. This outputs the URI of the browser, and the last received html response. As it is hard to step debug the code that is run in a CURL based browser.
+
+TODO: Mark your tests with at least one of the pre-defined tags:
+
+`selfservice`
+`ra`
+`gateway`
+`middleware`
+`tiqr`
+`demogssp`
+`webauthn`
+
+Note that these tags match the `devconf` names given to the different components.
