@@ -1,0 +1,97 @@
+cookie:
+  secure: true
+  # Options are 'Strict', 'Lax' or 'None'
+  same_site: None
+
+base_domain: dev.openconext.local
+environment: DEV
+
+server:
+  # The port to where this Spring Boot application listens to.
+  port: 8080
+  error:
+    path: "/error"
+  server-header:
+  servlet:
+    # We serve from the root. Do not change this
+    context-path:
+    session:
+      timeout: 28800
+      cookie:
+        secure: true
+
+features: push, push_preview, validation, orphans, find_my_data
+
+push:
+  eb:
+    url: https://engine-api.dev.openconext.local/api/connections
+    user: manage
+    password: secret
+    name: OpenConext DEV EngineBlock
+    exclude_edugain_imports: true
+    exclude_oidc_rp: false
+  oidc:
+    url: https://connect.dev.openconext.local/manage/connections
+    user: manage
+    name: manage
+    password: secret
+    enabled: true
+
+product:
+  name: Manage
+  organization: OpenConext DEV
+  service_provider_feed_url: http://mds.edugain.org/edugain-v2.xml
+  supported_languages: en,nl
+  show_oidc_rp: true
+
+metadata_configuration_path: file:///config/metadata_configuration/
+metadata_templates_path: file:///config/metadata_templates/
+
+security:
+  backdoor_user_name: backdoor_api_user
+  backdoor_password: secret
+  api_users_config_path: file:///config/manage-api-users.yml
+  super_user_team_names: urn:collab:group:dev.openconext.local:nl:openconext:admins
+
+crypto:
+  development-mode: True
+
+spring:
+  mail:
+    host: mailcatcher
+    port: 25
+  data:
+    mongodb:
+      uri: mongodb://managerw:secret@mongo:27017/manage?ssl=false
+  main:
+    banner-mode: "off"
+
+gui:
+  disclaimer:
+    background-color: red
+    content: DEV
+
+metadata_import:
+  auto_refresh:
+    cronSchedule: "* 28 7 * * *"
+
+# Is this node in a load-balanced topology responsible for cleaning up resources
+cron:
+  node-cron-job-responsible: True
+
+# We disable all endpoints except health for the load-balancer and info for git information.
+management:
+  health:
+    mail:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+      base-path: "/internal"
+  endpoint:
+    info:
+      enabled: true
+  info:
+    git:
+      mode: full

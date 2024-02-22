@@ -1,0 +1,26 @@
+{
+  "version": 0,
+  "type": "oidc10_rp",
+  "data": {
+    "entityid": "teams.dev.openconext.local",
+    "state": "prodaccepted",
+    "allowedall": false,
+    "arp": {
+      "enabled": true,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "name:en": "Teams Client Credential Client",
+      "name:nl": "Teams Client Credential Client",
+      "description:en": "Teams uses access tokens to connect to voot",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "grants": [
+        "client_credentials"
+      ]
+    },
+    "allowedEntities": [],
+    "allowedResourceServers": [],
+    "revisionnote": "Initial import"
+  }
+}

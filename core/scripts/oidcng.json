@@ -1,0 +1,30 @@
+{
+  "version": 0,
+  "type": "saml20_sp",
+  "data": {
+    "entityid": "https://connect.dev.openconext.local",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": false,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "name:en": "OIDCNG gateway OpenConext DEV",
+      "name:nl": "OIDCNG gateway OpenConext DEV",
+      "description:en": "OIDCNG gateway OpenConext DEV",
+      "OrganizationName:en": "OpenConext DEV",
+      "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+      "AssertionConsumerService:0:Location": "https://connect.dev.openconext.local/Shibboleth.sso/SAML2/POST",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "coin:trusted_proxy": true,
+      "redirect.sign": true,
+      "certData": "MIIDkTCCAnmgAwIBAgIUWvP6OyVV05rmIWH9u/bPmV5y3FYwDQYJKoZIhvcNAQELBQAwcTELMAkGA1UEBhMCTkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxGzAZBgNVBAoMEk9wZW5Db25leHQgREVWIGVudjEhMB8GA1UEAwwYb2lkY25nIHNhbWwgc2lnbmluZyBjZXJ0MB4XDTI0MDIwNTE2MDIxN1oXDTM0MDIwMjE2MDIxN1owcTELMAkGA1UEBhMCTkwxEDAOBgNVBAgMB1V0cmVjaHQxEDAOBgNVBAcMB1V0cmVjaHQxGzAZBgNVBAoMEk9wZW5Db25leHQgREVWIGVudjEhMB8GA1UEAwwYb2lkY25nIHNhbWwgc2lnbmluZyBjZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm6umJaYgIL++n+q7YJV6pTdN13d7rjnFcOXplcxB3iQFQ0YB17bBWF/VSZgzo90N6qexybsvNlV7OjCm2yxCSYYGRrdqKifMUeYoMXi4Gizlh0NYmsTwmqoZni123t7gEQhn+TPHtjngc+NXPSxRm/aFdjY9c+b9/WhijsUxU2jBwf3vapuWcArcxya2hCWjqJz0CuIqGh2cnsaBGU9qv3EHcWLDE8vTefJnG/EaeZ16C/INc2GmE997aXOAKbAdySTbsVXvgYbbcEQqSHyDKbQ+DCMeqLMwprwANrgw20yK2pfh/c1ZyFztFIk8E/HxynhAS4+40BUQLyvuRxhV2wIDAQABoyEwHzAdBgNVHQ4EFgQUfQjWL9Hcp5w1bcWQBjt8JZhcyiwwDQYJKoZIhvcNAQELBQADggEBAEXlLXTwaa4Nf+XDgLWl6CSgLHkeXVl9Bqbz9KGo+9337p/qhj7F8ARBG5kwcUTBEacq5zU30Dr1Wi+elA66z5VYequACftt9XgZqGMDc3bdr+H+kTFStSsG+lsRnfUxU20MywFotnVmEpumPH2CMcZPiqAUHr4NE+4h4AsWMYWkAKJwKcIAs6APwLD1ufTE/7EWckpiimblMoPwZsoOLcP1CezI+jtlOYi3WQe3QuAOEG6b+tdC86cPrZCqYsbOjkCxQIymesyoOxv6shy5zgpYikGNN24stgXabhwfwyJQ9tDlef6j6UCPU1ZSbysbZHhhCuVgel6dvWfBo6CLs8s=",
+      "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+    },
+    "allowedEntities": [],
+    "metadataurl": "https://connect.dev.openconext.local/metadata",
+    "type": "saml20-sp",
+    "revisionnote": "Initial import"
+  }
+}

@@ -1,0 +1,197 @@
+version: "3.8"
+
+services:
+  haproxy:
+    image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      coreconextdev:
+        aliases:
+          - engine.dev.openconext.local
+          - engine-api.dev.openconext.local
+          - profile.dev.openconext.local
+          - manage.dev.openconext.local
+          - connect.dev.openconext.local
+          - voot.dev.openconext.local
+    hostname: haproxy.docker
+
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      coreconextdev:
+    volumes:
+      - ./dbschema:/docker-entrypoint-initdb.d
+      - openconext_mariadb:/var/lib/mysql
+    hostname: mariadb.docker
+
+  mongo:
+    image: bitnami/mongodb:7.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGODB_ROOT_PASSWORD: secret
+      MONGODB_REPLICA_SET_NAME: openconext
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_KEY: secretsecret
+      MONGODB_ADVERTISED_HOSTNAME: mongodb
+    volumes:
+      - ./mongo/createdbs.js:/docker-entrypoint-initdb.d/createdbs.js
+      - openconext_mongodb:/bitnami/mongodb
+    healthcheck:
+      test: ["CMD", "mongosh", "-u", "root", "-p", "secret", "--eval", "db.stats().ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      coreconextdev:
+    hostname: mongodb
+
+  engine:
+    image: ghcr.io/openconext/openconext-engineblock/engineblock:feature-docker_configs
+    volumes:
+      - ./:/config
+      - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
+    networks:
+      coreconextdev:
+    hostname: engine.docker
+
+  profile:
+    image: ghcr.io/openconext/openconext-profile/profile:feature-docker_configs
+    environment:
+      APP_ENV: prod
+    volumes:
+      - ./:/config
+      - ./profile/parameters.yaml:/var/www/html/config/legacy/parameters.yaml
+    networks:
+      coreconextdev:
+    hostname: profile.docker
+
+  mujina-idp:
+    image: ghcr.io/openconext/mujina/mujina-idp:8.0.10-SNAPSHOT
+    volumes:
+      - ./:/config
+    networks:
+      coreconextdev:
+    command: "--spring.config.location=/config/mujina/"
+    hostname: mujina.docker
+
+  managegui:
+    image: ghcr.io/openconext/openconext-manage/manage-gui:7.3.3-SNAPSHOT
+    environment:
+      HTTPD_CSP: ""
+      HTTPD_SERVERNAME: "manage.dev.openconext.local"
+      OPENCONEXT_INSTANCENAME: "OpenConext dev"
+      OPENCONEXT_ENGINE_LOGOUT_URL: "https://engine.dev.openconext.local/logout"
+      OPENCONEXT_HELP_EMAIL: "support@openconext.org"
+      SHIB_ENTITYID: "https://manage.dev.openconext.local/shibboleth"
+      SHIB_REMOTE_ENTITYID: "https://engine.dev.openconext.local/authentication/idp/metadata"
+      SHIB_REMOTE_METADATA: "https://engine.dev.openconext.local/authentication/idp/metadata"
+    volumes:
+      - ./:/config
+    networks:
+      coreconextdev:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: managegui.docker
+    depends_on:
+      - engine
+
+  manage:
+    image: ghcr.io/openconext/openconext-manage/manage-server:7.3.3-SNAPSHOT
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    volumes:
+      - ./manage/:/config/
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    networks:
+      coreconextdev:
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=docker"
+    hostname: manageserver.docker
+    working_dir: /
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  teamsgui:
+    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.2.0-SNAPSHOT
+    volumes:
+      - ./:/config
+    environment:
+      HTTPD_CSP: ""
+      HTTPD_SERVERNAME: "teams.dev.openconext.local"
+      OPENCONEXT_INSTANCENAME: "OpenConext dev"
+      OPENCONEXT_ENGINE_LOGOUT_URL: "https://engine.dev.openconext.local/logout"
+      OPENCONEXT_HELP_EMAIL: "support@openconext.org"
+      SHIB_ENTITYID: "https://teams.dev.openconext.local/shibboleth"
+      SHIB_REMOTE_ENTITYID: "https://engine.dev.openconext.local/authentication/idp/metadata"
+      SHIB_REMOTE_METADATA: "https://engine.dev.openconext.local/authentication/idp/metadata"
+    networks:
+      coreconextdev:
+    hostname: teamsgui.docker
+    depends_on:
+      - engine
+
+  teams:
+    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.2.0-SNAPSHOT
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    networks:
+      coreconextdev:
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=docker"
+    hostname: teamsserver.docker
+    working_dir: /
+
+  oidcng: 
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.13-SNAPSHOT
+    networks:
+      coreconextdev:
+    volumes:
+      - ./oidcng/:/config/
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=docker"
+    hostname: oidcng.docker
+    working_dir: /
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  voot: 
+    image: ghcr.io/openconext/openconext-voot/voot:5.0.2-SNAPSHOT
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    networks:
+      coreconextdev:
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=docker"
+    hostname: voot.docker
+    working_dir: /
+
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - 1080:1080
+    command: "--ip 0.0.0.0 --smtp-port 25"
+    networks:
+      coreconextdev:
+    hostname: mailcatcher.docker
+
+networks:
+  coreconextdev:
+    driver: bridge
+
+volumes:
+  openconext_mariadb:
+  openconext_mongodb:
