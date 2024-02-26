@@ -40,7 +40,7 @@ services:
       MONGODB_REPLICA_SET_KEY: secretsecret
       MONGODB_ADVERTISED_HOSTNAME: mongodb
     volumes:
-      - ./mongo/createdbs.js:/docker-entrypoint-initdb.d/createdbs.js
+      - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
     healthcheck:
       test: ["CMD", "mongosh", "-u", "root", "-p", "secret", "--eval", "db.stats().ok"]
