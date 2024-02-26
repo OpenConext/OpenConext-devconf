@@ -21,7 +21,6 @@
     },
     "allowedEntities": [],
     "metadataurl": "",
-    "type": "saml20-sp",
     "revisionnote": "Initial import"
   }
 }

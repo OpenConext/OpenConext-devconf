@@ -21,7 +21,6 @@
     },
     "allowedEntities": [],
     "metadataurl": "https://manage.dev.openconext.local/Shibboleth.sso/Metadata",
-    "type": "saml20-sp",
     "revisionnote": "Initial import"
   }
 }

@@ -5,6 +5,11 @@
     "entityid": "teams.dev.openconext.local",
     "state": "prodaccepted",
     "allowedall": false,
+    "allowedResourceServers": [
+      {
+        "name": "voot.dev.openconext.local"
+      }
+    ],
     "arp": {
       "enabled": true,
       "attributes": {}
@@ -20,7 +25,6 @@
       ]
     },
     "allowedEntities": [],
-    "allowedResourceServers": [],
     "revisionnote": "Initial import"
   }
 }

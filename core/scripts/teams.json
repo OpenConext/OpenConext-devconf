@@ -21,7 +21,6 @@
     },
     "allowedEntities": [],
     "metadataurl": "https://teams.test2.surfconext.nl/Shibboleth.sso/Metadata",
-    "type": "saml20-sp",
     "revisionnote": "Initial import"
   }
 }

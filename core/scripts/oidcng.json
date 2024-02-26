@@ -24,7 +24,6 @@
     },
     "allowedEntities": [],
     "metadataurl": "https://connect.dev.openconext.local/metadata",
-    "type": "saml20-sp",
     "revisionnote": "Initial import"
   }
 }
