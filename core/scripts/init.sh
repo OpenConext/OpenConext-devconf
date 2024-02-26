@@ -1,24 +1,59 @@
 #!/bin/bash
-# Find out where we are
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+NOCOLOR='\033[0m'
 CWD=$(dirname $0)
+manageurl=https://manage.dev.openconext.local/manage/api/internal/
+# make sure the docker environment is up
+docker compose up -d
+# Bootstrapping engineblock means initialising the database
+printf "\n"
 
-read -p "This scripts needs to run only once to get a fresh install up and running. Continue? y/n " yn
-case $yn in
-[Nn]*)
-	exit 0
-	;;
-*)
-	echo "We are going to execute some commands"
-	;;
-esac
+echo -e "${ORANGE}First, we will initialise the EB database$NOCOLOR ${GREEN}\xE2\x9C\x94${NOCOLOR}"
+echo "Checking if the database is already present"
+engineversion=$(docker compose exec engine /var/www/html/app/console doctrine:migrations:status --env=prod |
+	grep "Current Version" | awk '{print $4 }')
+if [[ $engineversion == "0" ]]; then
+	echo creating the database schema
+	echo "Executing docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod"
+	docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod
+	echo "Updating engineblock to the latest migration"
+	echo "Executing docker compose exec engine /var/www/html/app/console doctrine:migrations:version -n --add --all --env=prod"
+	docker compose exec engine /var/www/html/app/console doctrine:migrations:version -n --add --all --env=prod
+fi
+echo "making sure all migrations have been executed"
+echo "executing docker compose exec engine /var/www/html/app/console doctrine:migrations:migrate -n --env=prod"
+docker compose exec engine /var/www/html/app/console doctrine:migrations:migrate -n --env=prod
+echo "Clearing the cache"
+echo "Executing docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod"
+docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod
+docker compose exec engine chown -R www-data /var/www/html/app/cache/
 
-echo "First, we will initialise the EB database"
-echo "Executing docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod"
-docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod
-echo "now we will import all the entities into manage"
+# Now it's time to bootstrap manage
+
+function search_entityid() {
+	local entityid=$1
+	local type=$2
+	local url="$manageurl/search/$type"
+	local json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
+	curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
+}
+echo -e "${ORANGE}Adding the manage entities${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+printf "\n"
 for i in "$CWD"/*.json; do
-	curl -k -u sysadmin:secret -H 'Content-Type: application/json' -d @$i -XPOST https://manage.dev.openconext.local/manage/api/internal/metadata
+	entityid=$(grep '"entityid":' "$i" | awk -F'"' '{print $4}')
+	type=$(grep '"type":' "$i" | awk -F'"' '{print $4}')
+	a=$(search_entityid "$entityid" "$type")
+	if [[ $a == "[]" ]]; then
+		echo "$entityid not found, adding"
+		curl -q -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @$i -XPOST $manageurl/metadata
+	else
+		echo "$entityid already present, skipping"
+	fi
 done
 printf "\n"
-echo "And last but not least, we are pushing the configuration from manage to eb and oidcng"
-curl -k -u sysadmin:secret https://manage.dev.openconext.local/manage/api/internal/push
+echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}"
+printf "\n"
+
+echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local"
