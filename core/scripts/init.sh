@@ -9,7 +9,7 @@ manageurl=https://manage.dev.openconext.local/manage/api/internal/
 set -e
 
 # make sure the docker environment is up
-docker compose up -d
+docker compose up -d --wait
 # Bootstrapping engineblock means initialising the database
 printf "\n"
 
