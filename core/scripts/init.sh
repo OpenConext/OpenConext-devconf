@@ -40,7 +40,7 @@ function search_entityid() {
 	local type=$2
 	local url="$manageurl/search/$type"
 	local json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
-	docker compose exec engine curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
+	docker compose exec managegui curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
 }
 echo -e "${ORANGE}Adding the manage entities${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
@@ -48,16 +48,17 @@ for i in "$CWD"/*.json; do
 	entityid=$(grep '"entityid":' "$i" | awk -F'"' '{print $4}')
 	type=$(grep '"type":' "$i" | awk -F'"' '{print $4}')
 	a=$(search_entityid "$entityid" "$type")
+	filename=$(basename $i)
 	if [[ $a == "[]" ]]; then
 		echo "$entityid not found, adding"
-		docker compose exec engine curl -q -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @$i -XPOST $manageurl/metadata
+		docker compose exec managegui curl -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @/config/scripts/"$filename" -XPOST "$manageurl"/metadata >/dev/null
 	else
 		echo "$entityid already present, skipping"
 	fi
 done
 printf "\n"
 echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBlock and OIDCNG${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
-docker compose exec engine curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
+docker compose exec managegui curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
 
 printf "\n"
 echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
