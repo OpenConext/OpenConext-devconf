@@ -5,6 +5,9 @@ ORANGE='\033[0;33m'
 NOCOLOR='\033[0m'
 CWD=$(dirname $0)
 manageurl=https://manage.dev.openconext.local/manage/api/internal/
+
+set -e
+
 # make sure the docker environment is up
 docker compose up -d
 # Bootstrapping engineblock means initialising the database
@@ -37,7 +40,7 @@ function search_entityid() {
 	local type=$2
 	local url="$manageurl/search/$type"
 	local json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
-	curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
+	docker compose exec engine curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
 }
 echo -e "${ORANGE}Adding the manage entities${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
@@ -47,13 +50,17 @@ for i in "$CWD"/*.json; do
 	a=$(search_entityid "$entityid" "$type")
 	if [[ $a == "[]" ]]; then
 		echo "$entityid not found, adding"
-		curl -q -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @$i -XPOST $manageurl/metadata
+		docker compose exec engine curl -q -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @$i -XPOST $manageurl/metadata
 	else
 		echo "$entityid already present, skipping"
 	fi
 done
 printf "\n"
-echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}"
+echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBlock and OIDCNG${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+docker compose exec engine curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
+
+printf "\n"
+echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
 
 echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local"
