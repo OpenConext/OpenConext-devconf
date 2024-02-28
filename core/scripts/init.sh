@@ -9,7 +9,7 @@ manageurl=https://manage.dev.openconext.local/manage/api/internal/
 set -e
 
 # make sure the docker environment is up
-docker compose up -d
+docker compose up -d --wait
 # Bootstrapping engineblock means initialising the database
 printf "\n"
 
@@ -35,19 +35,23 @@ docker compose exec engine chown -R www-data /var/www/html/app/cache/
 
 # Now it's time to bootstrap manage
 
-function search_entityid() {
-	local entityid=$1
-	local type=$2
-	local url="$manageurl/search/$type"
-	local json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
-	docker compose exec managegui curl -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url"
-}
 echo -e "${ORANGE}Adding the manage entities${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
 for i in "$CWD"/*.json; do
 	entityid=$(grep '"entityid":' "$i" | awk -F'"' '{print $4}')
 	type=$(grep '"type":' "$i" | awk -F'"' '{print $4}')
-	a=$(search_entityid "$entityid" "$type")
+	url="$manageurl/search/$type"
+	json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
+	set +e
+	command="docker compose exec managegui curl --fail-with-body -s -u sysadmin:secret -k -X POST -H \"Content-Type: application/json\" -d '$json_body' \"$url\""
+	a=$(docker compose exec managegui curl --fail-with-body -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url")
+	if [[ $? -ne 0 ]]; then
+	  echo -e "${RED}Error while adding $entityid to manage${NOCOLOR}"
+	  echo $command
+	  echo $a
+	  exit 1
+	fi
+  set -e
 	filename=$(basename $i)
 	if [[ $a == "[]" ]]; then
 		echo "$entityid not found, adding"
