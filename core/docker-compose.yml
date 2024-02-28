@@ -26,6 +26,10 @@ services:
     volumes:
       - ./dbschema:/docker-entrypoint-initdb.d
       - openconext_mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
     hostname: mariadb.docker
 
   mongo:
@@ -43,7 +47,7 @@ services:
       - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
     healthcheck:
-      test: ["CMD", "mongosh", "-u", "root", "-p", "secret", "--eval", "db.stats().ok"]
+      test: ["CMD", "mongosh", "-u", "managerw", "-p", "secret", "--eval", "db.stats().ok", "mongodb://127.0.0.1/manage"]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -115,6 +119,12 @@ services:
     command: "java -jar app.jar --spring.profiles.active=docker"
     hostname: manageserver.docker
     working_dir: /
+    healthcheck:
+      test: ["CMD", "wget", "-no-verbose",  "--tries=1",  "--spider", "http://localhost:8080/internal/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 10s
     depends_on:
       mongo:
         condition: service_healthy
@@ -137,6 +147,7 @@ services:
     hostname: teamsgui.docker
     depends_on:
       - engine
+      - mariadb
 
   teams:
     image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.2.0-SNAPSHOT
