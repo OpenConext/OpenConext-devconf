@@ -15,6 +15,8 @@ services:
           - manage.dev.openconext.local
           - connect.dev.openconext.local
           - voot.dev.openconext.local
+          - pdp.dev.openconext.local
+          - aa.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
@@ -27,10 +29,12 @@ services:
       - ./dbschema:/docker-entrypoint-initdb.d
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     hostname: mariadb.docker
+    ports:
+      - 3306:3306
 
   mongo:
     image: bitnami/mongodb:7.0
@@ -47,7 +51,18 @@ services:
       - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
     healthcheck:
-      test: ["CMD", "mongosh", "-u", "managerw", "-p", "secret", "--eval", "db.stats().ok", "mongodb://127.0.0.1/manage"]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "-u",
+          "managerw",
+          "-p",
+          "secret",
+          "--eval",
+          "db.stats().ok",
+          "mongodb://127.0.0.1/manage",
+        ]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -63,6 +78,10 @@ services:
       - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
     networks:
       coreconextdev:
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost/health"]
+      timeout: 5s
+      retries: 10
     hostname: engine.docker
 
   profile:
@@ -86,7 +105,7 @@ services:
     hostname: mujina.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:7.3.3-SNAPSHOT
+    image: ghcr.io/openconext/openconext-manage/manage-gui:snapshot
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -104,10 +123,11 @@ services:
       - "host.docker.internal:host-gateway"
     hostname: managegui.docker
     depends_on:
-      - engine
+      engine:
+        condition: service_healthy
 
   manage:
-    image: ghcr.io/openconext/openconext-manage/manage-server:7.3.3-SNAPSHOT
+    image: ghcr.io/openconext/openconext-manage/manage-server:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -116,11 +136,19 @@ services:
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=docker"
+    command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: manageserver.docker
     working_dir: /
     healthcheck:
-      test: ["CMD", "wget", "-no-verbose",  "--tries=1",  "--spider", "http://localhost:8080/internal/health" ]
+      test:
+        [
+          "CMD",
+          "wget",
+          "-no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8080/internal/health",
+        ]
       interval: 10s
       timeout: 10s
       retries: 6
@@ -130,7 +158,7 @@ services:
         condition: service_healthy
 
   teamsgui:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.2.0-SNAPSHOT
+    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:snapshot
     volumes:
       - ./:/config
     environment:
@@ -146,11 +174,13 @@ services:
       coreconextdev:
     hostname: teamsgui.docker
     depends_on:
-      - engine
-      - mariadb
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
 
   teams:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.2.0-SNAPSHOT
+    image: ghcr.io/openconext/openconext-teams-ng/teams-server:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -158,27 +188,27 @@ services:
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=docker"
+    command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: teamsserver.docker
     working_dir: /
 
-  oidcng: 
-    image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.13-SNAPSHOT
+  oidcng:
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:snapshot
     networks:
       coreconextdev:
     volumes:
       - ./oidcng/:/config/
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
     entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=docker"
+    command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: oidcng.docker
     working_dir: /
     depends_on:
       mongo:
         condition: service_healthy
 
-  voot: 
-    image: ghcr.io/openconext/openconext-voot/voot:5.0.2-SNAPSHOT
+  voot:
+    image: ghcr.io/openconext/openconext-voot/voot:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -186,9 +216,44 @@ services:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
     entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=docker"
+    command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: voot.docker
     working_dir: /
+
+  pdp:
+    image: ghcr.io/openconext/openconext-pdp/pdp-server:snapshot
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    networks:
+      coreconextdev:
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=devconf"
+    hostname: pdpserver.docker
+    working_dir: /
+
+  pdpgui:
+    image: ghcr.io/openconext/openconext-pdp/pdp-gui:snapshot
+    volumes:
+      - ./:/config
+    environment:
+      HTTPD_CSP: ""
+      HTTPD_SERVERNAME: "pdp.dev.openconext.local"
+      OPENCONEXT_INSTANCENAME: "OpenConext dev"
+      OPENCONEXT_ENGINE_LOGOUT_URL: "https://engine.dev.openconext.local/logout"
+      OPENCONEXT_HELP_EMAIL: "support@openconext.org"
+      SHIB_ENTITYID: "https://pdp.dev.openconext.local/shibboleth"
+      SHIB_REMOTE_ENTITYID: "https://engine.dev.openconext.local/authentication/idp/metadata"
+      SHIB_REMOTE_METADATA: "https://engine.dev.openconext.local/authentication/idp/metadata"
+    networks:
+      coreconextdev:
+    hostname: pdpgui.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
 
   mailcatcher:
     image: sj26/mailcatcher:latest
