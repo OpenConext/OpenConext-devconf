@@ -96,7 +96,7 @@ parameters:
   ## ATTRIBUTE AGGREGATION SETTINGS
   ##########################################################################################
   ## Location of AA
-  attribute_aggregation.base_url: "https://aa.dev.openconext.local/aa/api/internal/attribute/aggregation"
+  attribute_aggregation.base_url: "https://aa.dev.openconext.local/internal/attribute/aggregation"
   attribute_aggregation.username: eb
   attribute_aggregation.password: secret
 
