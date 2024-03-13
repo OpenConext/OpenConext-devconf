@@ -8,6 +8,9 @@
     "allowedResourceServers": [
       {
         "name": "oidc-playgroundrs.dev.openconext.local"
+      },
+      {
+        "name": "voot.dev.openconext.local"
       }
     ],
     "arp": {
