@@ -157,6 +157,52 @@ services:
       mongo:
         condition: service_healthy
 
+  oidcng:
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:snapshot
+    networks:
+      coreconextdev:
+    volumes:
+      - ./oidcng/:/config/
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=devconf"
+    hostname: oidcng.docker
+    working_dir: /
+    depends_on:
+      mongo:
+        condition: service_healthy
+    profiles:
+      - "oidc"
+      - "teams"
+      - "extras"
+
+  oidcplaygroundgui:
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:snapshot
+    networks:
+      coreconextdev:
+    hostname: oidcplagroundgui.docker
+    profiles:
+      - "oidc"
+      - "teams"
+      - "extras"
+
+  oidcplaygroundserver:
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:snapshot
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    networks:
+      coreconextdev:
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=devconf"
+    hostname: oidcserver.docker
+    working_dir: /
+    profiles:
+      - "oidc"
+      - "teams"
+      - "extras"
+
   teamsgui:
     image: ghcr.io/openconext/openconext-teams-ng/teams-gui:snapshot
     volumes:
@@ -178,6 +224,9 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+    profiles:
+      - "teams"
+      - "extras"
 
   teams:
     image: ghcr.io/openconext/openconext-teams-ng/teams-server:snapshot
@@ -191,21 +240,9 @@ services:
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: teamsserver.docker
     working_dir: /
-
-  oidcng:
-    image: ghcr.io/openconext/openconext-oidcng/oidcng:snapshot
-    networks:
-      coreconextdev:
-    volumes:
-      - ./oidcng/:/config/
-      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
-    entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=devconf"
-    hostname: oidcng.docker
-    working_dir: /
-    depends_on:
-      mongo:
-        condition: service_healthy
+    profiles:
+      - "teams"
+      - "extras"
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:snapshot
@@ -219,6 +256,9 @@ services:
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: voot.docker
     working_dir: /
+    profiles:
+      - "teams"
+      - "extras"
 
   pdp:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:snapshot
@@ -232,6 +272,8 @@ services:
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: pdpserver.docker
     working_dir: /
+    profiles:
+      - "extras"
 
   pdpgui:
     image: ghcr.io/openconext/openconext-pdp/pdp-gui:snapshot
@@ -254,6 +296,8 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+    profiles:
+      - "extras"
 
   mailcatcher:
     image: sj26/mailcatcher:latest
