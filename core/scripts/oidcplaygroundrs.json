@@ -1,0 +1,17 @@
+{
+  "version": 0,
+  "type": "oauth20_rs",
+  "data": {
+    "entityid": "oidc-playgroundrs.dev.openconext.local",
+    "state": "prodaccepted",
+    "metaDataFields": {
+      "name:en": "OIDC playground RS",
+      "name:nl": "OIDC playground RS",
+      "description:en": "Resource server for the oidc playground app",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "scopes": ["openid"]
+    },
+    "revisionnote": "Initial import"
+  }
+}
