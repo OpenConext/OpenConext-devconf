@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "oauth20_rs",
+  "data": {
+    "entityid": "voot.dev.openconext.local",
+    "state": "prodaccepted",
+    "metaDataFields": {
+      "name:en": "VOOT",
+      "name:nl": "VOOT",
+      "description:en": "VOOT group API",
+      "OrganizationName:en": "openconext DEV",
+      "scopes": [
+        "groups"
+      ],
+      "secret": "secretsecret"
+    },
+    "revisionnote": "Initial import"
+  }
+}

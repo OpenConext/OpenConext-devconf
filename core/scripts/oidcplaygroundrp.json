@@ -1,0 +1,40 @@
+{
+  "version": 0,
+  "type": "oidc10_rp",
+  "data": {
+    "entityid": "oidc-playground.dev.openconext.local",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "allowedResourceServers": [
+      {
+        "name": "oidc-playgroundrs.dev.openconext.local"
+      },
+      {
+        "name": "voot.dev.openconext.local"
+      }
+    ],
+    "arp": {
+      "enabled": false,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "name:en": "OIDC playground",
+      "name:nl": "OIDC playground",
+      "description:en": "Playground app to test OIDC and OAuth2 flows",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "grants": [
+        "client_credentials",
+        "implicit",
+        "authorization_code",
+        "refresh_token"
+      ],
+      "redirectUrls": [
+        "https://oidc-playground.dev.openconext.local/redirect",
+        "https://oidc-playground.dev.openconext.local/oidc/api/redirect"
+      ]
+    },
+    "allowedEntities": [],
+    "revisionnote": "Initial import"
+  }
+}

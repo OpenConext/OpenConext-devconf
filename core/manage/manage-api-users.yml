@@ -1,0 +1,25 @@
+# Valid scopes are manage.api.Scope.values(); =>
+#    CHANGE_REQUEST, //Allowed to create change requests
+#    PUSH, //Allowed to push changes to EB & OIDC-NG
+#    READ, //Allowed to read entities
+#    SYSTEM, //Allowed everything including Attribute Manipulation and updating / deleting Identity Providers
+#    WRITE, //Allowed to create (excluding Identity Providers) and update all entities
+#    DELETE //Allowed to delete entities (excluding Identity Providers)
+
+apiUsers:
+  - { name: "pdp", password: "secret", scopes: [READ] }
+  - { name: "dashboard", password: "secret", scopes: [READ, CHANGE_REQUEST] }
+  - { name: "myconext", password: "secret", scopes: [READ] }
+  - {
+      name: "sp-dashboard",
+      password: "secret",
+      scopes: [READ, WRITE, PUSH, TEST, DELETE],
+    }
+  - { name: "attribute-aggregation", password: "secret", scopes: [READ] }
+  - { name: "invite", password: "secret", scopes: [READ] }
+  - { name: "stats", password: "secret", scopes: [READ] }
+  - {
+      name: "sysadmin",
+      password: "secret",
+      scopes: [READ, WRITE, PUSH, SYSTEM],
+    }
