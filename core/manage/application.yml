@@ -65,6 +65,11 @@ spring:
       uri: mongodb://managerw:secret@mongo:27017/manage?ssl=false
   main:
     banner-mode: "off"
+  datasource:
+    url: jdbc:mysql://mariadb:3306/pdp?permitMysqlScheme
+    username: pdprw
+    password: secret
+    driverClassName: org.mariadb.jdbc.Driver
 
 gui:
   disclaimer:
