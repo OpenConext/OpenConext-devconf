@@ -90,7 +90,6 @@ services:
       APP_ENV: prod
     volumes:
       - ./:/config
-      - ./profile/parameters.yaml:/var/www/html/config/legacy/parameters.yaml
     networks:
       coreconextdev:
     hostname: profile.docker
