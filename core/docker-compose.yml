@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   haproxy:
     image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
@@ -30,7 +28,7 @@ services:
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      timeout: 5s
       retries: 10
     hostname: mariadb.docker
     ports:
@@ -83,6 +81,9 @@ services:
       timeout: 5s
       retries: 10
     hostname: engine.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   profile:
     image: ghcr.io/openconext/openconext-profile/profile:feature-docker_configs
