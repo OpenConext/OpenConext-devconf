@@ -228,7 +228,7 @@ services:
       - "teams"
       - "extras"
 
-  teams:
+  teamsserver:
     image: ghcr.io/openconext/openconext-teams-ng/teams-server:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
