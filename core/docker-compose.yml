@@ -260,7 +260,7 @@ services:
       - "teams"
       - "extras"
 
-  pdp:
+  pdpserver:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
