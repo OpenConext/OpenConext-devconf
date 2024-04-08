@@ -1,0 +1,8 @@
+services:
+  profile:
+    image: ghcr.io/openconext/openconext-basecontainers/${ENGINE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
+    volumes:
+      - ${ENGINE_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=${APP_ENV:-dev}
+      - APP_DEBUG=true
