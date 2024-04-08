@@ -55,8 +55,8 @@ while true; do
 		# Use docker compose to start the environment but with the modified override file(s)
 		echo -e "\nStarting the ${MODE} environment with the following command:\n"
 
-		echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
-		docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
+		echo -e "docker compose --profile php -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
+		docker compose --profile php -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
 		break
 		;;
 	*)
@@ -64,7 +64,7 @@ while true; do
 		echo -e "Starting the ${MODE} environment with the following command:\n"
 
 		echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
-		docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
+		docker compose --profile php -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
 		break
 		;;
 	esac
