@@ -1,5 +1,5 @@
 services:
-  profile:
+  engine:
     image: ghcr.io/openconext/openconext-basecontainers/${ENGINE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
     volumes:
       - ${ENGINE_CODE_PATH}:/var/www/html

@@ -68,4 +68,15 @@ If you want to start all services, you can use extras. A profile can be started 
 docker compose up -d --profile extras
 ```
 
+# Starting a PHP project in development mode (only lifecycle, profile and engineblock)
 
+You can mount your local directory inside a development container which contains the correct node and composer versions for your project. To do so use the script start-dev-env.sh. You can use this script to mount multiple directories in multiple containers, basically allowing you to start multiple containers in dev mode.
+
+To mount the code in just one container:
+`start-dev-env.sh profile:../../OpenConext-profile`
+The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`.
+
+To mount the code in multiple containers:
+`start-dev-env.sh profile:../../OpenConext-profile userlifecycle:../../OpenConext-user-lifecycle`
+You can add as many services+local code paths that you need.
+The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
