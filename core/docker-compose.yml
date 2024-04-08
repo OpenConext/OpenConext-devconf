@@ -10,6 +10,7 @@ services:
           - engine.dev.openconext.local
           - engine-api.dev.openconext.local
           - profile.dev.openconext.local
+          - userlifecycle.dev.openconext.local
           - manage.dev.openconext.local
           - connect.dev.openconext.local
           - voot.dev.openconext.local
@@ -291,6 +292,23 @@ services:
     networks:
       coreconextdev:
     hostname: pdpgui.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "extras"
+
+  userlifecycle:
+    image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:feature-docker_configs
+    environment:
+      APP_ENV: prod
+    volumes:
+      - ./:/config
+    networks:
+      coreconextdev:
+    hostname: userlifecycle.docker
     depends_on:
       engine:
         condition: service_healthy
