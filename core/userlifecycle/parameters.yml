@@ -1,0 +1,36 @@
+# This file is a "template" of what your parameters.yml file should look like
+# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
+# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+parameters:
+    database_host: mariadb
+    database_port: ~
+    database_name: userlifecycle
+    database_user: userlifecyclerw
+    database_password: secret
+    # You should uncomment this if you want to use pdo_sqlite
+    #database_path: '%kernel.root_dir%/../var/data/data.sqlite'
+
+    # A secret key that's used to generate certain security-related tokens
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+    # The clients should be configured with an api url, username and password. Basic auth is the only supported auth
+    # mechanism at this point.
+    open_conext_user_lifecycle_clients:
+        # The service name is used for naming the dynamically created service and should be written in snake case
+        my_service_name:
+            # The API Url excluding the endpoint        engine:
+            url: 'https://engine-api.dev.openconext.local'
+            username: "lifecycle"
+            password: "secret"
+            verify_ssl: true
+            # By default ssl verification is enabled, can be switched of by setting it to false
+    # The maximum number of users that can be deprovisioned during the batch deprovision run.
+    user_quota: 1500
+
+    # The inactivity period after which a user is deprovisioned. The period is in months.
+    inactivity_period: 37
+
+    # is the deprovision api enabled?
+    deprovision_api_settings_enabled: true
+    deprovision_api_settings_username: userlifecycle
+    deprovision_api_settings_password: secret

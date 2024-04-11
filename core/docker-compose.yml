@@ -306,6 +306,7 @@ services:
       APP_ENV: prod
     volumes:
       - ./:/config
+      - ./userlifecycle/parameters.yml:/var/www/html/config/legacy/parameters.yml
     networks:
       coreconextdev:
     hostname: userlifecycle.docker
