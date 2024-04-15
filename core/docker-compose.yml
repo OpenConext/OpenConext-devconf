@@ -261,6 +261,23 @@ services:
       - "teams"
       - "extras"
 
+  aa:
+    image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:snapshot
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    networks:
+      coreconextdev:
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=devconf"
+    hostname: aa.docker
+    working_dir: /
+    profiles:
+      - "teams"
+      - "extras"
+      - "php"
+  
   pdpserver:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:snapshot
     environment:
