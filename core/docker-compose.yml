@@ -87,7 +87,7 @@ services:
         condition: service_healthy
 
   profile:
-    image: ghcr.io/openconext/openconext-profile/profile:feature-docker_configs
+    image: ghcr.io/openconext/openconext-profile/profile:prod
     environment:
       APP_ENV: prod
     volumes:
