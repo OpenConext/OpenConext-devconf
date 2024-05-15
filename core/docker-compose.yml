@@ -16,6 +16,7 @@ services:
           - voot.dev.openconext.local
           - pdp.dev.openconext.local
           - aa.dev.openconext.local
+          - teams.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
