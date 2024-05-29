@@ -17,6 +17,8 @@ services:
           - pdp.dev.openconext.local
           - aa.dev.openconext.local
           - teams.dev.openconext.local
+          - spdashboard.dev.openconext.local
+          - mujina-idp.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
