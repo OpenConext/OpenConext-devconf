@@ -54,26 +54,40 @@
     },
     "type": {
       "type": "string",
-      "enum": ["saml20-idp"]
+      "enum": [
+        "saml20-idp"
+      ]
     },
     "revisionid": {
       "type": "number"
     },
     "state": {
       "type": "string",
-      "enum": ["prodaccepted", "testaccepted"]
+      "enum": [
+        "prodaccepted",
+        "testaccepted"
+      ]
     },
     "metadataurl": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "allowedall": {
       "type": "boolean"
     },
     "manipulation": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "manipulationNotes": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "user": {
       "type": "string"
@@ -135,17 +149,22 @@
             "type": "string"
           },
           "level": {
-            "type": ["string"],
-            "enum": [
-              "http://dev.openconext.local/assurance/loa1.5",
-              "http://dev.openconext.local/assurance/loa2",
-              "http://dev.openconext.local/assurance/loa3"
+            "type": [
+              "string"
             ],
-            "default": "http://dev.openconext.local/assurance/loa1.5"
+            "enum": [
+                            "http://test2.surfconext.nl/assurance/loa1.5",
+                            "http://test2.surfconext.nl/assurance/loa2",
+                            "http://test2.surfconext.nl/assurance/loa3"
+                          ],
+            "default": "http://test2.surfconext.nl/assurance/loa1.5"
           }
         }
       },
-      "required": ["name", "level"],
+      "required": [
+        "name",
+        "level"
+      ],
       "additionalProperties": false
     },
     "mfaEntities": {
@@ -157,20 +176,25 @@
             "type": "string"
           },
           "level": {
-            "type": ["string"],
-            "enum": [
-              "http://schemas.microsoft.com/claims/multipleauthn",
-              "https://refeds.org/profile/mfa",
-              "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileOneFactorContract",
-              "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileOneFactorUnregistered",
-              "urn:oasis:names:tc:SAML:2.0:ac:classes:Password",
-              "transparent_authn_context"
+            "type": [
+              "string"
             ],
+            "enum": [
+                            "http://schemas.microsoft.com/claims/multipleauthn",
+                            "https://refeds.org/profile/mfa",
+                            "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileOneFactorContract",
+                            "urn:oasis:names:tc:SAML:2.0:ac:classes:MobileOneFactorUnregistered",
+                            "urn:oasis:names:tc:SAML:2.0:ac:classes:Password",
+                            "transparent_authn_context"
+                          ],
             "default": "http://schemas.microsoft.com/claims/multipleauthn"
           }
         }
       },
-      "required": ["name", "level"],
+      "required": [
+        "name",
+        "level"
+      ],
       "additionalProperties": false
     },
     "disableConsent": {
@@ -182,23 +206,43 @@
             "type": "string"
           },
           "type": {
-            "type": ["string", "null"],
-            "enum": ["no_consent", "minimal_consent", "default_consent", null],
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "no_consent",
+              "minimal_consent",
+              "default_consent",
+              null
+            ],
             "default": "no_consent"
           },
           "explanation:en": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "explanation:nl": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "additionalProperties": false
     },
     "notes": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "metaDataFields": {
       "type": "object",
@@ -252,10 +296,10 @@
           "type": "boolean",
           "info": "Set this for Identity Providers published in eduGAIN.",
           "requiredAttributes": [
-            "coin:publish_in_edugain_date",
-            "OrganizationName:en",
-            "OrganizationDisplayName:en",
-            "OrganizationURL:en"
+              "coin:publish_in_edugain_date",
+              "OrganizationName:en",
+              "OrganizationDisplayName:en",
+              "OrganizationURL:en"
           ]
         },
         "coin:publish_in_edugain_date": {
@@ -270,6 +314,11 @@
         "coin:institution_id": {
           "type": "string",
           "info": "The defined client code. Generally an abbreviation of the name of the client."
+        },
+        "coin:institution_brin": {
+          "type": "string",
+          "format": "brin",
+          "info": "Official BRIN code as assigned to this IdP's institution by Dienst uitvoering Onderwijs (DUO)."
         },
         "coin:institution_guid": {
           "type": "string",
@@ -286,7 +335,11 @@
         },
         "coin:guest_qualifier": {
           "type": "string",
-          "enum": ["All", "Some", "None"],
+          "enum": [
+            "All",
+            "Some",
+            "None"
+          ],
           "default": "All",
           "info": "Services can use the guest attribute to offer guests a different set of functionality, the default behavior is to consider all users from an IdP as guest. Select: 1. All (default): All of the users from this IdP are marked as guests. 2 None: None of the users from this IdP marked as guests and all will be considered members. 3 Some: Most users will be a guest, and some of the users will be marked as members. When the IdP provides the attribute urn:oid:1.3.6.1.4.1.1076.20.100.10.10.1 (surfPersonAffiliation) with value member OpenConext considers it a member."
         },
@@ -305,10 +358,6 @@
         "coin:hidden": {
           "type": "boolean",
           "info": "Set to make the IdP hidden in the dashboard when the IdP is not connected to a service."
-        },
-        "coin:ss:allow_scb_admin_rights": {
-          "type": "boolean",
-          "info": "Set to grant SAB SURFconext beheerders for this IdP the SURFconext verantwoordelijke rights."
         },
         "coin:signature_method": {
           "type": "string",
@@ -341,15 +390,15 @@
         }
       },
       "patternProperties": {
-        "^name:(nl|en)$": {
+        "^name:(en|nl)$": {
           "type": "string",
           "info": "The name of the Identity Provider."
         },
-        "^displayName:(nl|en)$": {
+        "^displayName:(en|nl)$": {
           "type": "string",
           "info": "The name of the Identity Provider as displayed in applications."
         },
-        "^description:(nl|en)$": {
+        "^description:(en|nl)$": {
           "type": "string",
           "info": "The description of the Identity Provider."
         },
@@ -404,19 +453,19 @@
           "sibblingIndependent": true,
           "info": "From the pull down, select the type of contact."
         },
-        "^OrganizationName:(nl|en)$": {
+        "^OrganizationName:(en|nl)$": {
           "type": "string"
         },
-        "^OrganizationDisplayName:(nl|en)$": {
+        "^OrganizationDisplayName:(en|nl)$": {
           "type": "string",
           "info": "The friendly name of the organization. e.g. University of Harderwijk."
         },
-        "^OrganizationURL:(nl|en)$": {
+        "^OrganizationURL:(en|nl)$": {
           "type": "string",
           "format": "url",
           "info": "The URL to the website of the service e.g. http://www.example-institution.nl/en/."
         },
-        "^mdrpi:RegistrationPolicy:(nl|en)$": {
+        "^mdrpi:RegistrationPolicy:(en|nl)$": {
           "type": "string",
           "info": "The URL to the Registration Policy of the Identity Provider."
         },
@@ -444,7 +493,7 @@
           "multiplicity": 10,
           "info": "The URL to the a SAML protocol endpoint at an IdP that a client can contact to obtain a SAML authentication assertion for use at an SP. e.g. https://idp.example.org/idp/profile/SAML2/Redirect/SSO"
         },
-        "^keywords:(nl|en)$": {
+        "^keywords:(en|nl)$": {
           "type": "string",
           "info": "This field defines searchable words in the WAYF dialogue for this Identity Provider."
         },
@@ -468,7 +517,12 @@
       "additionalProperties": false
     }
   },
-  "required": ["entityid", "state", "allowedall", "metaDataFields"],
+  "required": [
+    "entityid",
+    "state",
+    "allowedall",
+    "metaDataFields"
+  ],
   "additionalProperties": false,
   "indexes": []
 }
