@@ -9,6 +9,8 @@ environment: DEV
 server:
   # The port to where this Spring Boot application listens to.
   port: 8080
+  tomcat:
+    max-threads: 1
   error:
     path: "/error"
   server-header:
@@ -30,12 +32,21 @@ push:
     name: OpenConext DEV EngineBlock
     exclude_edugain_imports: true
     exclude_oidc_rp: false
+    exclude_sram: False
   oidc:
     url: https://connect.dev.openconext.local/manage/connections
     user: manage
     name: manage
     password: secret
     enabled: true
+  pdp:
+    url: https://pdp.dev.openconext.local/pdp/api/manage/push
+    policy_url: https://pdp.dev.openconext.local/pdp/api/manage/policies
+    decide_url: https://pdp.dev.openconext.local/pdp/api/manage/decide
+    name: PdP
+    user: pdp_admin
+    password: "secret"
+    enabled: false
 
 product:
   name: Manage
@@ -46,6 +57,7 @@ product:
 
 metadata_configuration_path: file:///config/metadata_configuration/
 metadata_templates_path: file:///config/metadata_templates/
+metadata_export_path: classpath:/metadata_export
 
 security:
   backdoor_user_name: backdoor_api_user
@@ -55,6 +67,7 @@ security:
 
 crypto:
   development-mode: True
+  public-key-location: classpath:nope
 
 spring:
   mail:
