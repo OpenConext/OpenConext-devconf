@@ -130,7 +130,7 @@ services:
       engine:
         condition: service_healthy
 
-  manage:
+  manageserver:
     image: ghcr.io/openconext/openconext-manage/manage-server:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
