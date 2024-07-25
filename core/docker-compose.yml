@@ -248,6 +248,61 @@ services:
       - "teams"
       - "extras"
 
+  inviteserver:
+    image: ghcr.io/openconext/openconext-invite/inviteserver:snapshot
+    environment:
+      USE_SYSTEM_CA_CERTS: true
+    mem_limit: 200m
+    volumes:
+      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+    networks:
+      coreconextdev:
+    entrypoint: /__cacert_entrypoint.sh
+    command: "java -jar app.jar --spring.profiles.active=devconf"
+    hostname: teamsserver.docker
+    working_dir: /
+    profiles:
+      - "teams"
+      - "extras"
+
+  inviteclient:
+      image: ghcr.io/openconext/openconext-invite/inviteclient:snapshot
+      volumes:
+        - ./:/config
+      environment:
+        HTTPD_CSP: ""
+        HTTPD_SERVERNAME: "invite.dev.openconext.local"
+      networks:
+        coreconextdev:
+      hostname: inviteclient.docker
+      depends_on:
+        engine:
+          condition: service_healthy
+        mariadb:
+          condition: service_healthy
+      profiles:
+        - "extras"
+        - "teams"
+  
+  invitewelcome:
+      image: ghcr.io/openconext/openconext-invite/invitewelcome:snapshot
+      volumes:
+        - ./:/config
+      environment:
+        HTTPD_CSP: ""
+        HTTPD_SERVERNAME: "invite.dev.openconext.local"
+      networks:
+        coreconextdev:
+      hostname: inviteclient.docker
+      depends_on:
+        engine:
+          condition: service_healthy
+        mariadb:
+          condition: service_healthy
+      profiles:
+        - "extras"
+        - "teams"
+
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:snapshot
     environment:
@@ -295,6 +350,7 @@ services:
     working_dir: /
     profiles:
       - "extras"
+      - "teams"
 
   pdpgui:
     image: ghcr.io/openconext/openconext-pdp/pdp-gui:snapshot

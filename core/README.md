@@ -22,7 +22,7 @@ If you are doing this for the first time, you need to run a script to seed the e
 You will also need to tell your local machine where to find the hosts. 
 Add the following line in your hosts file (/etc/hosts )
 ```
-127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local
+127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local
 ```
 
 If all goes wel, you can now login. Please see the section below to find out where you can login.
@@ -43,16 +43,18 @@ docker compose --profile oidc down
 
 
 ### OpenConext apps
-|name |function     |URL     |
-| --- | --- | --- | 
-|engine  |Engineblock, the SAML proxy |https://engine.dev.openconext.local |
-|oidcng  |OpenID connect proxy   |https://connect.dev.openconext.local     |
-|profile |Profile page           |https://profile.dev.openconext.local     |
-|manage  | Entity registration   |https://manage.dev.openconext.local      |
-|teams   | Group membership app  |https://teams.dev.openconext.local       |
-|mujina  | Mujina IdP            |https://mujina-idp.dev.openconext.local  |
-|voot    | Voot membership API   |https://voot.dev.openconext.local        |
-|pdp     | Policy Decicions API  |https://pdp.dev.openconext.local         |
+| name    | function                    | URL                                     |
+| ---     | ---                         | ---                                     |
+| engine  | Engineblock, the SAML proxy | https://engine.dev.openconext.local     |
+| oidcng  | OpenID connect proxy        | https://connect.dev.openconext.local    |
+| profile | Profile page                | https://profile.dev.openconext.local    |
+| manage  | Entity registration         | https://manage.dev.openconext.local     |
+| teams   | Group membership app        | https://teams.dev.openconext.local      |
+| mujina  | Mujina IdP                  | https://mujina-idp.dev.openconext.local |
+| voot    | Voot membership API         | https://voot.dev.openconext.local       |
+| pdp     | Policy Decicions API        | https://pdp.dev.openconext.local        |
+| invite  | Invite based groups         | https://invite.dev.openconext.local     |
+| welcome | Invite UI                   | https://invite.dev.openconext.local     |
 
 ### Docker compose profiles
 
