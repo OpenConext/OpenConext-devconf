@@ -1,0 +1,19 @@
+{
+  "version": 0,
+  "type": "oauth20_rs",
+  "data": {
+    "entityid": "inviters.dev.openconext.local",
+    "state": "prodaccepted",
+    "metaDataFields": {
+      "name:en": "Invite RS",
+      "name:nl": "Invite RS",
+      "description:en": "Resource server for invite",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "scopes": [
+        "openid"
+      ]
+    },
+    "revisionnote": "Initial import"
+  }
+}

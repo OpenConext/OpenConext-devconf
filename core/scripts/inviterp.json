@@ -1,0 +1,36 @@
+{
+  "version": 0,
+  "type": "oidc10_rp",
+  "data": {
+    "entityid": "invite.dev.openconext.local",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "allowedResourceServers": [
+      {
+        "name": "inviters.dev.openconext.local"
+      }
+    ],
+    "arp": {
+      "enabled": false,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "name:en": "Invite Server",
+      "name:nl": "Invite Server",
+      "description:en": "Invite server",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "grants": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "redirectUrls": [
+        "https://invite.dev.openconext.local/login/oauth2/code/oidcng",
+        "https://welcome.dev.openconext.local/login/oauth2/code/oidcng"
+      ]
+    },
+    "allowedEntities": [],
+    "revisionnote": "Initial import"
+  }
+}
