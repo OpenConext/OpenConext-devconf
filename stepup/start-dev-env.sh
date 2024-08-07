@@ -61,24 +61,24 @@ if [ -f .start-dev-env-listing ]; then
   rm .start-dev-env-listing
 fi
 
-
+d_option=""
 while true; do
-    read -p "Do you wish to run Docker compose in the foreground? (press ENTER for Yes)" yn
-    case $yn in
-        [Nn]* )
-          # Use docker compose to start the environment but with the modified override file(s)
-          echo -e "\nStarting the ${MODE} environment with the following command:\n"
-
-          echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
-                    docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
-          break;;
-        * )
-          # Use docker compose to start the environment but with the modified override file(s)
-          echo -e "Starting the ${MODE} environment with the following command:\n"
-
-          echo -e "docker compose -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
-          docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
-          break;;
-    esac
+  read -p "Do you wish to run Docker compose in the foreground? (Y/n): " yn
+  yn=${yn:-y}
+  case $yn in
+      [Nn]* )
+        d_option="-d"
+        break;
+        ;;
+      [Yy]* )
+        break;
+  esac
 done
+
+# Use docker compose to start the environment but with the modified override file(s)
+echo -e "Starting the ${MODE} environment with the following command:\n"
+
+echo -e "docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}\n"
+docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}
+
 
