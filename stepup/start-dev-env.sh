@@ -4,7 +4,14 @@ GREEN="\e[1;32m"
 ENDCOLOR="\e[0m"
 MODE="dev"
 
-source .env
+# Check if the .env file exists
+if [ -f .env ]; then
+  echo "Sourcing .env file"
+  source .env
+else
+  echo "no .env file not found."
+fi
+
 if [ "${STEPUP_VERSION}" == "test" ]; then
 	extra_compose_args="-f docker-compose-behat.yml"
 	MODE="test"
