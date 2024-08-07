@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+
   haproxy:
     image: ghcr.io/openconext/openconext-basecontainers/haproxy26:latest
     ports:
@@ -19,8 +18,6 @@ services:
           - tiqr.dev.openconext.local
           - mailcatcher.dev.openconext.local
     hostname: haproxy.docker
-
-
 
   mariadb:
     image: mariadb:10.6
@@ -92,7 +89,6 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: gateway.docker
-
 
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:${STEPUP_VERSION:-prod}
