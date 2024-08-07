@@ -4,14 +4,17 @@ CWD=$(pwd)
 
 function error_exit {
 	echo "${1}"
-	if [ -n "${TMP_FILE}" -a -d "${TMP_FILE}" ]; then
+	if [ -n "${TMP_FILE}" ] && [ -d "${TMP_FILE}" ]; then
 		rm "${TMP_FILE}"
 	fi
 	cd ${CWD}
 	exit 1
 }
 
-# Script to write the middleware config
+# Get the directory of this script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Script to write the middleware institution whitelist
 
 TMP_FILE=$(mktemp -t midcfg.XXXXXX)
 if [ $? -ne "0" ]; then
@@ -20,17 +23,18 @@ fi
 
 echo "Pushing new institution whitelist to: http://middleware.dev.openconext.local/management/whitelist/replace"
 
-http_response=$(curl -k --write-out %{http_code} --output ${TMP_FILE} -XPOST -s \
+http_response=$(curl -k --write-out %\{http_code\} --output "${TMP_FILE}" -XPOST -s \
 	-u management:secret -H "Accept: application/json" \
 	-H "Content-type: application/json" \
-	-d @middleware-whitelist.json \
+	-d @"${DIR}/middleware-whitelist.json" \
 	https://middleware.dev.openconext.local/management/whitelist/replace)
 
-output=$(cat ${TMP_FILE})
-rm ${TMP_FILE}
-echo $output
-
 res=$?
+
+output=$(cat "${TMP_FILE}")
+rm "${TMP_FILE}"
+echo "$output"
+
 if [ $res -ne "0" ]; then
 	error_exit "Curl failed with code $res"
 fi
