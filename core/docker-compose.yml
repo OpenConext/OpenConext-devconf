@@ -266,6 +266,7 @@ services:
     hostname: teamsserver.docker
     working_dir: /
     profiles:
+      - "php"
       - "teams"
       - "extras"
 
