@@ -86,6 +86,8 @@ services:
       timeout: 5s
       retries: 10
     hostname: engine.docker
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       mariadb:
         condition: service_healthy
@@ -107,10 +109,11 @@ services:
     networks:
       coreconextdev:
     command: "--spring.config.location=/config/mujina/"
+    mem_limit: 200m
     hostname: mujina.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:snapshot
+    image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.4
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -132,7 +135,7 @@ services:
         condition: service_healthy
 
   manageserver:
-    image: ghcr.io/openconext/openconext-manage/manage-server:snapshot
+    image: ghcr.io/openconext/openconext-manage/manage-server:7.4.4
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
