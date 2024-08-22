@@ -19,6 +19,7 @@ services:
           - teams.dev.openconext.local
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
+          - invite.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
