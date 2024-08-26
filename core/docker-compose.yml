@@ -144,7 +144,7 @@ services:
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=devconf"
+    command: java -jar app.jar --spring.profiles.active=devconf  --spring.config.location=/config/
     hostname: manageserver.docker
     working_dir: /
     healthcheck:
@@ -349,6 +349,7 @@ services:
       coreconextdev:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./pdp/application.properties:/application.properties
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: pdpserver.docker
