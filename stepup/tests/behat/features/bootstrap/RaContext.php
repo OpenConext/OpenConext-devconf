@@ -55,7 +55,7 @@ class RaContext implements Context
     {
         // We visit the RA location url
         $this->minkContext->visit($this->raUrl);
-        $this->iAmLoggedInIntoTheRaPortalAs('admin', 'yubikey');
+        $this->iAmLoggedInIntoTheRaPortalAsWith('admin', 'yubikey');
 
         $this->iVetASpecificSecondFactor(
             $tokenType,
@@ -119,10 +119,10 @@ class RaContext implements Context
     /**
      * @Given /^I am logged in into the ra portal as "([^"]*)" with a "([^"]*)" token$/
      */
-    public function iAmLoggedInIntoTheRaPortalAs($userName, $tokenType)
+    public function iAmLoggedInIntoTheRaPortalAsWith($userName, $tokenType)
     {
         // Login into RA
-        $this->iTryToLoginIntoTheRaPortalAs($userName, $tokenType);
+        $this->iTryToLoginIntoTheRaPortalAsWith($userName, $tokenType);
         // We are now on the RA homepage
         $this->minkContext->assertPageAddress('https://ra.dev.openconext.local');
         $this->iSwitchLocaleTo('English');
@@ -131,9 +131,9 @@ class RaContext implements Context
     }
 
     /**
-     * @Given /^I try to login into the ra portal as "([^"]*)" with a "([^"]*)" token$/
+     * @Given /^I try to login into the ra portal as "([^"]*)"$/
      */
-    public function iTryToLoginIntoTheRaPortalAs($userName, $tokenType)
+    public function iTryToLoginIntoTheRaPortalAs($userName)
     {
         // We visit the RA location url
         $this->minkContext->getSession()->reset();
@@ -141,6 +141,14 @@ class RaContext implements Context
 
         // The admin user logs in and gives a Yubikey second factor
         $this->authContext->authenticateWithIdentityProviderForWithStepup($userName);
+    }
+
+    /**
+     * @Given /^I try to login into the ra portal as "([^"]*)" with a "([^"]*)" token$/
+     */
+    public function iTryToLoginIntoTheRaPortalAsWith($userName, $tokenType)
+    {
+        $this->iTryToLoginIntoTheRaPortalAs($userName);
         switch ($tokenType) {
             case "yubikey":
                 $this->authContext->verifyYuikeySecondFactor();
@@ -704,5 +712,13 @@ class RaContext implements Context
         echo $this->minkContext->getSession()->getCurrentUrl();
         echo $this->minkContext->getSession()->getPage()->getContent();
         die;
+    }
+
+    /**
+     * @Given /^I die$/
+     */
+    public function andIDie()
+    {
+        $this->diePrintingContent();
     }
 }
