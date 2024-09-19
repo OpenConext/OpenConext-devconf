@@ -12,6 +12,7 @@ class SecondFactorAuthContext implements Context
     const SSO_SP = 'default-sp';
     const SFO_SP = 'second-sp';
     const TEST_NAMEID = 'urn:collab:person:institution-a.example.com:jane-a1';
+    const TEST_NAMEID_ADFS = 'urn:collab:person:dev.openconext.local:admin';
 
     /**
      * @var \Behat\MinkExtension\Context\MinkContext
@@ -100,6 +101,53 @@ class SecondFactorAuthContext implements Context
             $this->minkContext->fillField('subject', self::TEST_NAMEID);
         }
         $this->minkContext->pressButton('Login');
+        if ($this->activeIdp === self::SFO_IDP) {
+            // Pass through the SFO endpoint in Gateway
+            $this->minkContext->pressButton('Submit');
+            $this->diePrintingContent();
+        }
+    }
+
+    /**
+     * @When I start an SFO authentication for :arg1
+     */
+    public function startASfoAuthenticationFor(string $userIdentifier)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('subject', $userIdentifier);
+        $this->minkContext->pressButton('Login');
+    }
+
+    /**
+     * @When I visit the ADFS service provider
+     */
+    public function visitAdfsServiceProvider()
+    {
+        $nameId = self::TEST_NAMEID;
+        if ($this->activeIdp === self::SFO_IDP) {
+            $nameId = self::TEST_NAMEID_ADFS;
+        }
+        $this->logInSimulatingAdfsFor($nameId);
+    }
+
+    /**
+     * @When I start an ADFS authentication for :arg1
+     */
+    public function logInSimulatingAdfsFor(string $userIdentifier)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->selectOption('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->selectOption('ssobinding', 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST');
+        $this->minkContext->checkOption('emulateadfs');
+
+        $this->minkContext->fillField('subject', $userIdentifier);
+        $this->minkContext->pressButton('Login');
+        $this->minkContext->pressButton('Yes, continue');
     }
 
     private function fillField($session, $field, $value)
@@ -135,7 +183,7 @@ class SecondFactorAuthContext implements Context
             case "yubikey":
                 $this->authenticateUserYubikeyInGateway();
                 break;
-            case "dummy":
+            case "demo-gssp":
                 $this->authenticateUserInDummyGsspApplication();
                 break;
             default:
@@ -145,7 +193,6 @@ class SecondFactorAuthContext implements Context
                         $tokenType
                     )
                 );
-                break;
         }
     }
 
@@ -171,7 +218,7 @@ class SecondFactorAuthContext implements Context
             case "yubikey":
                 $this->cancelYubikeySsoAuthentication();
                 break;
-            case "dummy":
+            case "demo-gssp":
                 $this->cancelAuthenticationInDummyGsspApplication();
                 break;
             default:
@@ -205,19 +252,24 @@ class SecondFactorAuthContext implements Context
 
     public function authenticateUserInDummyGsspApplication()
     {
-        $this->minkContext->assertPageAddress('http://localhost:1234/authentication');
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
 
         // Trigger the dummy authentication action.
         $this->minkContext->pressButton('Authenticate user');
 
         // Pass through the 'return to sp' redirection page.
         $this->minkContext->pressButton('Submit');
+        // And continue back to the SP via Gateway
+        $this->minkContext->pressButton('Submit');
     }
 
     public function authenticateUserYubikeyInGateway()
     {
-        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sso/yubikey');
-
+        try {
+            $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sso/yubikey');
+        } catch (Exception $e) {
+            $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sfo/yubikey');
+        }
         // Give an OTP
         $this->minkContext->fillField('gateway_verify_yubikey_otp_otp', 'ccccccdhgrbtucnfhrhltvfkchlnnrndcbnfnnljjdgf');
         // Simulate the enter press the yubikey otp generator
@@ -251,18 +303,29 @@ class SecondFactorAuthContext implements Context
 
     public function cancelAuthenticationInDummyGsspApplication()
     {
-        $this->minkContext->assertPageAddress('http://localhost:1234/authentication');
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
 
         // Cancel the dummy authentication action.
         $this->minkContext->pressButton('Return authentication failed');
 
-        // Pass through the 'return to sp' redirection page.
+        // Pass through the gssp
+        $this->minkContext->pressButton('Submit');
+        // Pass through the Gateway
         $this->minkContext->pressButton('Submit');
     }
 
     public function cancelYubikeySsoAuthentication()
     {
-        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sso/yubikey');
+        switch ($this->activeSp) {
+            case 'second-sp':
+                $this->minkContext->assertPageAddress('/verify-second-factor/sfo/yubikey');
+                break;
+            case 'default-sp':
+                $this->minkContext->assertPageAddress('/verify-second-factor/sso/yubikey');
+                break;
+            default:
+                throw new Exception($this->activeSp . ' is not supported for yubikey cancellation');
+        }
         // Cancel the yubikey authentication action.
         $this->minkContext->pressButton('Cancel');
         // Pass through the 'return to sp' redirection page.
@@ -347,11 +410,59 @@ class SecondFactorAuthContext implements Context
      */
     public function assertErrorAtServiceProvider()
     {
-        $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp');
+        switch ($this->activeSp) {
+            case 'second-sp':
+                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/second-sp');
+                break;
+            case 'default-sp':
+                $this->minkContext->assertPageAddress('/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp');
+                break;
+            default:
+                throw new Exception($this->activeSp . ' is not supported');
+        }
 
         $this->minkContext->assertPageContainsText(
             sprintf('Unhandled exception')
         );
+
+        $this->minkContext->assertPageNotContainsText(
+            sprintf('You are logged in to SP')
+        );
+    }
+
+    /**
+     * @Then I see an ADFS error at the service provider
+     */
+    public function assertAdfsErrorAtServiceProvider()
+    {
+        switch ($this->activeSp) {
+            case 'second-sp':
+                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/second-sp');
+                break;
+            case 'default-sp':
+                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/default-sp');
+                break;
+            default:
+                throw new Exception($this->activeSp . ' is not supported');
+        }
+
+        $this->minkContext->assertPageContainsText(
+            sprintf('Unhandled exception')
+        );
+
+        $currentUrl = $this->minkContext->getSession()->getCurrentUrl();
+        // With behat we can not verify if the Context and AuthMethod are present in the POST request data, but we can
+        // check if Gateway added back the original query string
+        $expectedAdfsParams = '?SAMLRequest=request_that_must_be_kept&Context=context_value_that_must_be_kept';
+        // The original parameters sent by the ADFS client should still be on the Url
+        if (strpos($currentUrl, $expectedAdfsParams) === false) {
+            throw new Exception(
+                sprintf(
+                    'The original Adfs parameters are not on the error page (expected: "%s")',
+                    $expectedAdfsParams
+                )
+            );
+        }
 
         $this->minkContext->assertPageNotContainsText(
             sprintf('You are logged in to SP')
