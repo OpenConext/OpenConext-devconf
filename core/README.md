@@ -27,7 +27,7 @@ Add the following line in your hosts file (/etc/hosts )
 
 If all goes wel, you can now login. Please see the section below to find out where you can login.
 
-*please not that this starts the environment with the profile oidc. Bringing it down requires this command:*
+*Please note that this starts the environment with the profile oidc. Bringing it down requires this command:*
 ```
 docker compose --profile oidc down
 ```
