@@ -38,7 +38,7 @@ push:
     user: manage
     name: manage
     password: secret
-    enabled: true
+    enabled: True
   pdp:
     url: https://pdp.dev.openconext.local/pdp/api/manage/push
     policy_url: https://pdp.dev.openconext.local/pdp/api/manage/policies
@@ -68,6 +68,7 @@ security:
 crypto:
   development-mode: True
   public-key-location: classpath:nope
+  enabled: False
 
 spring:
   mail:
