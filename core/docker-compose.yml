@@ -75,7 +75,7 @@ services:
     hostname: mongodb
 
   engine:
-    image: ghcr.io/openconext/openconext-engineblock/engineblock:feature-docker_configs
+    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
     volumes:
       - ./:/config
       - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
@@ -103,7 +103,7 @@ services:
     hostname: profile.docker
 
   mujina-idp:
-    image: ghcr.io/openconext/mujina/mujina-idp:8.0.10-SNAPSHOT
+    image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
     volumes:
       - ./:/config
     networks:
@@ -113,7 +113,7 @@ services:
     hostname: mujina.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.4
+    image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.9
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -135,12 +135,13 @@ services:
         condition: service_healthy
 
   manageserver:
-    image: ghcr.io/openconext/openconext-manage/manage-server:7.4.4
+    image: ghcr.io/openconext/openconext-manage/manage-server:7.4.9
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
       - ./manage/:/config/
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
@@ -166,7 +167,7 @@ services:
         condition: service_healthy
 
   oidcng:
-    image: ghcr.io/openconext/openconext-oidcng/oidcng:snapshot
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.14
     networks:
       coreconextdev:
     volumes:
@@ -185,7 +186,7 @@ services:
       - "extras"
 
   oidcplaygroundgui:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:snapshot
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
     networks:
       coreconextdev:
     hostname: oidcplagroundgui.docker
@@ -195,11 +196,12 @@ services:
       - "extras"
 
   oidcplaygroundserver:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:snapshot
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:3.0.1
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
@@ -212,7 +214,7 @@ services:
       - "extras"
 
   teamsgui:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:snapshot
+    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
     volumes:
       - ./:/config
     environment:
@@ -237,11 +239,12 @@ services:
       - "extras"
 
   teamsserver:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-server:snapshot
+    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.3.1
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
@@ -256,14 +259,14 @@ services:
     image: ghcr.io/openconext/openconext-invite/inviteserver:snapshot
     environment:
       USE_SYSTEM_CA_CERTS: true
-    mem_limit: 200m
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
-    hostname: teamsserver.docker
+    hostname: inviteserver.docker
     working_dir: /
     profiles:
       - "php"
@@ -271,7 +274,7 @@ services:
       - "extras"
 
   inviteclient:
-      image: ghcr.io/openconext/openconext-invite/inviteclient:snapshot
+      image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
       volumes:
         - ./:/config
       environment:
@@ -290,7 +293,7 @@ services:
         - "teams"
   
   invitewelcome:
-      image: ghcr.io/openconext/openconext-invite/invitewelcome:snapshot
+      image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
       volumes:
         - ./:/config
       environment:
@@ -309,13 +312,15 @@ services:
         - "teams"
 
   voot:
-    image: ghcr.io/openconext/openconext-voot/voot:snapshot
+    image: ghcr.io/openconext/openconext-voot/voot:6.2.0
+    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
       coreconextdev:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: voot.docker
@@ -323,15 +328,16 @@ services:
     profiles:
       - "teams"
       - "extras"
-
   aa:
-    image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:snapshot
+    image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:3.2.0
+    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
       coreconextdev:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: aa.docker
@@ -342,7 +348,8 @@ services:
       - "php"
   
   pdpserver:
-    image: ghcr.io/openconext/openconext-pdp/pdp-server:snapshot
+    image: ghcr.io/openconext/openconext-pdp/pdp-server:5.1.0
+    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -350,6 +357,7 @@ services:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
       - ./pdp/application.properties:/application.properties
+      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: pdpserver.docker
@@ -359,7 +367,7 @@ services:
       - "teams"
 
   pdpgui:
-    image: ghcr.io/openconext/openconext-pdp/pdp-gui:snapshot
+    image: ghcr.io/openconext/openconext-pdp/pdp-gui:5.1.0
     volumes:
       - ./:/config
     environment:
@@ -381,9 +389,10 @@ services:
         condition: service_healthy
     profiles:
       - "extras"
+      - "teams"
 
   userlifecycle:
-    image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:feature-docker_configs
+    image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:prod
     environment:
       APP_ENV: prod
     volumes:
