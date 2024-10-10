@@ -36,7 +36,7 @@ parameters:
   ## * How attributes are displayed in Profile and Consent
   ## * How attributes are Normalized and Denormalized
   ## * How attributes are validated
-  attribute_definition_file_path: %kernel.project_dir%/application/configs/attributes.json
+  attribute_definition_file_path: %kernel.project_dir%/../application/configs/attributes.json
 
   ## The Signing / Encryption keys used for the SAML2 authentication and metadata
   ## When EngineBlock signs responses (when it acts as an Idp)
@@ -224,6 +224,7 @@ parameters:
   feature_block_user_on_violation: false
   feature_enable_consent: true
   feature_stepup_sfo_override_engine_entityid: false
+  feature_enable_idp_initiated_flow: true
 
   ##########################################################################################
   ## PROFILE SETTINGS
@@ -294,3 +295,5 @@ parameters:
   # The time the cookie expires. This is a timestamp in number of seconds since the authentication.
   # If set to 0 the cookie will expire at the end of the session (when the browser closes).
   sso_session_cookie_max_age: 0
+
+  auth.log.attributes: []
