@@ -41,7 +41,7 @@ services:
       - 3306:3306
 
   mongo:
-    image: bitnami/mongodb:7.0
+    image: ghcr.io/xavidop/mongodb:7.0
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -105,6 +105,7 @@ services:
 
   mujina-idp:
     image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
+    platform: amd64
     volumes:
       - ./:/config
     networks:
@@ -114,6 +115,7 @@ services:
 
   managegui:
     image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.9
+    platform: amd64
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -136,6 +138,7 @@ services:
 
   manageserver:
     image: ghcr.io/openconext/openconext-manage/manage-server:7.4.9
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -168,6 +171,7 @@ services:
 
   oidcng:
     image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.14
+    platform: amd64
     networks:
       coreconextdev:
     volumes:
@@ -187,6 +191,7 @@ services:
 
   oidcplaygroundgui:
     image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
+    platform: amd64
     networks:
       coreconextdev:
     hostname: oidcplagroundgui.docker
@@ -197,6 +202,7 @@ services:
 
   oidcplaygroundserver:
     image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:3.0.1
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -215,6 +221,7 @@ services:
 
   teamsgui:
     image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
+    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -240,6 +247,7 @@ services:
 
   teamsserver:
     image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.3.1
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -257,6 +265,7 @@ services:
 
   inviteserver:
     image: ghcr.io/openconext/openconext-invite/inviteserver:snapshot
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -275,6 +284,7 @@ services:
 
   inviteclient:
     image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
+    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -294,6 +304,7 @@ services:
 
   invitewelcome:
     image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
+    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -313,6 +324,7 @@ services:
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:6.2.0
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -329,6 +341,7 @@ services:
       - "extras"
   aa:
     image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:3.2.0
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -347,6 +360,7 @@ services:
 
   pdpserver:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:5.1.0
+    platform: amd64
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -365,6 +379,7 @@ services:
 
   pdpgui:
     image: ghcr.io/openconext/openconext-pdp/pdp-gui:5.1.0
+    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -390,6 +405,7 @@ services:
 
   userlifecycle:
     image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:prod
+    platform: amd64
     environment:
       APP_ENV: prod
     volumes:
