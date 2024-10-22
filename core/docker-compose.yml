@@ -110,7 +110,6 @@ services:
     networks:
       coreconextdev:
     command: "--spring.config.location=/config/mujina/"
-    mem_limit: 200m
     hostname: mujina.docker
 
   managegui:
@@ -314,7 +313,6 @@ services:
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:6.2.0
-    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -331,7 +329,6 @@ services:
       - "extras"
   aa:
     image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:3.2.0
-    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -350,7 +347,6 @@ services:
 
   pdpserver:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:5.1.0
-    mem_limit: 200m
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
