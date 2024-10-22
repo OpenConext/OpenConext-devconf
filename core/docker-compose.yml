@@ -221,7 +221,6 @@ services:
 
   teamsgui:
     image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
-    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -284,7 +283,6 @@ services:
 
   inviteclient:
     image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
-    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -304,7 +302,6 @@ services:
 
   invitewelcome:
     image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
-    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -379,7 +376,6 @@ services:
 
   pdpgui:
     image: ghcr.io/openconext/openconext-pdp/pdp-gui:5.1.0
-    platform: amd64
     volumes:
       - ./:/config
     environment:
@@ -405,7 +401,6 @@ services:
 
   userlifecycle:
     image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:prod
-    platform: amd64
     environment:
       APP_ENV: prod
     volumes:
