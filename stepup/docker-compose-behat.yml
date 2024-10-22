@@ -1,6 +1,7 @@
+---
 services:
- 
-  behat: 
+
+  behat:
     image: ghcr.io/openconext/openconext-devconf/openconext-devconf:test
     environment:
       - APP_ENV=${APP_ENV:-prod}

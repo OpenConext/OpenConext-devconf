@@ -1,3 +1,4 @@
+---
 services:
   haproxy:
     image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
@@ -274,42 +275,42 @@ services:
       - "extras"
 
   inviteclient:
-      image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
-      volumes:
-        - ./:/config
-      environment:
-        HTTPD_CSP: ""
-        HTTPD_SERVERNAME: "invite.dev.openconext.local"
-      networks:
-        coreconextdev:
-      hostname: inviteclient.docker
-      depends_on:
-        engine:
-          condition: service_healthy
-        mariadb:
-          condition: service_healthy
-      profiles:
-        - "extras"
-        - "teams"
-  
+    image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
+    volumes:
+      - ./:/config
+    environment:
+      HTTPD_CSP: ""
+      HTTPD_SERVERNAME: "invite.dev.openconext.local"
+    networks:
+      coreconextdev:
+    hostname: inviteclient.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "extras"
+      - "teams"
+
   invitewelcome:
-      image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
-      volumes:
-        - ./:/config
-      environment:
-        HTTPD_CSP: ""
-        HTTPD_SERVERNAME: "invite.dev.openconext.local"
-      networks:
-        coreconextdev:
-      hostname: inviteclient.docker
-      depends_on:
-        engine:
-          condition: service_healthy
-        mariadb:
-          condition: service_healthy
-      profiles:
-        - "extras"
-        - "teams"
+    image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
+    volumes:
+      - ./:/config
+    environment:
+      HTTPD_CSP: ""
+      HTTPD_SERVERNAME: "invite.dev.openconext.local"
+    networks:
+      coreconextdev:
+    hostname: inviteclient.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "extras"
+      - "teams"
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:6.2.0
@@ -346,7 +347,7 @@ services:
       - "teams"
       - "extras"
       - "php"
-  
+
   pdpserver:
     image: ghcr.io/openconext/openconext-pdp/pdp-server:5.1.0
     mem_limit: 200m

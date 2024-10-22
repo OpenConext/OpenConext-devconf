@@ -1,3 +1,4 @@
+---
 services:
   userlifecycle:
     image: ghcr.io/openconext/openconext-basecontainers/${USERLIFECYCLE_PHP_IMAGE:-php82-apache2-node20-composer2:latest}

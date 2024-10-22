@@ -1,38 +1,39 @@
+---
 default:
-    autoload:
-        - '%paths.base%/../features/bootstrap/'
-    formatters:
-      progress:
-        paths: false
-    suites:
-        default:
-            filters:
-              tags: "~@wip&&~@skip"
-            paths:
-              - '%paths.base%/../features'
-            contexts:
-              - FeatureContext: ~
-              - SecondFactorAuthContext:
-                  spTestUrl: 'https://ssp.dev.openconext.local/simplesaml/sp.php'
-              - SelfServiceContext:
-                  selfServiceUrl: 'https://selfservice.dev.openconext.local'
-                  mailCatcherUrl: 'http://mailcatcher:1080/messages'
-              - RaContext:
-                  raUrl: 'https://ra.dev.openconext.local'
-              - ApiFeatureContext:
-                  apiUrl: 'https://middleware.dev.openconext.local'
-              - Behat\MinkExtension\Context\MinkContext
+  autoload:
+    - '%paths.base%/../features/bootstrap/'
+  formatters:
+    progress:
+      paths: false
+  suites:
+    default:
+      filters:
+        tags: "~@wip&&~@skip"
+      paths:
+        - '%paths.base%/../features'
+      contexts:
+        - FeatureContext: ~
+        - SecondFactorAuthContext:
+            spTestUrl: 'https://ssp.dev.openconext.local/simplesaml/sp.php'
+        - SelfServiceContext:
+            selfServiceUrl: 'https://selfservice.dev.openconext.local'
+            mailCatcherUrl: 'http://mailcatcher:1080/messages'
+        - RaContext:
+            raUrl: 'https://ra.dev.openconext.local'
+        - ApiFeatureContext:
+            apiUrl: 'https://middleware.dev.openconext.local'
+        - Behat\MinkExtension\Context\MinkContext
 
-    extensions:
-        Behat\MinkExtension:
-            base_url: ~
-            goutte: ~
-            sessions:
-                default:
-                  goutte:
-                    guzzle_parameters:
-                      verify: False
-                second:
-                  goutte:
-                    guzzle_parameters:
-                      verify: False
+  extensions:
+    Behat\MinkExtension:
+      base_url: ~
+      goutte: ~
+      sessions:
+        default:
+          goutte:
+            guzzle_parameters:
+              verify: False
+        second:
+          goutte:
+            guzzle_parameters:
+              verify: False

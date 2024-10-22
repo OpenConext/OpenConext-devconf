@@ -1,3 +1,4 @@
+---
 cookie:
   secure: true
   # Options are 'Strict', 'Lax' or 'None'

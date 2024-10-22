@@ -1,3 +1,4 @@
+---
 # The logging configuration.
 logging:
   config: file:////config/mujina/logback.xml

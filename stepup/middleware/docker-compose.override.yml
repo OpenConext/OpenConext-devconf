@@ -1,3 +1,4 @@
+---
 services:
   middleware:
     image: ghcr.io/openconext/openconext-basecontainers/${MIDDLEWARE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}

@@ -1,3 +1,4 @@
+---
 name: build-push-test-docker-image
 
 on:
@@ -24,7 +25,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Set docker labels and tags
         id: meta
         uses: docker/metadata-action@v5

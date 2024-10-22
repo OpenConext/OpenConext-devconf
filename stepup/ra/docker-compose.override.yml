@@ -1,3 +1,4 @@
+---
 services:
   ra:
     image: ghcr.io/openconext/openconext-basecontainers/${RA_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
