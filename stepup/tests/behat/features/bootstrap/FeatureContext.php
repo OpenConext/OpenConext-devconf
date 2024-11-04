@@ -51,17 +51,17 @@ class FeatureContext implements Context
     {
         // Generate test databases
         echo "Preparing test schemas\n";
-        shell_exec("docker exec -it stepup-middleware-1 bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -it stepup-gateway-1  bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -it stepup-middleware-1 bin/console doctrine:schema:create --env=smoketest");
-        shell_exec("docker exec -it stepup-gateway-1 bin/console doctrine:schema:create --env=smoketest");
+        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --env=smoketest --force");
+        shell_exec("docker exec -t stepup-gateway-1  bin/console doctrine:schema:drop --env=smoketest --force");
+        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --env=smoketest");
+        shell_exec("docker exec -t stepup-gateway-1 bin/console doctrine:schema:create --env=smoketest");
 
         echo "Replaying event stream\n";
         // Import the events.sql into middleware
         shell_exec("mysql -uroot -psecret middleware_test -h mariadb < ./fixtures/events.sql");
         shell_exec("./fixtures/middleware-push-config.sh");
         // Perform an event replay
-        shell_exec("docker exec -ti stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -q");
+        shell_exec("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -q");
     }
 
     /**
