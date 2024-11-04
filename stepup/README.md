@@ -1,17 +1,17 @@
 # OpenConext Stepup config for development and testing purposes
 
-This folder contains configuration that is needed to get an OpenConext Stepup developmentenvironment up and running. 
+This folder contains configuration that is needed to get an OpenConext Stepup developmentenvironment up and running.
 
 The main configuration for each app can be found in each application repository. The extension .dist is used for that (parameters.yaml.dist for instance). The idea is that these configuration files contain everything necessary to get a development environment up and running and that there is no need to change that. The containers will have a working copy of those .dist configuration files.
 This repository contains the docker-compose.yml to get all containers that are used for development up and running.
 
-* The application containers 
+* The application containers
 * A loadbalancer in front of it
 * A MariaDB container for the databases.
 
-A SQL in the directory dbschema  which creates databases and users needed for OpenConext Stepup development is mounted in the MariaDB container. 
+A SQL in the directory dbschema  which creates databases and users needed for OpenConext Stepup development is mounted in the MariaDB container.
 
-The application config directories contain the SAML key material. Those are not shipped with the application containers to prevent accidental usage of that key material in a production environment. The docker-compose mounts the application specific directory in /config. 
+The application config directories contain the SAML key material. Those are not shipped with the application containers to prevent accidental usage of that key material in a production environment. The docker-compose mounts the application specific directory in /config.
 
 # Getting everything up and running
 
@@ -75,7 +75,7 @@ You can add as many services+local code paths that you need.
 The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
 
 # Accessing the database from your IDE
-The Maria DB container exposes her 3306 port to the outside. So you should be able to connect to the database with 
+The Maria DB container exposes her 3306 port to the outside. So you should be able to connect to the database with
 your favorite DBA tool. In PHPStorm I was able to connect to the `mariadb` host by using these setting.
 
 ```
@@ -89,7 +89,7 @@ The default development container is based on the base image with PHP7.2. You ca
 
 # Functional testing
 The stepup application suite comes with a set of Behat (Gherkin) features. These features test the stepup applications
-functionally. These tests range from simple smoketests (can we still vet a token), to more bug report driven 
+functionally. These tests range from simple smoketests (can we still vet a token), to more bug report driven
 functional tests. And everything in between.
 
 These tests live in this folder: `stepup/tests/behat/features`
@@ -117,8 +117,9 @@ STEPUP_VERSION=test
 3. Choose if you want to run the containers in the back- or foreground.
 
 3: Once the containers are up and running, you can run the behat tests
-1. Open a shell in the `behat` container `$ docker exec -it stepup-behat-1 bash`
-2. Run the tests:
+1. Install the required dependencies in the container `$ docker compose exec behat composer install`
+2. Open a shell in the `behat` container `$ docker compose exec behat bash`
+3. Run the tests:
    1. `./behat` will run all available behat tests that are not excluded using the `@SKIP` tag
    2. `./behat features/ra.feature` will only run the `ra.feature` found in the features folder
    3. `./behat features/ra.feature:20` will only run the scenario found on line 20 of the `ra.feature`
@@ -126,7 +127,7 @@ STEPUP_VERSION=test
 
 ## Writing tests
 Many of the step definitions are coded in our own Contexts. These contexts are divided into five main contexts.
-It should be straightforward where to add new definitions. The contexts are not following all the clean code or solid principles. This code is messy, be warned. 
+It should be straightforward where to add new definitions. The contexts are not following all the clean code or solid principles. This code is messy, be warned.
 
 It can be useful during debugging to use the `$this->diePrintingContent();` statement. This outputs the URI of the browser, and the last received html response. As it is hard to step debug the code that is run in a CURL based browser.
 
