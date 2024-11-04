@@ -31,6 +31,8 @@ services:
     volumes:
       - ${PWD}/dbschema:/docker-entrypoint-initdb.d
       - stepup_mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
     hostname: mariadb.docker
 
   behat:
@@ -56,6 +58,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: webauthn.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   ssp:
     image: ghcr.io/openconext/openconext-devssp/devssp:latest
@@ -77,6 +82,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: middleware.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   gateway:
     image: ghcr.io/openconext/stepup-gateway/stepup-gateway:${STEPUP_VERSION:-prod}
@@ -90,6 +98,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: gateway.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   ra:
     image: ghcr.io/openconext/stepup-ra/stepup-ra:${STEPUP_VERSION:-prod}
@@ -102,6 +113,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: ra.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   selfservice:
     image: ghcr.io/openconext/stepup-selfservice/stepup-selfservice:${STEPUP_VERSION:-prod}
@@ -114,6 +128,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: selfservice.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   demogssp:
     image: ghcr.io/openconext/stepup-gssp-example/stepup-gssp-example:${STEPUP_VERSION:-prod}
@@ -126,6 +143,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: demogssp.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   tiqr:
     image: ghcr.io/openconext/stepup-tiqr/stepup-tiqr:prod
@@ -138,6 +158,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: tiqr.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   azuremfa:
     image: ghcr.io/openconext/stepup-azuremfa/stepup-azuremfa:${STEPUP_VERSION:-prod}
@@ -150,6 +173,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: azuremfa.docker
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   mailcatcher:
     image: sj26/mailcatcher:latest
