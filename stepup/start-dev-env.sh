@@ -13,7 +13,6 @@ else
 fi
 
 if [ "${STEPUP_VERSION}" == "test" ]; then
-	extra_compose_args="-f docker-compose-behat.yml"
 	MODE="test"
 	echo -e "${GREEN}Starting in test mode${ENDCOLOR}"
 else

@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      DOCKER_COMPOSE: docker compose -f docker-compose.yml -f docker-compose-behat.yml
+      DOCKER_COMPOSE: docker compose -f docker-compose.yml
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -30,13 +30,13 @@ jobs:
       - name: Install composer dependencies on the Behat container
         run: |
           cd stepup
-          ${DOCKER_COMPOSE} exec -T behat bash -lc "composer install --ignore-platform-reqs -n"
+          ${DOCKER_COMPOSE} exec behat composer install --ignore-platform-reqs -n
       - name: Sleep for 10 seconds
         run: sleep 10s
       - name: Run Behat tests
         run: |
           cd stepup
-          docker exec -t stepup-behat-1 bash -lc "./behat"
+          ${DOCKER_COMPOSE} exec behat ./behat
       - name: Output logs on failure
         if: failure()
         run: |
