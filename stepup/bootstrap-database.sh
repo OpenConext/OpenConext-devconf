@@ -30,14 +30,14 @@ echo ""
 # WebAuthn migrations are currently broken
 
 # Initialize the webauthn database schema
-#echo "Initializing/upgrading the webauthn database schema"
-#if ! docker compose -f "${DIR}/docker-compose.yml" exec webauthn php /var/www/html/bin/console doctrine:migrations:migrate --env=prod --no-interaction; then
-#    echo "Error initializing the webauthn database schema"
-#    echo ""
-#    exit 1
-#fi
-#echo "Webauthn database schemas initialized/upgraded"
-#echo ""
+echo "Initializing/upgrading the webauthn database schema"
+if ! docker compose -f "${DIR}/docker-compose.yml" exec webauthn php /var/www/html/bin/console doctrine:migrations:migrate --env=prod --no-interaction; then
+    echo "Error initializing the webauthn database schema"
+    echo ""
+    exit 1
+fi
+echo "Webauthn database schemas initialized/upgraded"
+echo ""
 
 # Push middleware configuration
 echo "Pushing new middleware configuration"
