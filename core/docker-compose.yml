@@ -428,39 +428,16 @@ services:
     hostname: redis.docker
 
   # This is apache RP
-  #   client -> sbs-client:3000
-  #   api    -> sbs-api:8080
+  #   client -> docroot
+  #   api    -> sbs-server:8080
   sbs:
     image: ghcr.io/surfscz/sram-sbs-client:openconext-dev
-    ports:
-      - 8080:80
     networks:
       coreconextdev:
-    # volumes:
-    #   - ./sbs/apache.conf:/etc/apache2/sites-enabled/apache.conf:ro"
     hostname: sbs.docker
     depends_on:
       sbs-server:
         condition: service_healthy
-
-  # This is the version with node/yarn
-  # sbs-client:
-  #   image: "node:22"
-  #   environment:
-  #     - NODE_ENV=development
-  #     - HOST=0.0.0.0
-  #     - PORT=8080
-  #   networks:
-  #     coreconextdev:
-  #   healthcheck:
-  #     test: ["CMD", "curl", "--fail", "-s", "http://localhost:8080/index.html"]
-  #     timeout: 5s
-  #     retries: 10
-  #   volumes:
-  #     - ../../SBS/client:/home/node/app
-  #   working_dir: /home/node/app
-  #   hostname: sbs-client.docker
-  #   command: "yarn start"
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:openconext-dev

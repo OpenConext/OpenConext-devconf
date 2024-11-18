@@ -2,12 +2,10 @@
 services:
   sbs:
     image: ghcr.io/surfscz/sram-sbs:openconext-dev
-    ports:
-      - 8080:80
     networks:
       coreconextdev:
-    volumes:
-      - ./sbs/apache-dev.conf:/etc/apache2/sites-enabled/apache.conf:ro"
+    # volumes:
+    #   - ./sbs/apache-dev.conf:/etc/apache2/sites-enabled/apache.conf:ro"
     hostname: sbs.docker
     depends_on:
       sbs-client:
