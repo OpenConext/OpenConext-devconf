@@ -23,11 +23,7 @@ Feature: A RAA manages ra candidates in the ra environment
     Then I should see the following candidates:
       | name                                  | institution               |
       | jane-a-ra                             | institution-a.example.com |
-      | jane-b1 institution-b.example.com     | institution-b.example.com |
-      | user-b-ra institution-b.example.com   | institution-b.example.com |
-      | user-b5 institution-b.example.com     | institution-b.example.com |
       | Admin                                 | dev.openconext.local      |
-      | SRAA2                                 | dev.openconext.local      |
 
   Scenario: SRAA user checks if "Jane Toppan" is a candidate for all institutions (with filtering on institution-a)
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -42,9 +38,6 @@ Feature: A RAA manages ra candidates in the ra environment
     When I visit the RA promotion page
     Then I should see the following candidates for "institution-b.example.com":
       | name                                | institution               |
-      | jane-b1 institution-b.example.com   | institution-b.example.com |
-      | user-b-ra institution-b.example.com | institution-b.example.com |
-      | user-b5 institution-b.example.com   | institution-b.example.com |
 
   Scenario: SRAA user demotes "jane-a-ra" to no longer be an RAA for "institution-a"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -57,18 +50,12 @@ Feature: A RAA manages ra candidates in the ra environment
     Then I should see the following candidates for "institution-a.example.com":
       | name                                | institution               |
       | jane-a-ra                           | institution-a.example.com |
-      | jane-b1 institution-b.example.com   | institution-b.example.com |
-      | user-b-ra institution-b.example.com | institution-b.example.com |
-      | user-b5 institution-b.example.com   | institution-b.example.com |
 
   Scenario: SRAA user checks if "Jane Toppan" is not a candidate for "institution-b"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
     When I visit the RA promotion page
     Then I should see the following candidates for "institution-b.example.com":
       | name                                | institution               |
-      | jane-b1 institution-b.example.com   | institution-b.example.com |
-      | user-b-ra institution-b.example.com | institution-b.example.com |
-      | user-b5 institution-b.example.com   | institution-b.example.com |
 
   Scenario: SRAA user checks if "Jane Toppan" is not listed for "institution-a"
     Given I am logged in into the ra portal as "admin" with a "yubikey" token

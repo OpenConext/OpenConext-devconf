@@ -4,6 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Ramsey\Uuid\Uuid;
 use Surfnet\StepupBehat\Factory\CommandPayloadFactory;
 use Surfnet\StepupBehat\Repository\SecondFactorRepository;
@@ -65,9 +66,9 @@ class FeatureContext implements Context
     }
 
     /**
-     * @BeforeFeature
+     * @BeforeSuite
      */
-    public static function setupDatabase(BeforeFeatureScope $scope)
+    public static function setupDatabase(BeforeSuiteScope $scope)
     {
         // Generate test databases
         echo "Preparing test schemas\n";
@@ -83,8 +84,25 @@ class FeatureContext implements Context
         // Perform an event replay
         echo "Replaying event stream\n";
         self::execCommand("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
+
         // Push config
+        echo "Push Middleware config\n";
         self::execCommand("./fixtures/middleware-push-config.sh");
+        self::execCommand("./fixtures/middleware-push-whitelist.sh");
+        self::execCommand("./fixtures/middleware-push-institution.sh");
+
+        // Write base setup for initializing features
+        echo "Dump empty setup to mysql file\n";
+        self::execCommand("mysqldump -h mariadb -u root -psecret --single-transaction --databases middleware_test gateway_test > setup.sql");
+    }
+
+    /**
+     * @BeforeFeature
+     */
+    public static function load(BeforeFeatureScope $scope)
+    {
+        // restore base setup
+        self::execCommand("mysql -h mariadb -u root -psecret < setup.sql");
     }
 
     /**
