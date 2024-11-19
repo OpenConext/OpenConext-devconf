@@ -387,14 +387,6 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->pressButton('Yes, continue');
     }
 
-    private function passTroughIdentityProviderAssertionConsumerService()
-    {
-        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/authentication/consume-assertion');
-
-        $this->minkContext->assertPageNotContainsText('Incorrect username or password');
-        $this->minkContext->pressButton('Submit');
-    }
-
     /**
      * @Then I am logged on the service provider
      */

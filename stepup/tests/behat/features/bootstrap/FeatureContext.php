@@ -44,6 +44,26 @@ class FeatureContext implements Context
      */
     private $institutionConfiguration;
 
+    private static function execCommand(string $command): void
+    {
+        $output = [];
+        $returnCode = -1;
+        $result = exec($command, $output, $returnCode);
+
+        if($result === false) {
+            echo "Failed executing command\n";
+            die();
+        }
+
+        foreach ($output as $line) {
+            echo $line."\n";
+        }
+
+        if ($returnCode !== 0) {
+            die();
+        }
+    }
+
     /**
      * @BeforeFeature
      */
@@ -51,17 +71,20 @@ class FeatureContext implements Context
     {
         // Generate test databases
         echo "Preparing test schemas\n";
-        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -t stepup-gateway-1  bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --env=smoketest");
-        shell_exec("docker exec -t stepup-gateway-1 bin/console doctrine:schema:create --env=smoketest");
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=middleware --env=smoketest');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=gateway --env=smoketest');
 
-        echo "Replaying event stream\n";
         // Import the events.sql into middleware
-        shell_exec("mysql -uroot -psecret middleware_test -h mariadb < ./fixtures/events.sql");
-        shell_exec("./fixtures/middleware-push-config.sh");
+        echo "Add events to test database\n";
+        self::execCommand("mysql -uroot -psecret middleware_test -h mariadb < ./fixtures/events.sql");
+
         // Perform an event replay
-        shell_exec("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -q");
+        echo "Replaying event stream\n";
+        self::execCommand("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
+        // Push config
+        self::execCommand("./fixtures/middleware-push-config.sh");
     }
 
     /**
