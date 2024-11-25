@@ -43,7 +43,6 @@ services:
 
   mongo:
     image: bitnami/mongodb:7.0
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: secret
@@ -418,7 +417,7 @@ services:
     hostname: mailcatcher.docker
 
   redis:
-    image: "docker.io/redis"
+    image: "redis"
     healthcheck:
       test: ["CMD", "redis-cli","ping"]
       timeout: 5s
