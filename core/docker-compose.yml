@@ -274,7 +274,7 @@ services:
       - "extras"
 
   inviteclient:
-    image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.21
+    image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.23
     volumes:
       - ./:/config
     environment:
@@ -293,7 +293,7 @@ services:
       - "teams"
 
   invitewelcome:
-    image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.21
+    image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.23
     volumes:
       - ./:/config
     environment:
