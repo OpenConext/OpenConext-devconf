@@ -45,7 +45,7 @@ class FeatureContext implements Context
      */
     private $institutionConfiguration;
 
-    private static function execCommand(string $command): void
+    public static function execCommand(string $command): void
     {
         $output = [];
         $returnCode = -1;
