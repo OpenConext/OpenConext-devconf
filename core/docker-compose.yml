@@ -425,6 +425,8 @@ services:
     networks:
       coreconextdev:
     hostname: redis.docker
+    profiles:
+      - "sbs"
 
   # This is apache RP
   #   client -> docroot
@@ -437,6 +439,8 @@ services:
     depends_on:
       sbs-server:
         condition: service_healthy
+    profiles:
+      - "sbs"
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:openconext-dev
@@ -458,6 +462,8 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+    profiles:
+      - "sbs"
 
 networks:
   coreconextdev:

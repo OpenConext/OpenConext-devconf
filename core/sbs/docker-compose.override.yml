@@ -10,6 +10,8 @@ services:
         condition: service_healthy
       sbs-server:
         condition: service_healthy
+    profiles:
+      - "sbs"
 
   # This is the version with node/yarn
   sbs-client:
@@ -29,6 +31,8 @@ services:
       retries: 10
     hostname: sbs-client.docker
     command: "yarn start"
+    profiles:
+      - "sbs"
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:openconext-dev
@@ -51,3 +55,5 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+    profiles:
+      - "sbs"
