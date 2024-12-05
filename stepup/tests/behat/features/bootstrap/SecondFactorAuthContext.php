@@ -2,6 +2,7 @@
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\MinkExtension\Context\MinkContext;
 
@@ -359,6 +360,36 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->pressButton('Login');
         $this->minkContext->pressButton('Yes, continue');
 
+    }
+
+    /**
+     * @Given /^I receive no additional attributes for "([^"]*)" from the IdP$/
+     * @param TableNode $table
+     */
+    public function authenticateIdentityProviderAndExpectNoAttributes(string $user)
+    {
+        $this->authenticateIdentityProviderAndExpectAttributes($user, new TableNode([]));
+    }
+
+    /**
+     * @Given /^I receive the following attributes for "([^"]*)" from the IdP:$/
+     * @param TableNode $table
+     */
+    public function authenticateIdentityProviderAndExpectAttributes(string $user, TableNode $table)
+    {
+        $this->minkContext->visit('https://ssp.dev.openconext.local/simplesaml/aa.php');
+
+        $this->minkContext->pressButton('delete all');
+
+        $hash = $table->getHash();
+        foreach ($hash as $row) {
+            $name = $row['name'];
+            $value = $row['value'];
+            $this->minkContext->fillField('uid', $user);
+            $this->minkContext->fillField('name', $name);
+            $this->minkContext->fillField('value', $value);
+            $this->minkContext->pressButton('add');
+        }
     }
 
     /**

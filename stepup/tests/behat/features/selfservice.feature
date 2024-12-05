@@ -33,3 +33,12 @@ Feature: A user manages his tokens in the SelfService portal
     Then I should see "The following tokens are registered for your account."
     And I should see "SMS"
     And I should see "Test a token"
+
+Scenario: A user can validate an email address when not logged into selfservice
+    Given I am logged in into the selfservice portal as "jane-a2"
+    And I register a new "Yubikey" token
+    When  I log out of the selfservice portal
+    Then I verify my e-mail address
+    And  pass through GW
+    And I choose the "RA vetting" vetting type
+

@@ -70,12 +70,41 @@ class SelfServiceContext implements Context
     }
 
     /**
+     * @Given I log out of the selfservice portal
+     */
+    public function logoutOfSelfService()
+    {
+        $this->minkContext->visit($this->selfServiceUrl);
+
+        $this->minkContext->pressButton('Sign out');
+
+        $expectBaseUrl = 'https://www.surf.nl/';
+        if (substr($this->minkContext->getSession()->getCurrentUrl(), 0, strlen($expectBaseUrl)) !== $expectBaseUrl) {
+            throw new Exception("after logout we should be redirected to the surf domain");
+        }
+    }
+
+    /**
      * @Given /^I am logged in into the selfservice portal as "([^"]*)"$/
      */
     public function iAmLoggedInIntoTheSelfServicePortalAs($userName)
     {
         // We visit the Self Service location url
         $this->minkContext->visit($this->selfServiceUrl);
+        $this->authContext->authenticateWithIdentityProviderFor($userName);
+        $this->authContext->passTroughGatewaySsoAssertionConsumerService();
+        $this->iSwitchLocaleTo('English');
+        $this->minkContext->assertPageContainsText('Registration Portal');
+    }
+
+
+    /**
+     * @Given /^I log into the selfservice portal as "([^"]*)" with activation preference "([^"]*)"$/
+     */
+    public function ilogIntoTheSelfServicePortalAsWithPreference($userName, $preference)
+    {
+        // We visit the Self Service location url
+        $this->minkContext->visit($this->selfServiceUrl.'?activate='.$preference);
         $this->authContext->authenticateWithIdentityProviderFor($userName);
         $this->authContext->passTroughGatewaySsoAssertionConsumerService();
         $this->iSwitchLocaleTo('English');
@@ -172,6 +201,8 @@ class SelfServiceContext implements Context
         $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
         $this->minkContext->pressButton('Verify');
 
+        $this->minkContext->assertPageContainsText('Verify your e-mail');
+        $this->minkContext->assertPageContainsText('Check your inbox');
         $this->minkContext->visit(
             $this->getEmailVerificationUrl()
         );
@@ -215,9 +246,45 @@ class SelfServiceContext implements Context
     }
 
     /**
+     * @When I verify my e-mail address
+     */
+    public function verifyEmailAddress()
+    {
+        $this->minkContext->visit(
+            $this->getEmailVerificationUrl()
+        );
+    }
+
+    /**
+     * @When pass through GW
+     */
+    public function passThroughGW()
+    {
+        $this->minkContext->pressButton('Yes, continue');
+        $this->minkContext->pressButton('Submit');
+    }
+
+    /**
+     * @When I activate my token
+     */
+    public function activateToken()
+    {
+        $matches = [];
+        preg_match('#/second-factor/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/vetting-types#', $this->minkContext->getSession()->getPage()->getContent(), $matches);
+        if (empty($matches)) {
+            throw new Exception('Could not find a valid second factor verification id in the url');
+        }
+        $href = reset($matches);
+
+        $this->minkContext->getSession()
+            ->getPage()
+            ->find('css', '[href="'.$href.'"]')->click();
+    }
+
+    /**
      * @When I verify my e-mail address and choose the :vettingType vetting type
      */
-    public function verifyEmailAddress(string $vettingType)
+    public function verifyEmailAddressAndChooseVettingType(string $vettingType)
     {
         ## And we should now be on the mail verification page
         $this->minkContext->assertPageContainsText('Verify your e-mail');
