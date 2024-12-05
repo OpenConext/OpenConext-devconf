@@ -508,7 +508,7 @@ class SelfServiceContext implements Context
         }
 
         $messages = json_decode($response);
-        if (!$messages) {
+        if (!is_array($messages)) {
             throw new Exception(
                 'Unable to parse mailcatcher response'
             );

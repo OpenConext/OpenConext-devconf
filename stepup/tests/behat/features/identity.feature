@@ -3,6 +3,11 @@ Feature: A (S)RA(A) user reads identities of StepUp users in the middleware API
   As a (S)RA(A) user
   I must be able to read from the middleware API
 
+  Scenario: Provision the following users:
+    Given a user "jane-a1" identified by "urn:collab:person:institution-a.example.com:jane-a-ra" from institution "institution-a.example.com" with UUID "00000000-0000-4000-8000-000000000001"
+    And a user "joe-a1" identified by "urn:collab:person:institution-a.example.com:jane-a-ra" from institution "institution-a.example.com" with UUID "00000000-0000-4000-8000-000000000002"
+    And a user "jill-a1" identified by "urn:collab:person:institution-a.example.com:jane-a-ra" from institution "institution-a.example.com" with UUID "00000000-0000-4000-8000-000000000003"
+
   Scenario: A (S)RA(A) user reads identities without additional authorization context
     Given I authenticate with user "ra" and password "secret"
     When I request "GET /identity?institution=institution-a.example.com"

@@ -4,6 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Ramsey\Uuid\Uuid;
 use Surfnet\StepupBehat\Factory\CommandPayloadFactory;
 use Surfnet\StepupBehat\Repository\SecondFactorRepository;
@@ -44,24 +45,64 @@ class FeatureContext implements Context
      */
     private $institutionConfiguration;
 
+    public static function execCommand(string $command): void
+    {
+        $output = [];
+        $returnCode = -1;
+        $result = exec($command, $output, $returnCode);
+
+        if($result === false) {
+            echo "Failed executing command\n";
+            die();
+        }
+
+        foreach ($output as $line) {
+            echo $line."\n";
+        }
+
+        if ($returnCode !== 0) {
+            die();
+        }
+    }
+
     /**
-     * @BeforeFeature
+     * @BeforeSuite
      */
-    public static function setupDatabase(BeforeFeatureScope $scope)
+    public static function setupDatabase(BeforeSuiteScope $scope)
     {
         // Generate test databases
         echo "Preparing test schemas\n";
-        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -t stepup-gateway-1  bin/console doctrine:schema:drop --env=smoketest --force");
-        shell_exec("docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --env=smoketest");
-        shell_exec("docker exec -t stepup-gateway-1 bin/console doctrine:schema:create --env=smoketest");
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=middleware --env=smoketest');
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=gateway --env=smoketest');
 
-        echo "Replaying event stream\n";
         // Import the events.sql into middleware
-        shell_exec("mysql -uroot -psecret middleware_test -h mariadb < ./fixtures/events.sql");
-        shell_exec("./fixtures/middleware-push-config.sh");
+        echo "Add events to test database\n";
+        self::execCommand("mysql -uroot -psecret middleware_test -h mariadb < ./fixtures/events.sql");
+
         // Perform an event replay
-        shell_exec("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -q");
+        echo "Replaying event stream\n";
+        self::execCommand("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
+
+        // Push config
+        echo "Push Middleware config\n";
+        self::execCommand("./fixtures/middleware-push-config.sh");
+        self::execCommand("./fixtures/middleware-push-whitelist.sh");
+        self::execCommand("./fixtures/middleware-push-institution.sh");
+
+        // Write base setup for initializing features
+        echo "Dump empty setup to mysql file\n";
+        self::execCommand("mysqldump -h mariadb -u root -psecret --single-transaction --databases middleware_test gateway_test > setup.sql");
+    }
+
+    /**
+     * @BeforeFeature
+     */
+    public static function load(BeforeFeatureScope $scope)
+    {
+        // restore base setup
+        self::execCommand("mysql -h mariadb -u root -psecret < setup.sql");
     }
 
     /**

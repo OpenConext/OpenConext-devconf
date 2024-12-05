@@ -54,11 +54,7 @@ Feature: A RAA (jane a ra) has two loa 3 tokens which makes her a valid RA candi
     Then I should see the following candidates:
       | name                                | institution               |
       | jane-a-ra                           | institution-a.example.com |
-      | jane-b1 institution-b.example.com   | institution-b.example.com |
-      | user-b5 institution-b.example.com   | institution-b.example.com |
-      | user-b-ra institution-b.example.com | institution-b.example.com |
       | Admin                               | dev.openconext.local      |
-      | SRAA2                               | dev.openconext.local      |
 
   Scenario: SRAA user checks if "jane-a-ra" is a candidate for institutions if relieved from the RAA role
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -68,11 +64,7 @@ Feature: A RAA (jane a ra) has two loa 3 tokens which makes her a valid RA candi
     And I should see the following candidates:
       | name                                | institution               |
       | jane-a-ra                           | institution-a.example.com |
-      | jane-b1 institution-b.example.com   | institution-b.example.com |
-      | user-b5 institution-b.example.com   | institution-b.example.com |
-      | user-b-ra institution-b.example.com | institution-b.example.com |
       | Admin                               | dev.openconext.local      |
-      | SRAA2                               | dev.openconext.local      |
 
   Scenario: Sraa revokes only one vetted token from "jane-a-ra" and that shouldn't remove her as candidate
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -82,11 +74,7 @@ Feature: A RAA (jane a ra) has two loa 3 tokens which makes her a valid RA candi
       And I should see the following candidates:
         | name                                | institution               |
         | jane-a-ra                           | institution-a.example.com |
-        | jane-b1 institution-b.example.com   | institution-b.example.com |
-        | user-b5 institution-b.example.com   | institution-b.example.com |
-        | user-b-ra institution-b.example.com | institution-b.example.com |
         | Admin                               | dev.openconext.local      |
-        | SRAA2                               | dev.openconext.local      |
 
   Scenario: Sraa revokes the last vetted token from "Jane Toppan" and that must remove her as candidate
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
@@ -95,8 +83,4 @@ Feature: A RAA (jane a ra) has two loa 3 tokens which makes her a valid RA candi
     Then I visit the RA promotion page
       And I should see the following candidates:
         | name                                | institution               |
-        | jane-b1 institution-b.example.com   | institution-b.example.com |
-        | user-b5 institution-b.example.com   | institution-b.example.com |
-        | user-b-ra institution-b.example.com | institution-b.example.com |
         | Admin                               | dev.openconext.local      |
-        | SRAA2                               | dev.openconext.local      |
