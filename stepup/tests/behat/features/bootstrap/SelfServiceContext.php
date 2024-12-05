@@ -70,6 +70,21 @@ class SelfServiceContext implements Context
     }
 
     /**
+     * @Given I log out of the selfservice portal
+     */
+    public function logoutOfSelfService()
+    {
+        $this->minkContext->visit($this->selfServiceUrl);
+
+        $this->minkContext->pressButton('Sign out');
+
+        $expectBaseUrl = 'https://www.surf.nl/';
+        if (substr($this->minkContext->getSession()->getCurrentUrl(), 0, strlen($expectBaseUrl)) !== $expectBaseUrl) {
+            throw new Exception("after logout we should be redirected to the surf domain");
+        }
+    }
+
+    /**
      * @Given /^I am logged in into the selfservice portal as "([^"]*)"$/
      */
     public function iAmLoggedInIntoTheSelfServicePortalAs($userName)
@@ -186,6 +201,8 @@ class SelfServiceContext implements Context
         $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
         $this->minkContext->pressButton('Verify');
 
+        $this->minkContext->assertPageContainsText('Verify your e-mail');
+        $this->minkContext->assertPageContainsText('Check your inbox');
         $this->minkContext->visit(
             $this->getEmailVerificationUrl()
         );
@@ -233,13 +250,18 @@ class SelfServiceContext implements Context
      */
     public function verifyEmailAddress()
     {
-        ## And we should now be on the mail verification page
-        $this->minkContext->assertPageContainsText('Verify your e-mail');
-        $this->minkContext->assertPageContainsText('Check your inbox');
-
         $this->minkContext->visit(
             $this->getEmailVerificationUrl()
         );
+    }
+
+    /**
+     * @When pass through GW
+     */
+    public function passThroughGW()
+    {
+        $this->minkContext->pressButton('Yes, continue');
+        $this->minkContext->pressButton('Submit');
     }
 
     /**
