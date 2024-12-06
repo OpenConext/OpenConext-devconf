@@ -6,6 +6,7 @@ CREATE DATABASE IF NOT EXISTS spdashboard;
 CREATE DATABASE IF NOT EXISTS invite;
 CREATE DATABASE IF NOT EXISTS userlifecycle;
 CREATE DATABASE IF NOT EXISTS spdashboard;
+CREATE DATABASE IF NOT EXISTS sbs;
 
 CREATE USER IF NOT EXISTS 'ebrw'@'%' IDENTIFIED BY 'secret';
 GRANT ALL PRIVILEGES ON eb.* TO 'ebrw'@'%';
@@ -30,3 +31,6 @@ GRANT ALL PRIVILEGES ON userlifecycle.* TO 'userlifecyclerw'@'%';
 
 CREATE USER IF NOT EXISTS 'spdrwrw'@'%' IDENTIFIED BY 'secret';
 GRANT ALL PRIVILEGES ON spdashboard.* TO 'spdrwrw'@'%';
+
+CREATE USER IF NOT EXISTS 'sbs'@'%' IDENTIFIED BY 'secret';
+GRANT ALL PRIVILEGES ON sbs.* TO 'sbs'@'%';
