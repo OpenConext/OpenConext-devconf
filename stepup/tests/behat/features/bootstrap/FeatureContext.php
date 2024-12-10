@@ -70,11 +70,17 @@ class FeatureContext implements Context
      */
     public static function setupDatabase(BeforeSuiteScope $scope)
     {
+        // Check Docker status
+        echo "Check Docker container status\n";
+        self::execCommand('docker ps');
+
         // Generate test databases
-        echo "Preparing test schemas\n";
+        echo "Preparing test schemas for Middleware\n";
         self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
-        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
         self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=middleware --env=smoketest');
+
+        echo "Preparing test schemas for Gateway\n";
+        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
         self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=gateway --env=smoketest');
 
         // Import the events.sql into middleware
