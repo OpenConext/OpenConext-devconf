@@ -28,10 +28,10 @@ class ReplayContext implements Context
     {
         // Generate test databases
         echo "Preparing test schemas\n";
-        FeatureContext::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
-        FeatureContext::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
-        FeatureContext::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=middleware --env=smoketest');
-        FeatureContext::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=gateway --env=smoketest');
+        FeatureContext::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
+        FeatureContext::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
+        FeatureContext::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:create --em=middleware --env=smoketest');
+        FeatureContext::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:create --em=gateway --env=smoketest');
 
         // Import the events.sql into middleware
         echo "Add events to test database\n";
@@ -39,6 +39,6 @@ class ReplayContext implements Context
 
         // Perform an event replay
         echo "Replaying event stream\n";
-        FeatureContext::execCommand("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
+        FeatureContext::execCommand("docker exec -t stepup-middleware-1 php bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
     }
 }
