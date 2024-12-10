@@ -17,9 +17,9 @@ Feature: A RAA can only manage R RA(A)'s on the promotion page
     # The identity does not have a second factor token and can by no means log in to RA
     And I try to login into the ra portal as "jane-d4"
     And I press "Submit"
-    Then I should see "Error - Not authorised to sign in"
+    Then I should see "Sign in unsuccessful. Please try again."
     And I should see "Error code"
-    And I should see "11430"
+    And I should see "41164"
 
   Scenario: User "joe-a3" tries to login while no acceptable 2FA token is available
     Given a user "joe-a3" identified by "urn:collab:person:institution-a.example.com:joe-a3" from institution "institution-a.example.com"
@@ -27,9 +27,9 @@ Feature: A RAA can only manage R RA(A)'s on the promotion page
     And the user "urn:collab:person:institution-a.example.com:joe-a3" has a vetted "sms" with identifier "+31 (0) 687654321"
     And I try to login into the ra portal as "joe-a3"
     And I press "Submit"
-    Then I should see "Error - Not authorised to sign in"
+    Then I should see "Sign in unsuccessful. Please try again."
     And I should see "Error code"
-    And I should see "11430"
+    And I should see "41164"
 
   Scenario: User "admin" cancels the second factor authentication
     Given I try to login into the ra portal as "admin"
@@ -39,4 +39,4 @@ Feature: A RAA can only manage R RA(A)'s on the promotion page
     And I press "Submit"
     Then I should see "Error - Sign in"
     And I should see "Error code"
-    And I should see "32592"
+    And I should see "41164"
