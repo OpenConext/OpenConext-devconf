@@ -53,7 +53,7 @@ class FeatureContext implements Context
 
         if($result === false) {
             echo "Failed executing command\n";
-            die();
+            exit(1);
         }
 
         foreach ($output as $line) {
@@ -61,7 +61,7 @@ class FeatureContext implements Context
         }
 
         if ($returnCode !== 0) {
-            die();
+            exit($returnCode);
         }
     }
 
@@ -76,12 +76,12 @@ class FeatureContext implements Context
 
         // Generate test databases
         echo "Preparing test schemas for Middleware\n";
-        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
-        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=middleware --env=smoketest');
+        self::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:drop --em=middleware --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:create --em=middleware --env=smoketest');
 
         echo "Preparing test schemas for Gateway\n";
-        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
-        self::execCommand('docker exec -t stepup-middleware-1 bin/console doctrine:schema:create --em=gateway --env=smoketest');
+        self::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:drop --em=gateway --env=smoketest --force');
+        self::execCommand('docker exec -t stepup-middleware-1 php bin/console doctrine:schema:create --em=gateway --env=smoketest');
 
         // Import the events.sql into middleware
         echo "Add events to test database\n";
@@ -89,7 +89,7 @@ class FeatureContext implements Context
 
         // Perform an event replay
         echo "Replaying event stream\n";
-        self::execCommand("docker exec -t stepup-middleware-1 bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
+        self::execCommand("docker exec -t stepup-middleware-1 php bin/console middleware:event:replay --env=smoketest_event_replay --no-interaction -vvv");
 
         // Push config
         echo "Push Middleware config\n";
