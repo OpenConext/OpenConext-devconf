@@ -314,6 +314,16 @@ class RaContext implements Context
     }
 
     /**
+     * @Given /^I visit the Recovery methods page$/
+     */
+    public function iVisitTheRecoveryMethodsPage()
+    {
+        $this->minkContext->clickLink('Recovery methods');
+        $this->minkContext->assertPageAddress('https://ra.dev.openconext.local/recovery-tokens');
+    }
+
+
+    /**
      * @When I filter the :arg1 filter on :arg2
      */
     public function iFilterTheForm($filter, $filterValue)

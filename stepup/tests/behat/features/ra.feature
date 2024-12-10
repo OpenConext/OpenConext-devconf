@@ -21,6 +21,12 @@ Feature: A RAA manages tokens tokens registered in the selfservice portal
      When I search for "9876WXYZ" on the token activation page
      Then I should see "Unknown activation code"
 
+    Scenario: RA user can view the audit log of its institution
+    Given I am logged in into the ra portal as "admin" with a "yubikey" token
+    When I visit the Tokens page
+      And I open the audit log for a user of "dev.openconext.local"
+    Then I should see "Identity and Token bootstrapped" in the audit log identity overview
+
   Scenario: RA user can view the audit log of another institution identity
     Given I am logged in into the ra portal as "jane-a-ra" with a "yubikey" token
     When I visit the Tokens page
@@ -54,3 +60,8 @@ Feature: A RAA manages tokens tokens registered in the selfservice portal
     Given I am logged in into the ra portal as "admin" with a "yubikey" token
      When I visit the RA Management page
      Then I relieve "Jane Aone" from "institution-a.example.com" of his "RA" role
+
+  Scenario: RA user can see the recovery methods overview
+    Given I am logged in into the ra portal as "jane-a-ra" with a "yubikey" token
+    When I visit the Recovery methods page
+    Then I should see "No recovery methods found"
