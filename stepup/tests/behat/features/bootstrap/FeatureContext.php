@@ -332,6 +332,22 @@ class FeatureContext implements Context
         $this->apiContext->iRequest('POST', '/command');
     }
 
+    /**
+     * @Given /^I click on link "([^"]*)"$/
+     */
+    public function iClickOnLink($name)
+    {
+        $this->minkContext->clickLink($name);
+    }
+
+    /**
+     * @Given /^I should be on page "([^"]*)"$/
+     */
+    public function iShouldBeOnPage($url)
+    {
+        $this->minkContext->assertPageAddress($url);
+    }
+
     private function proveYubikeyPossession($identityData)
     {
         // 1.1 prove possession of a yubikey token
