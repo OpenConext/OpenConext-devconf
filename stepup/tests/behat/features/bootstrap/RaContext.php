@@ -354,6 +354,8 @@ class RaContext implements Context
             );
         }
         $searchResult->clickLink('Audit log');
+
+        $this->minkContext->assertPageContainsText('Audit log');
     }
 
     /**
