@@ -1,0 +1,59 @@
+---
+services:
+  sbs:
+    image: ghcr.io/surfscz/sram-sbs:openconext-dev
+    networks:
+      coreconextdev:
+    hostname: sbs.docker
+    depends_on:
+      sbs-client:
+        condition: service_healthy
+      sbs-server:
+        condition: service_healthy
+    profiles:
+      - "sbs"
+
+  # This is the version with node/yarn
+  sbs-client:
+    image: node:22
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=8080
+    networks:
+      coreconextdev:
+    volumes:
+      - ${SBS_CODE_PATH}/client:/home/node/app
+    working_dir: /home/node/app
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost:8080/index.html"]
+      timeout: 5s
+      retries: 10
+    hostname: sbs-client.docker
+    command: "yarn start"
+    profiles:
+      - "sbs"
+
+  sbs-server:
+    image: ghcr.io/surfscz/sram-sbs-server:openconext-dev
+    environment:
+      TESTING: 1
+      PROFILE: "local"
+      ALLOW_MOCK_USER_API: 1
+    volumes:
+      - ./sbs/config:/opt/sbs/config
+      - ${SBS_CODE_PATH}/server:/opt/sbs/server
+    networks:
+      coreconextdev:
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost:8080/health"]
+      timeout: 5s
+      retries: 10
+    hostname: sbs-server.docker
+    depends_on:
+      redis:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "sbs"

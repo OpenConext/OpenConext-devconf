@@ -21,6 +21,7 @@ services:
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
           - invite.dev.openconext.local
+          - sbs.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
@@ -42,7 +43,6 @@ services:
 
   mongo:
     image: bitnami/mongodb:7.0
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: secret
@@ -415,6 +415,55 @@ services:
     networks:
       coreconextdev:
     hostname: mailcatcher.docker
+
+  redis:
+    image: "redis"
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      timeout: 5s
+      retries: 10
+    networks:
+      coreconextdev:
+    hostname: redis.docker
+    profiles:
+      - "sbs"
+
+  # This is apache RP
+  #   client -> docroot
+  #   api    -> sbs-server:8080
+  sbs:
+    image: ghcr.io/surfscz/sram-sbs-client:openconext-dev
+    networks:
+      coreconextdev:
+    hostname: sbs.docker
+    depends_on:
+      sbs-server:
+        condition: service_healthy
+    profiles:
+      - "sbs"
+
+  sbs-server:
+    image: ghcr.io/surfscz/sram-sbs-server:openconext-dev
+    environment:
+      TESTING: 1
+      PROFILE: "local"
+      ALLOW_MOCK_USER_API: 1
+    volumes:
+      - ./sbs/config:/opt/sbs/config
+    networks:
+      coreconextdev:
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost:8080/health"]
+      timeout: 5s
+      retries: 10
+    hostname: sbs-server.docker
+    depends_on:
+      redis:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "sbs"
 
 networks:
   coreconextdev:
