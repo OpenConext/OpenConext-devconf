@@ -41,7 +41,7 @@ jobs:
             type=raw,suffix=,value=test
 
       - name: Build and push the TEST image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: stepup/tests/Dockerfile
