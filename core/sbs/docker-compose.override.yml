@@ -1,7 +1,7 @@
 ---
 services:
   sbs:
-    image: ghcr.io/surfscz/sram-sbs:openconext-dev
+    image: ghcr.io/surfscz/sram-sbs:main
     networks:
       coreconextdev:
     hostname: sbs.docker
@@ -35,7 +35,7 @@ services:
       - "sbs"
 
   sbs-server:
-    image: ghcr.io/surfscz/sram-sbs-server:openconext-dev
+    image: ghcr.io/surfscz/sram-sbs-server:main
     environment:
       TESTING: 1
       PROFILE: "local"
