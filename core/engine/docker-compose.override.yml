@@ -7,4 +7,5 @@ services:
       - ./engine/appconf.conf:/etc/apache2/sites-enabled/appconf.conf
     environment:
       - APP_ENV=${APP_ENV:-dev}
+      - SYMFONY_ENV=${APP_ENV:-dev}
       - APP_DEBUG=true
