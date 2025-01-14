@@ -79,7 +79,6 @@ services:
     image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
     volumes:
       - ./:/config
-      - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
     networks:
       coreconextdev:
     healthcheck:
