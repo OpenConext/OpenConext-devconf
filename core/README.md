@@ -7,19 +7,21 @@ This repo contains a docker compose and some configuration to get you started wi
 
 ## Getting started
 
-To get all services up and running you must have docker compose installed. Enter this command to get things up and running:
-
-```
-docker compose up -d
-```
-
+### The first time
 If you are doing this for the first time, you need to run a script to seed the environment:
 
 ```
 ./scripts/init.sh
 ```
 
-You will also need to tell your local machine where to find the hosts. 
+### After initialisation
+To get all services up and running you must have docker compose installed. Enter this command to get things up and running:
+
+```
+docker compose up -d
+```
+
+You will also need to tell your local machine where to find the hosts.
 Add the following line in your hosts file (/etc/hosts )
 ```
 127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local
@@ -36,7 +38,7 @@ docker compose --profile oidc down
 
 ### Loadbalancer and databases
 |name |function     |
-| --- | --- | 
+| --- | --- |
 |haproxy     | loadbalancer    |
 |mongo     |Mongo database for oidc and manage     |
 |mariadb   |MariaDB databases for engine and teams     |

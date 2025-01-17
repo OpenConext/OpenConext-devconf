@@ -83,8 +83,9 @@ services:
       coreconextdev:
     healthcheck:
       test: ["CMD", "curl", "--fail", "-s", "http://localhost/health"]
-      timeout: 5s
-      retries: 10
+      interval: 10s
+      timeout: 10s
+      retries: 20
     hostname: engine.docker
     extra_hosts:
       - "host.docker.internal:host-gateway"
