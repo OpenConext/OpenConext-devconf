@@ -91,6 +91,9 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    environment:
+      - APP_ENV=${APP_ENV:-prod}
+      - SYMFONY_ENV=${APP_ENV:-prod}
 
   profile:
     image: ghcr.io/openconext/openconext-profile/profile:prod
