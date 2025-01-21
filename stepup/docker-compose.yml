@@ -44,6 +44,8 @@ services:
     volumes:
       - ${PWD}/:/config
       - /var/run/docker.sock:/var/run/docker.sock
+    profiles:
+      - "smoketest"
 
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:${STEPUP_VERSION:-prod}
