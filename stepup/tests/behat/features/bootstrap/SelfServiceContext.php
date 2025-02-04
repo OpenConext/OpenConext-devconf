@@ -93,6 +93,7 @@ class SelfServiceContext implements Context
         $this->minkContext->visit($this->selfServiceUrl);
         $this->authContext->authenticateWithIdentityProviderFor($userName);
         $this->authContext->passTroughGatewaySsoAssertionConsumerService();
+
         $this->iSwitchLocaleTo('English');
         $this->minkContext->assertPageContainsText('Registration Portal');
     }
