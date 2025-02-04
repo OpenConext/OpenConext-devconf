@@ -13,3 +13,6 @@ Feature: A user can be deprovisioned from Middleware
     | email             | joe-a-raa@institution-a.nl    |
     | common_name       | Joe RAA                       |
     | document_number   | 467890                        |
+
+  Scenario: After being deprovisioned a user would still be able to enroll again
+    Given I am logged in into the selfservice portal as "joe-a-raa"
