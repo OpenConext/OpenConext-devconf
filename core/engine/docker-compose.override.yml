@@ -5,7 +5,8 @@ services:
     volumes:
       - ${ENGINE_CODE_PATH}:/var/www/html
       - ./engine/appconf.conf:/etc/apache2/sites-enabled/appconf.conf
+      - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
     environment:
       - APP_ENV=${APP_ENV:-dev}
-      - SYMFONY_ENV=${APP_ENV:-dev}
-      - APP_DEBUG=true
+      # - SYMFONY_ENV=${APP_ENV:-dev}
+      - APP_DEBUG=1
