@@ -47,6 +47,21 @@ services:
     profiles:
       - "smoketest"
 
+  chrome:
+    image: alpeware/chrome-headless-trunk
+    ports:
+      - 9222:9222
+    environment:
+      - CHROME_OPTS=--ignore-certificate-errors --window-size=1920,1080 --ignore-ssl-errors
+    volumes:
+      - /tmp/chromedata/:/data
+    networks:
+      openconextdev:
+        aliases:
+          - chrome.dev.openconext.local
+    profiles:
+      - "smoketest"
+
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:${STEPUP_VERSION:-prod}
     ports:
