@@ -55,6 +55,8 @@ services:
       - APP_ENV=${APP_ENV:-prod}
     volumes:
       - ${PWD}/:/config
+      - ${PWD}/webauthn/blob.jwt:/var/www/html/config/openconext/mds/blob.jwt
+      - ${PWD}/webauthn/root.crt:/var/www/html/config/openconext/mds/root.crt
     networks:
       openconextdev:
     extra_hosts:
