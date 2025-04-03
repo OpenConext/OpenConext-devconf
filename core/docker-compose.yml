@@ -113,7 +113,16 @@ services:
     networks:
       coreconextdev:
     command: "--spring.config.location=/config/mujina/"
-    hostname: mujina.docker
+    hostname: mujinaidp.docker
+
+  mujina-sp:
+    image: ghcr.io/openconext/mujina/mujina-sp:9.0.0
+    volumes:
+      - ./:/config
+    networks:
+      coreconextdev:
+    command: "--spring.config.location=/config/mujina/"
+    hostname: mujinasp.docker
 
   managegui:
     image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.9
