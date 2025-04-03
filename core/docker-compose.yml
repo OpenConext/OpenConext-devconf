@@ -113,7 +113,7 @@ services:
       - ./:/config
     networks:
       coreconextdev:
-    command: "--spring.config.location=/config/mujina/"
+    command: "--spring.config.location=/config/mujina-idp/"
     hostname: mujinaidp.docker
 
   mujina-sp:
@@ -122,7 +122,7 @@ services:
       - ./:/config
     networks:
       coreconextdev:
-    command: "--spring.config.location=/config/mujina/"
+    command: "--spring.config.location=/config/mujina-sp/"
     hostname: mujinasp.docker
 
   managegui:
