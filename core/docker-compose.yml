@@ -24,6 +24,14 @@ services:
           - invite.dev.openconext.local
           - sbs.dev.openconext.local
     hostname: haproxy.docker
+    # bind mount separate files because the haproxy config
+    # directory also contains some static error files we do not want
+    # in our repository
+    volumes:
+      - ./haproxy/backends.map:/usr/local/etc/haproxy/backends.map:ro
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./haproxy/haproxy.crt:/usr/local/etc/haproxy/haproxy.crt:ro
+      - ./haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem:ro
 
   mariadb:
     image: mariadb:10.6
