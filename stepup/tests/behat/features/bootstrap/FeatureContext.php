@@ -440,4 +440,14 @@ class FeatureContext implements Context
         $this->connectToApi('ra', 'secret');
         $this->apiContext->iRequest('POST', '/command');
     }
+
+    /**
+     * @When die printing content
+     */
+    public function diePrintingContent()
+    {
+        echo $this->minkContext->getSession()->getCurrentUrl();
+        echo $this->minkContext->getSession()->getPage()->getContent();
+        die;
+    }
 }

@@ -100,6 +100,25 @@ class SelfServiceContext implements Context
 
 
     /**
+     * @Given /^I log in again into selfservice$/
+     */
+    public function loginAgainIntoSelfService()
+    {
+        // We visit the Self Service location url
+        $this->minkContext->visit($this->selfServiceUrl);
+        $this->minkContext->pressButton('Sign out');
+
+        $this->minkContext->visit($this->selfServiceUrl);
+        $this->minkContext->pressButton('Yes, continue');
+        // Pass through Gateway (already authenticated)
+        $this->minkContext->pressButton('Submit');
+
+        $this->iSwitchLocaleTo('English');
+        $this->minkContext->assertPageContainsText('Registration Portal');
+    }
+
+
+    /**
      * @Given /^I log into the selfservice portal as "([^"]*)" with activation preference "([^"]*)"$/
      */
     public function ilogIntoTheSelfServicePortalAsWithPreference($userName, $preference)
@@ -117,7 +136,7 @@ class SelfServiceContext implements Context
      */
     public function registerNewToken(string $tokenType)
     {
-        $this->minkContext->assertPageAddress('/registration/select-token');
+        $this->minkContext->visit('/registration/select-token');
 
         switch ($tokenType) {
             case 'Yubikey':
@@ -171,79 +190,6 @@ class SelfServiceContext implements Context
             default:
                 throw new Exception(sprintf('The %s token type is not supported', $tokenType));
         }
-    }
-
-    /**
-     * @When I self-vet a new SMS token with my Yubikey token
-
-     */
-    public function selfVetNewSmsToken()
-    {
-        $this->minkContext->visit($this->selfServiceUrl);
-        $this->minkContext->assertPageAddress('/overview');
-
-        $this->minkContext->assertPageContainsText('The following tokens are registered for your account');
-        $this->minkContext->assertPageContainsText('Yubikey');
-
-        $this->minkContext->visit('/registration/select-token');
-
-        // Select the sms second factor type
-        $this->minkContext->getSession()
-            ->getPage()
-            ->find('css', '[href="/registration/sms/send-challenge"]')->click();
-        $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
-
-        // Start registration
-        $this->minkContext->assertPageContainsText('Send SMS code');
-        $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
-        $this->minkContext->pressButton('Send code');
-
-        $this->minkContext->assertPageContainsText('Enter the code that was sent to your phone');
-        $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
-        $this->minkContext->pressButton('Verify');
-
-        $this->minkContext->assertPageContainsText('Verify your e-mail');
-        $this->minkContext->assertPageContainsText('Check your inbox');
-        $this->minkContext->visit(
-            $this->getEmailVerificationUrl()
-        );
-        // Now we should be on the choose vetting page
-        $this->minkContext->assertPageContainsText('Use your existing token');
-        $page = $this->minkContext->getSession()->getPage();
-        $form = $page->find('css', 'form[action$="self-vet"]');
-        $form->submit();
-        $this->minkContext->pressButton('Yes, continue');
-        $this->minkContext->pressButton('Submit');
-        $this->authContext->authenticateUserYubikeyInGateway();
-    }
-
-    /**
-     * @Given /^I try to self\-vet a new Yubikey token with my SMS token$/
-     */
-    public function iTryToSelfVetANewYubikeyTokenWithMySMSToken()
-    {
-        $this->minkContext->visit($this->selfServiceUrl);
-        $this->minkContext->assertPageAddress('/overview');
-
-        $this->minkContext->assertPageContainsText('The following tokens are registered for your account');
-        $this->minkContext->assertPageContainsText('SMS');
-        $this->minkContext->assertPageContainsText('+31 (0) 612345678');
-
-        $this->minkContext->visit('/registration/select-token');
-
-        // Select the sms second factor type
-        $this->minkContext->getSession()
-            ->getPage()
-            ->find('css', '[href="/registration/yubikey/prove-possession"]')->click();
-        $this->minkContext->assertPageAddress('/registration/yubikey/prove-possession');
-
-        // Start registration
-        $this->minkContext->assertPageContainsText('Link your YubiKey');
-        $this->minkContext->fillField('ss_prove_yubikey_possession_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
-        $page = $this->minkContext->getSession()->getPage();
-        $form = $page->find('css', 'form[name="ss_prove_yubikey_possession"]');
-        $form->submit();
-
     }
 
     /**
@@ -325,23 +271,7 @@ class SelfServiceContext implements Context
                 $this->iChooseToActivateMyTokenUsingSat();
                 break;
             case "Self vetting":
-                // Select the sms second factor type
-                $this->minkContext->getSession()
-                    ->getPage()
-                    ->find('css', '[href="/registration/sms/send-challenge"]')->click();
-                $this->minkContext->assertPageAddress('/registration/sms/send-challenge');
-
-                // Start registration
-                $this->minkContext->assertPageContainsText('Send SMS code');
-                $this->minkContext->fillField('ss_send_sms_challenge_subscriber', '612345678');
-                $this->minkContext->pressButton('Send code');
-
-                $this->minkContext->assertPageContainsText('Enter the code that was sent to your phone');
-                $this->minkContext->fillField('ss_verify_sms_challenge_challenge', '999');
-                $this->minkContext->pressButton('Verify');
-
-
-                $this->iChooseToActivateMyTokenUsingSat();
+                $this->iChooseToVetMyTokenMyself();
                 break;
             default:
                 throw new Exception(sprintf('Vetting type "%s" is not supported', $vettingType));
@@ -433,6 +363,12 @@ class SelfServiceContext implements Context
     {
         $this->minkContext->assertPageContainsText('Activate your token yourself');
         $this->minkContext->pressButton('sat-button');
+    }
+
+    public function iChooseToVetMyTokenMyself()
+    {
+        $this->minkContext->assertPageContainsText('Use your existing token');
+        $this->minkContext->pressButton('self-vet-button');
     }
 
     /**
