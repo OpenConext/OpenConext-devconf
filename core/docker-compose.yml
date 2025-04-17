@@ -1,8 +1,7 @@
 ---
 services:
   haproxy:
-    #image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
-    image: haproxytestlokaal
+    image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
     ports:
       - 80:80
       - 443:443
