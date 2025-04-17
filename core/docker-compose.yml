@@ -30,8 +30,6 @@ services:
     volumes:
       - ./haproxy/backends.map:/usr/local/etc/haproxy/backends.map:ro
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-      - ./haproxy/haproxy.crt:/usr/local/etc/haproxy/haproxy.crt:ro
-      - ./haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem:ro
 
   mariadb:
     image: mariadb:10.6
