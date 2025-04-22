@@ -71,6 +71,11 @@ There are many user accounts available for testing. See http://ssp.dev.openconex
 We recommend that you use the admin account only to activate additional RA and RAA accounts and do not
 use the admin account itself for testing.
 
+# Version info
+You can use the included `version-info.sh` script to get the version info of the different stepup
+components from the docker containers. This script will show the `version`, `revision` and `created`
+tags of the running containers.
+
 # Starting a project in development mode
 
 You can mount your local directory inside a development container which contains the correct node and composer versions for your project. To do so use the script start-dev-env.sh. You can use this script to mount multiple directories in multiple containers, basically allowing you to start multiple containers in dev mode.
