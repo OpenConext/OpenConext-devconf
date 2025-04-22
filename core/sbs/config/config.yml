@@ -33,37 +33,24 @@ api_users:
     scopes: ["ipaddress"]
 
 oidc:
-  client_id: foo
-  client_secret: echtgeheim
-  audience: http://http://sbs.dev.openconext.local
-  authorization_endpoint: http://http://sbs.dev.openconext.local/saml2sp/OIDC/authorization
-  token_endpoint: http://http://sbs.dev.openconext.local/OIDC/token
-  userinfo_endpoint: http://http://sbs.dev.openconext.local/OIDC/userinfo
-  jwks_endpoint: http://http://sbs.dev.openconext.local/OIDC/jwks
+  client_id: sbs.dev.openconext.local
+  client_secret: secretsecret
+  audience: sbs.dev.openconext.local
+  verify_peer: False
+  authorization_endpoint: https://connect.dev.openconext.local/oidc/authorize
+  token_endpoint: https://connect.dev.openconext.local/oidc/token
+  userinfo_endpoint: https://connect.dev.openconext.local/oidc/userinfo
+  jwks_endpoint: https://connect.dev.openconext.local/oidc/certs
   #Note that the paths for these  uri's is hardcoded and only domain and port differ per environment
-  redirect_uri: http://http://sbs.dev.openconext.local/api/users/resume-session
+  redirect_uri: https://sbs.dev.openconext.local/api/users/resume-session
   continue_eduteams_redirect_uri: http://sbs.dev.openconext.local/continue
   continue_eb_redirect_uri: https://engine.(.*)openconext.local
   second_factor_authentication_required: True
   totp_token_name: "SRAM local"
   # The client_id of SBS. Most likely to equal the oidc.client_id
   sram_service_entity_id: http://sbs.dev.openconext.local
-
-
   scopes:
-    - profile
-    - eduperson_scoped_affiliation
-    - voperson_external_affiliation
-    - email
-    - ssh_public_key
-    - eduperson_orcid
-    - uid
-    - voperson_external_id
-    - eduperson_entitlement
-    - eduperon_assurance
     - openid
-    - eduperson_principal_name
-    - voperson_id
 
 base_scope: "test.sbs.local"
 entitlement_group_namespace: "urn:example:sbs"
@@ -107,6 +94,7 @@ base_server_url: http://sbs.dev.openconext.local
 wiki_link: https://edu.nl/vw3jx
 
 admin_users:
+  - uid: "urn:collab:person:example.com:admin"
   - uid: "urn:john"
   - uid: "urn:rocky"
   - uid: "urn:mike"
@@ -139,6 +127,7 @@ retention:
 metadata:
   idp_url: https://metadata.surfconext.nl/idps-metadata.xml
   parse_at_startup: False
+  scope_override: {}
 
 service_bus:
   enabled: False
