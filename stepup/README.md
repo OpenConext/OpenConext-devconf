@@ -21,7 +21,9 @@ First, you need to create an entry in your hosts file (/etc/hosts on *nix system
 127.0.0.1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local
 ```
 
-Secondly you need to create the `stepup/gateway/surfnet_yubikey.yaml` filewith your Yubikey API credentials. If you do not have API credentials, you can get them at <https://upgrade.yubico.com/getapikey/>. You require a Yubikey to get an API key.
+Secondly you need to create the `stepup/gateway/surfnet_yubikey.yaml` file with your Yubikey API credentials.
+If you do not have API credentials, you can get them at <https://upgrade.yubico.com/getapikey/>.
+You require a Yubikey to get an API key. There credential are used to verify the Yubikey OTP's.
 
 ```yaml
 surfnet_yubikey_api_client:
@@ -30,36 +32,44 @@ surfnet_yubikey_api_client:
     client_secret: 'YOUR_SECRET'
 ```
 
-You should then get the apps initialised
-You can then bring up the containers using docker compose:
-
-Initialise the middelware database:
+Start the containers using docker compose:
 ```
 docker compose up -d
-docker compose exec middleware /var/www/html/bin/console  doctrine:migrations:migrate --env=prod --em=deploy
-docker compose exec middleware chown -R www-data /var/www/html/var/cache/prod/
+```
+or use the included script:
+```
+./start-dev-env.sh
 ```
 
-Then the webauthn db
+Initialise (bootstrap) the middleware, gateway and webauthn database schema's and push
+the configuration to the middleware. This is done by running the following script:
 ```
-docker compose exec webauthn /var/www/html/bin/console  doctrine:migrations:migrate --env=prod
+./bootstrap.sh
 ```
 
-Then you will need to provision the middleware config:
+Then, bootstrap the SRAA. For this, you will need to have a Yubikey.
+Use the following command to bootstrap the SRAA:
 ```
-cd middleware
-./middleware-push-config.sh
-./middleware-push-whitelist.sh
-./middleware-push-institution.sh
+./bootstrap-admin-sraa.sh
 ```
-Then, bootstrap the SRAA. For this, you will need to have a Yubikey. Replace Yubikey_ID with the number that is printed on your yubikey. It should be 8 characters. If it is less, prepend it with 0's
+
+You can now login to the RA application using the admin account. The URL is:
+https://ra.dev.openconext.local
+The username and password for the admin account are:
 ```
-docker compose exec middleware  /var/www/html/bin/console middleware:bootstrap:identity-with-yubikey urn:collab:person:dev.openconext.local:admin dev.openconext.local "Your Name" Your@email nl_NL Yubikey_ID
+username: admin
+password: admin
 ```
 
 Mailcatcher is included. You can view the email by going to http://localhost:1080
 
-A SimpleSAMLPHP sp is included. It can be accessed at https://ssp.dev.openconext.local/simplesaml/sp.php
+A SimpleSAMLPHP SP is included to test authentication from an SP. It can be accessed at https://ssp.dev.openconext.local/simplesaml/sp.php
+
+The selfservice application is available at https://selfservice.dev.openconext.local
+
+There are many user accounts available for testing. See http://ssp.dev.openconext.local/#test-accounts
+We recommend that you use the admin account only to activate additional RA and RAA accounts and do not
+use the admin account itself for testing.
 
 # Starting a project in development mode
 
