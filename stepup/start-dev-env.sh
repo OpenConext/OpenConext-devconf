@@ -9,7 +9,7 @@ if [ -f .env ]; then
   echo "Sourcing .env file"
   source .env
 else
-  echo "no .env file not found."
+  echo ".env file is not present"
 fi
 
 if [ "${STEPUP_VERSION}" == "test" ]; then
@@ -74,8 +74,14 @@ while true; do
   esac
 done
 
+# Start docker compose with the smoketest profile when APP_ENV=smoketest
+if [ "${APP_ENV}" == "smoketest" ]; then
+  extra_compose_args="--profile smoketest"
+  echo -e "${GREEN}Starting in smoketest mode because APP_ENV=smoketest${ENDCOLOR}"
+fi
+
 # Use docker compose to start the environment but with the modified override file(s)
 echo -e "Starting the ${MODE} environment with the following command:\n"
 
-echo -e "docker compose --profile smoketest -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}\n"
-docker compose --profile smoketest -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}
+echo -e "docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}\n"
+docker compose -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up ${d_option} ${@:$number_of_dev_envs}

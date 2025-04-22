@@ -63,3 +63,10 @@ if ! "${DIR}/middleware/middleware-push-institution.sh"; then
     exit 1
 fi
 echo ""
+
+echo "Successfully initialized/upgraded the stepup database schemas and pushed the configuration"
+echo ""
+echo "Next step: bootstrap the admin (SRAA) user in the stepup docker dev environment"
+echo "           Do this *before* the first login of the \"admin\" user"
+echo "           You can use the script `stepup/bootstrap-admin-sraa.sh` to do this"
+echo ""
