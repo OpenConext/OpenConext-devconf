@@ -30,7 +30,10 @@ services:
       timeout: 5s
       retries: 10
     hostname: sbs-client.docker
-    command: "yarn start"
+    command:
+      - "sh"
+      - "-c"
+      - "yarn install && yarn build --disable-warning && yarn start"
     profiles:
       - "sbs"
 

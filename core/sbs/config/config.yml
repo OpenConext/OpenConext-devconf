@@ -15,6 +15,9 @@ redis:
 
 socket_url: 0.0.0.0:8080/
 
+logging:
+  log_to_stdout: True
+
 api_users:
   - name: "sysadmin"
     password: "secret"
@@ -40,6 +43,7 @@ oidc:
   #Note that the paths for these  uri's is hardcoded and only domain and port differ per environment
   redirect_uri: http://http://sbs.dev.openconext.local/api/users/resume-session
   continue_eduteams_redirect_uri: http://sbs.dev.openconext.local/continue
+  continue_eb_redirect_uri: https://engine.(.*)openconext.local
   second_factor_authentication_required: True
   totp_token_name: "SRAM local"
   # The client_id of SBS. Most likely to equal the oidc.client_id
@@ -87,10 +91,11 @@ mail:
   environment: local
 
 manage:
-  enabled: false
-  base_url: ""
-  user: ""
-  password: ""
+  enabled: true
+  base_url: "https://manage.dev.openconext.local/"
+  user: "sram"
+  password: "secret"
+  verify_peer: False
 
 aup:
   version: 1
@@ -255,3 +260,13 @@ rate_limit_totp_guesses_per_30_seconds: 10
 excluded_user_accounts:
   - uid: "urn:paul"
   - uid: "urn:peter"
+
+stress_test:
+  num_users: 1
+  num_orgs: 1
+  num_collaborations: 2
+  num_services: 1
+  num_groups: 1
+
+engine_block:
+  api_token: secret

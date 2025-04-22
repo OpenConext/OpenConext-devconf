@@ -116,7 +116,7 @@ services:
     hostname: mujina.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.9
+    image: ghcr.io/openconext/openconext-manage/manage-gui:latest
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -138,7 +138,7 @@ services:
         condition: service_healthy
 
   manageserver:
-    image: ghcr.io/openconext/openconext-manage/manage-server:7.4.9
+    image: ghcr.io/openconext/openconext-manage/manage-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:

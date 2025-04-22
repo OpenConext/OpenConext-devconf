@@ -1,27 +1,20 @@
 ---
 apiUsers:
-  - {
-    name: "dashboard",
-    password: "secret",
+  - name: "dashboard"
+    password: "secret"
     scopes: [ READ, CHANGE_REQUEST_SP,CHANGE_REQUEST_IDP, TEST, POLICIES ]
-  }
-  - {
-    name: "pdp",
-    password: "secret",
+  - name: "pdp"
+    password: "secret"
     scopes: [READ]
-  }
-  - {
-    name: "stats",
-    password: "secret",
+  - name: "stats"
+    password: "secret"
     scopes: [READ]
-  }
-  - {
-    name: "sp-dashboard",
-    password: "secret",
+  - name: "sp-dashboard"
+    password: "secret"
     scopes: [ READ, WRITE_SP, PUSH, CHANGE_REQUEST_SP, TEST ]
-  }
-  - {
-    name: "sysadmin",
-    password: "secret",
+  - name: "sysadmin"
+    password: "secret"
     scopes: [ READ, WRITE_IDP, WRITE_SP, PUSH, SYSTEM ]
-  }
+  - name: "sram"
+    password: "secret"
+    scopes: [ READ, WRITE_IDP, WRITE_SP, PUSH, SYSTEM ]
