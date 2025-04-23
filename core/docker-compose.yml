@@ -20,9 +20,16 @@ services:
           - teams.dev.openconext.local
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
+          - mujina-sp.dev.openconext.local
           - invite.dev.openconext.local
           - sbs.dev.openconext.local
     hostname: haproxy.docker
+    # bind mount separate files because the haproxy config
+    # directory also contains some static error files we do not want
+    # in our repository
+    volumes:
+      - ./haproxy/backends.map:/usr/local/etc/haproxy/backends.map:ro
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
 
   mariadb:
     image: mariadb:10.6
@@ -113,8 +120,17 @@ services:
       - ./:/config
     networks:
       coreconextdev:
-    command: "--spring.config.location=/config/mujina/"
-    hostname: mujina.docker
+    command: "--spring.config.location=/config/mujina-idp/"
+    hostname: mujinaidp.docker
+
+  mujina-sp:
+    image: ghcr.io/openconext/mujina/mujina-sp:9.0.0
+    volumes:
+      - ./:/config
+    networks:
+      coreconextdev:
+    command: "--spring.config.location=/config/mujina-sp/"
+    hostname: mujinasp.docker
 
   managegui:
     image: ghcr.io/openconext/openconext-manage/manage-gui:latest
