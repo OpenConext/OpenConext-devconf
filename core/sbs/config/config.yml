@@ -13,7 +13,7 @@ permanent_session_lifetime: 60
 redis:
   uri: redis://redis:6379/
 
-socket_url: 0.0.0.0:8080/
+socket_url: https://sbs.dev.openconext.local/
 
 logging:
   log_to_stdout: True
@@ -60,8 +60,8 @@ collaboration_creation_allowed_entitlement: "urn:example:sbs:allow-create-co"
 environment_disclaimer: "local"
 
 mail:
-  host: localhost
-  port: 1025
+  host: mailcatcher
+  port: 25
   sender_name: SURF_ResearchAccessManagement
   sender_email: no-reply@surf.nl
   suppress_sending_mails: False
@@ -75,7 +75,7 @@ mail:
   send_exceptions: False
   send_js_exceptions: False
   send_exceptions_recipients: ["sram-support@surf.nl"]
-  environment: local
+  environment: dev.openconext.local
 
 manage:
   enabled: true
@@ -191,6 +191,15 @@ invitation_reminders:
   # How long before expiration of an invitation do we remind the user?
   invitation_reminders_threshold: 5
 
+invitation_expirations:
+  # Do we daily check for invitations that are expired / accepted and are eligible for deletion ?
+  enabled: True
+  cron_hour_of_day: 10
+  # How long after expiration of an invitation do we delete the invitation?
+  nbr_days_remove_expired_invitations: 10
+  # How long after expiration of an API created invitation do we delete the invitation?
+  nbr_days_remove_api_expired_invitations: 30
+
 orphan_users:
   # Do we daily check for users that are orphans?
   enabled: True
@@ -214,7 +223,7 @@ ldap:
   bind_account: cn=admin,dc=example,dc=org
 
 # A MFA login in a different flow is valid for X minutes
-mfa_sso_time_in_minutes: 10
+mfa_sso_time_in_minutes: 1
 
 # whether to require TOTP for users form IdPs that match neither mfa_idp_allowed
 # nor ssid_identity_providers

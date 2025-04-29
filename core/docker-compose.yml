@@ -5,6 +5,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - ./haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem
     networks:
       coreconextdev:
         aliases:
@@ -34,7 +36,7 @@ services:
       - ./dbschema:/docker-entrypoint-initdb.d
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "-uroot", "-psecret", "ping", "-h", "localhost"]
       timeout: 5s
       retries: 10
     hostname: mariadb.docker
@@ -448,8 +450,6 @@ services:
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:main
-    environment:
-      TESTING: 1
     volumes:
       - ./sbs/config:/opt/sbs/config
     networks:

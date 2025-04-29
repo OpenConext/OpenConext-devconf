@@ -40,7 +40,7 @@ services:
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:main
     environment:
-      TESTING: 1
+      - REQUESTS_CA_BUNDLE=/opt/sbs/config/haproxy.crt
     volumes:
       - ./sbs/config:/opt/sbs/config
       - ${SBS_CODE_PATH}/server:/opt/sbs/server
