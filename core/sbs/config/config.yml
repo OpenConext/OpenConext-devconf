@@ -89,8 +89,8 @@ aup:
   url_aup_en: https://edu.nl/6wb63
   url_aup_nl: https://edu.nl/6wb63
 
-base_url: http://sbs.dev.openconext.local
-base_server_url: http://sbs.dev.openconext.local
+base_url: https://sbs.dev.openconext.local
+base_server_url: https://sbs.dev.openconext.local
 wiki_link: https://edu.nl/vw3jx
 
 admin_users:
