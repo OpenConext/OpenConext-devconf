@@ -13,7 +13,7 @@ permanent_session_lifetime: 60
 redis:
   uri: redis://redis:6379/
 
-socket_url: https://sbs.dev.openconext.local/
+socket_url: "sbs.dev.openconext.local/"
 
 logging:
   log_to_stdout: True
