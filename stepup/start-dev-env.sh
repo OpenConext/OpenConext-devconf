@@ -49,10 +49,6 @@ docker_compose_options=()    # Array to hold the options for docker compose
 docker_compose_options+=("-f")
 docker_compose_options+=("${SCRIPT_DIR}/docker-compose.yml")
 
-# Add some default options for the docker compose up command
-docker_compose_up_options+=("--wait")  # Wait for the containers to be ready
-
-
 # Show value of STEPUP_VERSION and APP_ENV if set and process their values
 # Warn if these values are not set to unexpected values
 if [ -n "${STEPUP_VERSION}" ]; then
@@ -93,7 +89,7 @@ while [[ $# -gt 0 ]]; do
         echo ""
         echo "Options:"
         echo "  -h, --help       Show this help message"
-        echo "  -d               Run docker compose up in detached mode"
+        echo "  -d               Run docker compose up in detached mode (-d) with wait (--wait)"
         echo "  <app>:<path>     The <app> to override followed by the <path> to the local code for the app"
         echo ""
         echo "  Any options after -- are passed to docker compose"
@@ -112,7 +108,7 @@ while [[ $# -gt 0 ]]; do
     -d | --detach)
         shift
         # add "-d" to docker_compose_up_options
-        docker_compose_up_options+=("-d")
+        docker_compose_up_options+=("--wait")
         ;;
     --)
         # End of options for this script, everything after this is passed to docker compose
