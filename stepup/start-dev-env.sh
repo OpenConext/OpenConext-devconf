@@ -153,6 +153,9 @@ while [[ $# -gt 0 ]]; do
         exit 1;
     fi
 
+    # Replace "~/" with the user's home directory
+    path=${path/#\~/$HOME}
+
 	# Test if the specified path(s) exist.
 	if [ ! -d "${path}" ]; then
         echo  -e "${RED}The specified path for app '${app}' is not a directory.";
