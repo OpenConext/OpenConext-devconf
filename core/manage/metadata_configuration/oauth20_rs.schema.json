@@ -86,7 +86,7 @@
         },
         "coin:institution_id": {
           "type": "string",
-          "info": "The defined institution code. Generally an abbreviation of the name of the institution"
+          "info": "Deprecated. Use coin:institution_guid. The defined institution code. Generally an abbreviation of the name of the institution"
         },
         "coin:institution_guid": {
           "type": "string",
@@ -172,7 +172,10 @@
           "type": "boolean",
           "info": "Set if the 'General Data Protection Regulation' (GDPR) is available on the SURF wiki. In Dutch known as 'Algemene Verordening Gegevensbescherming' (AVG). "
         },
-
+        "coin:collab_enabled": {
+          "type": "boolean",
+          "info": "Set for SRAM services."
+        },
         "secret": {
           "type": "string",
           "format": "password",
