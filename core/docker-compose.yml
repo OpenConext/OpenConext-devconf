@@ -173,7 +173,7 @@ services:
         condition: service_healthy
 
   oidcng:
-    image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.14
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:latest
     networks:
       coreconextdev:
     volumes:
