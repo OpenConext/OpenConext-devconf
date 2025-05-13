@@ -71,6 +71,11 @@ crypto:
   public-key-location: classpath:nope
   enabled: False
 
+# Can also be a file system resource like file://{{ manage_dir }}/policies/allowed_attributes.json
+policies:
+  allowed_attributes: classpath:/policies/allowed_attributes.json
+  extra_saml_attributes: classpath:/policies/extra_saml_attributes.json
+
 spring:
   mail:
     host: mailcatcher
