@@ -56,8 +56,8 @@ product:
   supported_languages: en,nl
   show_oidc_rp: true
 
-metadata_configuration_path: classpath:/metadata_configuration
-metadata_templates_path: classpath:/metadata_templates
+metadata_configuration_path: file:///config/metadata_configuration/
+metadata_templates_path: file:///config/metadata_templates/
 metadata_export_path: classpath:/metadata_export
 
 security:
@@ -66,7 +66,6 @@ security:
   api_users_config_path: file:///config/manage-api-users.yml
   super_user_attribute_name: is-member-of
   super_user_values: urn:collab:group:dev.openconext.local:nl:openconext:admins
-
 
 crypto:
   development-mode: True
