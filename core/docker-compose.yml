@@ -55,8 +55,8 @@ services:
       - openconext_mongodb:/data/db
     healthcheck:
       test: |
-        # After starting, but before being used, we need to initialize the Mongo replication set
-        # we abuse the healthcheck for that, because we need to check the health status anyway
+        # Apart form implementing a regular healthcheck, we also use it here to initialize
+        # the Mongo replication set
         mongosh -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --eval '
           try {
             rs.status().ok;
