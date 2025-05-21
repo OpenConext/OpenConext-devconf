@@ -44,36 +44,49 @@ services:
       - 3306:3306
 
   mongo:
-    image: bitnami/mongodb:7.0
+    image: mongo:7
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: secret
-      MONGODB_ROOT_PASSWORD: secret
-      MONGODB_REPLICA_SET_NAME: openconext
-      MONGODB_REPLICA_SET_MODE: primary
-      MONGODB_REPLICA_SET_KEY: secretsecret
-      MONGODB_ADVERTISED_HOSTNAME: mongodb
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-secret}
+      MONGO_REPLICA_SET_NAME: ${MONGODB_RS_NAME:-openconext}
     volumes:
       - ./mongo/:/docker-entrypoint-initdb.d/
-      - openconext_mongodb:/bitnami/mongodb
+      - openconext_mongodb:/data/db
     healthcheck:
-      test: ['CMD', 'true']
-      # test:
-      #   [
-      #     "CMD",
-      #     "mongosh",
-      #     "-u",
-      #     "managerw",
-      #     "-p",
-      #     "secret",
-      #     "--eval",
-      #     "db.stats().ok",
-      #     "mongodb://127.0.0.1/manage",
-      #   ]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
+      test: |
+        # After starting, but before being used, we need to initialize the Mongo replication set
+        # we abuse the healthcheck for that, because we need to check the health status anyway
+        mongosh -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --eval '
+          try {
+            rs.status().ok;
+          }
+          catch ({ name, message }) {
+            print("error:" + name);
+            print("message:" + message);
+            if (name=="MongoServerError" && message.includes("no replset config has been received")) {
+              rs.initiate({
+                _id : "${MONGODB_RS_NAME:-openconext}",
+                members: [ { _id: 0, host: "mongodb:27017" } ]
+              });
+              rs.status().ok;
+            }
+          };
+        '
+      interval: 2s
+      timeout: 3s
+      retries: 5
+    entrypoint: >
+      bash -c '
+          openssl rand -base64 756 > /keyfile \
+          && chown mongodb:mongodb /keyfile \
+          && chmod 400 /keyfile \
+          && exec docker-entrypoint.sh $$@
+      '
+    command: |
+      mongod --bind_ip_all --replSet ${MONGODB_RS_NAME:-openconext} --keyFile /keyfile
+    restart: always
+    ports:
+      - "27017:27017"
     networks:
       coreconextdev:
     hostname: mongodb
