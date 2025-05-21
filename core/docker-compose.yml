@@ -110,7 +110,7 @@ services:
     hostname: profile.docker
 
   mujina-idp:
-    image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
+    image: ghcr.io/openconext/mujina/mujina-idp:latest
     volumes:
       - ./:/config
     networks:
@@ -192,7 +192,7 @@ services:
       - "extras"
 
   oidcplaygroundgui:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:latest
     networks:
       coreconextdev:
     hostname: oidcplagroundgui.docker
@@ -202,7 +202,7 @@ services:
       - "extras"
 
   oidcplaygroundserver:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -220,7 +220,7 @@ services:
       - "extras"
 
   teamsgui:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
+    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:latest
     volumes:
       - ./:/config
     environment:
@@ -245,7 +245,7 @@ services:
       - "extras"
 
   teamsserver:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.3.1
+    image: ghcr.io/openconext/openconext-teams-ng/teams-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
