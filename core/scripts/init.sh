@@ -73,7 +73,10 @@ printf "\n"
 echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
 
-echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local"
+# we need ipv6 here, because otherwise systems will first query mdns for ipv6 entries for the .local domain
+hosts="engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local"
+echo "127.0.0.1 $hosts"
+echo "::1 $hosts"
 
 printf "\n"
 echo "You can now login. If you want to bring the environment down, use the command below"
