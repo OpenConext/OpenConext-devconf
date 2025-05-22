@@ -37,43 +37,57 @@ services:
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "-uroot", "-psecret", "ping", "-h", "localhost"]
-      timeout: 5s
-      retries: 10
+      interval: 10s
+      timeout: 3s
+      retries: 5
     hostname: mariadb.docker
     ports:
       - 3306:3306
 
   mongo:
-    image: bitnami/mongodb:7.0
+    image: mongo:7
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: secret
-      MONGODB_ROOT_PASSWORD: secret
-      MONGODB_REPLICA_SET_NAME: openconext
-      MONGODB_REPLICA_SET_MODE: primary
-      MONGODB_REPLICA_SET_KEY: secretsecret
-      MONGODB_ADVERTISED_HOSTNAME: mongodb
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-secret}
+      MONGO_REPLICA_SET_NAME: ${MONGODB_RS_NAME:-openconext}
     volumes:
       - ./mongo/:/docker-entrypoint-initdb.d/
-      - openconext_mongodb:/bitnami/mongodb
+      - openconext_mongodb:/data/db
     healthcheck:
-      test: ['CMD', 'true']
-      # test:
-      #   [
-      #     "CMD",
-      #     "mongosh",
-      #     "-u",
-      #     "managerw",
-      #     "-p",
-      #     "secret",
-      #     "--eval",
-      #     "db.stats().ok",
-      #     "mongodb://127.0.0.1/manage",
-      #   ]
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
+      test: |
+        # Apart from implementing a regular healthcheck, we also use it here to initialize
+        # the Mongo replication set
+        mongosh -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --eval '
+          try {
+            rs.status().ok;
+          }
+          catch ({ name, message }) {
+            print("error:" + name);
+            print("message:" + message);
+            if (name=="MongoServerError" && message.includes("no replset config has been received")) {
+              rs.initiate({
+                _id : "$${MONGO_REPLICA_SET_NAME}",
+                members: [ { _id: 0, host: "mongodb:27017" } ]
+              });
+              rs.status().ok;
+            }
+          };
+        '
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    entrypoint: >
+      bash -c '
+          openssl rand -base64 756 > /keyfile \
+          && chown mongodb:mongodb /keyfile \
+          && chmod 400 /keyfile \
+          && exec docker-entrypoint.sh $$@
+      '
+    command: |
+      mongod --bind_ip_all --replSet $${MONGO_REPLICA_SET_NAME} --keyFile /keyfile
+    restart: always
+    ports:
+      - "27017:27017"
     networks:
       coreconextdev:
     hostname: mongodb
@@ -110,7 +124,7 @@ services:
     hostname: profile.docker
 
   mujina-idp:
-    image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
+    image: ghcr.io/openconext/mujina/mujina-idp:latest
     volumes:
       - ./:/config
     networks:
@@ -192,7 +206,7 @@ services:
       - "extras"
 
   oidcplaygroundgui:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:latest
     networks:
       coreconextdev:
     hostname: oidcplagroundgui.docker
@@ -202,7 +216,7 @@ services:
       - "extras"
 
   oidcplaygroundserver:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -220,7 +234,7 @@ services:
       - "extras"
 
   teamsgui:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
+    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:latest
     volumes:
       - ./:/config
     environment:
@@ -245,7 +259,7 @@ services:
       - "extras"
 
   teamsserver:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.3.1
+    image: ghcr.io/openconext/openconext-teams-ng/teams-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
