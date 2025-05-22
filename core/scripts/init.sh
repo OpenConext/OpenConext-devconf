@@ -3,7 +3,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 NOCOLOR='\033[0m'
-CWD=$(dirname $0)
+CWD=$(dirname "$0")
 manageurl=https://manage.dev.openconext.local/manage/api/internal/
 
 set -e
@@ -48,16 +48,17 @@ for i in "$CWD"/*.json; do
 	url="$manageurl/search/$type"
 	json_body="{\"entityid\":\"$entityid\",\"REQUESTED_ATTRIBUTES\":[\"entityid\"],\"LOGICAL_OPERATOR_IS_AND\":true}"
 	set +e
-	command="docker compose exec managegui curl --fail-with-body -s -u sysadmin:secret -k -X POST -H \"Content-Type: application/json\" -d '$json_body' \"$url\""
-	a=$(docker compose exec managegui curl --fail-with-body -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url")
+	command=(docker compose exec managegui curl --fail-with-body -s -u sysadmin:secret -k -X POST -H "Content-Type: application/json" -d "$json_body" "$url")
+	a=$( "${command[@]}" )
+	# shellcheck disable=SC2181
 	if [[ $? -ne 0 ]]; then
 		echo -e "${RED}Error while adding $entityid to manage${NOCOLOR}"
-		echo $command
-		echo $a
+		echo "${command[@]}"
+		echo "$a"
 		exit 1
 	fi
 	set -e
-	filename=$(basename $i)
+	filename=$(basename "$i")
 	if [[ $a == "[]" ]]; then
 		echo "$entityid not found, adding"
 		docker compose exec managegui curl -s -k -u sysadmin:secret -H 'Content-Type: application/json' -d @/config/scripts/"$filename" -XPOST "$manageurl"/metadata >/dev/null
@@ -76,7 +77,7 @@ printf "\n"
 # we need ipv6 here, because otherwise systems will first query mdns for ipv6 entries for the .local domain
 hosts="engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local"
 echo "127.0.0.1 $hosts"
-echo "::1 $hosts"
+echo "::1       $hosts"
 
 printf "\n"
 echo "You can now login. If you want to bring the environment down, use the command below"
