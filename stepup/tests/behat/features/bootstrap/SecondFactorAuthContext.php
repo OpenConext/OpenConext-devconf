@@ -78,6 +78,17 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @Given a service provider configured for second-factor-only with loa 1.5
+     */
+    public function configureServiceProviderForSecondFactorOnlyLoa1_5()
+    {
+        $this->activeIdp = self::SFO_IDP;
+        $this->activeSp = self::SFO_SP;
+        $this->requiredLoa = 1.5;
+    }
+
+
+    /**
      * @Given a service provider configured for single-signon
      */
     public function configureServiceProviderForSingleSignOn()
@@ -107,6 +118,23 @@ class SecondFactorAuthContext implements Context
             $this->minkContext->pressButton('Submit');
             $this->diePrintingContent();
         }
+    }
+
+    /**
+     * @When I start an SFO authentication for :arg1 with GSSP extension subject :arg2 and institution :arg3
+     */
+    public function startASfoAuthenticationWithGsspExtension(string $userIdentifier, string $subject, string $institution)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('subject', $userIdentifier);
+
+        $this->minkContext->fillField('email_extension', $subject);
+        $this->minkContext->fillField('sho_extension', $institution);
+
+        $this->minkContext->pressButton('Login');
     }
 
     /**
@@ -198,6 +226,45 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @When I verify the azuremfa gssp second factor with email address :arg1
+     */
+    public function authenticateUserInAzureMfaGsspApplication($emailAddress)
+    {
+        $this->minkContext->assertPageAddress('https://azuremfa.dev.openconext.local/mock/sso');
+
+        // Fill test attributes on demo page
+        $attributes = sprintf('[
+            {
+                "name": "urn:mace:dir:attribute-def:mail",
+                "value": [
+                    "%s"
+                ]
+            },
+            {
+                "name": "http://schemas.microsoft.com/claims/authnmethodsreferences",
+                "value": [
+                    "http://schemas.microsoft.com/claims/multipleauthn"
+                ]
+            }
+        ]', $emailAddress);
+
+        $this->minkContext->fillField('attributes', $attributes);
+        $this->minkContext->pressButton('success');
+
+        // Submit assertion
+        $this->minkContext->assertPageAddress('https://azuremfa.dev.openconext.local/mock/sso');
+        $this->minkContext->pressButton('Submit assertion');
+
+        // Pass through the 'return to sp' redirection page.
+        $this->minkContext->assertPageAddress('https://azuremfa.dev.openconext.local/saml/sso_return');
+        $this->minkContext->pressButton('Submit');
+
+        // And continue back to the SP via Gateway
+        $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/gssp/azuremfa/consume-assertion');
+        $this->minkContext->pressButton('Submit');
+    }
+
+    /**
      * @When I verify the Yubikey second factor
      */
     public function verifyYuikeySecondFactor()
@@ -221,6 +288,9 @@ class SecondFactorAuthContext implements Context
                 break;
             case "demo-gssp":
                 $this->cancelAuthenticationInDummyGsspApplication();
+                break;
+            case "azuremfa-gssp":
+                $this->cancelAuthenticationInAzureMfaGsspApplication();
                 break;
             default:
                 throw new Exception(
@@ -312,6 +382,22 @@ class SecondFactorAuthContext implements Context
         // Pass through the gssp
         $this->minkContext->pressButton('Submit');
         // Pass through the Gateway
+        $this->minkContext->pressButton('Submit');
+    }
+
+    public function cancelAuthenticationInAzureMfaGsspApplication()
+    {
+        $this->minkContext->assertPageAddress('https://azuremfa.dev.openconext.local/mock/sso');
+        // Cancel the dummy authentication action.
+        $this->minkContext->pressButton('user-cancelled');
+
+        // Pass through the gssp
+        $this->minkContext->pressButton('Submit');
+
+        // Pass through the Gateway
+        $this->minkContext->pressButton('Submit');
+
+        // Pass through the SP
         $this->minkContext->pressButton('Submit');
     }
 
