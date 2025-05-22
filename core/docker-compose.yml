@@ -73,7 +73,7 @@ services:
             }
           };
         '
-      interval: 10s
+      interval: 5s
       timeout: 3s
       retries: 5
     entrypoint: >
