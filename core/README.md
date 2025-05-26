@@ -70,7 +70,7 @@ Since the OpenConext suite is composed of multiple docker containers, you can us
 
 If you want to start all services, you can use extras. A profile can be started by using the --profile argument to the `docker compose up` command. For example:
 ```
-docker compose up -d --profile extras
+docker compose --profile extras up -d
 ```
 
 # Starting a PHP project in development mode (only lifecycle, profile and engineblock)
