@@ -93,7 +93,7 @@ services:
     hostname: mongodb
 
   engine:
-    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
+    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:6.15.4
     volumes:
       - ./:/config
     networks:
@@ -133,7 +133,7 @@ services:
     hostname: mujina.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:latest
+    image: ghcr.io/openconext/openconext-manage/manage-gui:9.1
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -155,7 +155,7 @@ services:
         condition: service_healthy
 
   manageserver:
-    image: ghcr.io/openconext/openconext-manage/manage-server:latest
+    image: ghcr.io/openconext/openconext-manage/manage-server:9.1
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -294,7 +294,7 @@ services:
       - "extras"
 
   inviteclient:
-    image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.23
+    image: ghcr.io/openconext/openconext-invite/inviteclient:snapshot
     volumes:
       - ./:/config
     environment:
