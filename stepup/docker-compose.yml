@@ -17,6 +17,7 @@ services:
           - demogssp.dev.openconext.local
           - webauthn.dev.openconext.local
           - tiqr.dev.openconext.local
+          - azuremfa.dev.openconext.local
           - mailcatcher.dev.openconext.local
     hostname: haproxy.docker
 
