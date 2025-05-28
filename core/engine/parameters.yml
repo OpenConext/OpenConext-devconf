@@ -9,7 +9,7 @@ parameters:
   enabled_languages:
     - nl
     - en
-  attribute_definition_file_path: '%kernel.project_dir%/application/configs/attributes.json'
+  attribute_definition_file_path: '%kernel.project_dir%/../application/configs/attributes.json'
   encryption_keys:
     default:
       publicFile: /config/engine/engineblock.crt
