@@ -728,9 +728,12 @@ class RaContext implements Context
 
     /**
      * @Given /^I die$/
-     */
+     * Call the PHP die() function and output the contents of the current webpage
+     * Useful for debugging
+ */
     public function andIDie()
     {
+        echo "\nAborting test because \"I die\" is given\n";
         $this->diePrintingContent();
     }
 }
