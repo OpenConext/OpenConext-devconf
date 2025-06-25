@@ -58,6 +58,25 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @Then I Submit the SAML Post
+     * Because the emulator does not run javascript, forms with a SAML POST must be submitted manually.
+     * @throws Exception
+     */
+    public function pressSubmit()
+    {
+        // Check that there is a HTML form on the page with a submit button and an input field "SAMLResponse"
+        $page = $this->minkContext->getSession()->getPage();
+        $form = $page->find('css', 'form');
+        $samlResponse = $page->find('css', 'input[name="SAMLResponse"]');
+
+        if (!$form || !$samlResponse) {
+            throw new Exception('Expected SAML form post elements not found on page');
+        }
+
+        $this->minkContext->pressButton('Submit');
+    }
+
+    /**
      * @BeforeScenario
      */
     public function gatherContexts(BeforeScenarioScope $scope)
