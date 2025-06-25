@@ -27,6 +27,7 @@
     "number_of_tokens_per_identity": 2,
     "self_vet": true,
     "sso_on_2fa": true,
+    "sso_registration_bypass": true,
     "allow_self_asserted_tokens": true
   },
   "institution-d.example.com": {
