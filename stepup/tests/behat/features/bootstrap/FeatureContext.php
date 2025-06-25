@@ -48,6 +48,7 @@ class FeatureContext implements Context
 
     public static function execCommand(string $command): void
     {
+        echo "\nExecuting command: '$command'\n";
         $output = [];
         $returnCode = -1;
         $result = exec($command, $output, $returnCode);
