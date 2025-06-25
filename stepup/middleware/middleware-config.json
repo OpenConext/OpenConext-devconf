@@ -1,8 +1,6 @@
 {
   "sraa": [
-    "urn:collab:person:dev.openconext.local:admin",
-    "urn:collab:person:dev.openconext.local:pieter",
-    "urn:collab:person:dev.openconext.local:joost"
+    "urn:collab:person:dev.openconext.local:admin"
   ],
   "email_templates": {
     "confirm_email": {
