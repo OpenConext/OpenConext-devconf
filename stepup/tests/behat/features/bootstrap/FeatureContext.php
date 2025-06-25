@@ -12,6 +12,7 @@ use Surfnet\StepupBehat\ValueObject\ActivationContext;
 use Surfnet\StepupBehat\ValueObject\Identity;
 use Surfnet\StepupBehat\ValueObject\SecondFactorToken;
 use Surfnet\StepupBehat\ValueObject\InstitutionConfiguration;
+use Behat\Behat\Hook\Scope\AfterStepScope;
 
 class FeatureContext implements Context
 {
@@ -449,5 +450,28 @@ class FeatureContext implements Context
         echo $this->minkContext->getSession()->getCurrentUrl();
         echo $this->minkContext->getSession()->getPage()->getContent();
         die;
+    }
+
+    /**
+     * @AfterStep
+     */
+    public function dumpPageContentAfterFailedStep(AfterStepScope $scope)
+    {
+        if ($scope->getTestResult()->getResultCode() === \Behat\Testwork\Tester\Result\TestResult::FAILED) {
+            $session = $this->minkContext->getSession();
+            if ($session->getDriver() instanceof \Behat\Mink\Driver\GoutteDriver) {
+                $content = $session->getPage()->getContent();
+                $url = $session->getCurrentUrl();
+                $headers = $session->getResponseHeaders();
+                fwrite (STDERR, "\nStep failed:\n");
+                fwrite (STDERR, "URL: ".$url."\n");
+                foreach ($headers as $header => $values) {
+                    foreach ($values as $value)
+                    fwrite (STDERR, $header.": ".$value."\n");
+                }
+                fwrite(STDERR, "\n".$content."\n");
+
+            }
+        }
     }
 }
