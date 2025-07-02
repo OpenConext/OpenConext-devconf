@@ -5,8 +5,13 @@ services:
     ports:
       - 80:80
       - 443:443
+    # bind mount separate files because the haproxy config
+    # directory also contains some static error files we do not want
+    # in our repository
     volumes:
       - ./haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem
+      - ./haproxy/backends.map:/usr/local/etc/haproxy/backends.map:ro
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     networks:
       coreconextdev:
         aliases:
