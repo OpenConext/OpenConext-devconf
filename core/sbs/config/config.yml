@@ -13,7 +13,10 @@ permanent_session_lifetime: 60
 redis:
   uri: redis://redis:6379/
 
-socket_url: 0.0.0.0:8080/
+socket_url: "sbs.dev.openconext.local/"
+
+logging:
+  log_to_stdout: True
 
 api_users:
   - name: "sysadmin"
@@ -30,36 +33,24 @@ api_users:
     scopes: ["ipaddress"]
 
 oidc:
-  client_id: foo
-  client_secret: echtgeheim
-  audience: http://http://sbs.dev.openconext.local
-  authorization_endpoint: http://http://sbs.dev.openconext.local/saml2sp/OIDC/authorization
-  token_endpoint: http://http://sbs.dev.openconext.local/OIDC/token
-  userinfo_endpoint: http://http://sbs.dev.openconext.local/OIDC/userinfo
-  jwks_endpoint: http://http://sbs.dev.openconext.local/OIDC/jwks
+  client_id: sbs.dev.openconext.local
+  client_secret: secretsecret
+  audience: sbs.dev.openconext.local
+  verify_peer: False
+  authorization_endpoint: https://connect.dev.openconext.local/oidc/authorize
+  token_endpoint: https://connect.dev.openconext.local/oidc/token
+  userinfo_endpoint: https://connect.dev.openconext.local/oidc/userinfo
+  jwks_endpoint: https://connect.dev.openconext.local/oidc/certs
   #Note that the paths for these  uri's is hardcoded and only domain and port differ per environment
-  redirect_uri: http://http://sbs.dev.openconext.local/api/users/resume-session
+  redirect_uri: https://sbs.dev.openconext.local/api/users/resume-session
   continue_eduteams_redirect_uri: http://sbs.dev.openconext.local/continue
+  continue_eb_redirect_uri: https://engine.(.*)openconext.local
   second_factor_authentication_required: True
   totp_token_name: "SRAM local"
   # The client_id of SBS. Most likely to equal the oidc.client_id
   sram_service_entity_id: http://sbs.dev.openconext.local
-
-
   scopes:
-    - profile
-    - eduperson_scoped_affiliation
-    - voperson_external_affiliation
-    - email
-    - ssh_public_key
-    - eduperson_orcid
-    - uid
-    - voperson_external_id
-    - eduperson_entitlement
-    - eduperon_assurance
     - openid
-    - eduperson_principal_name
-    - voperson_id
 
 base_scope: "test.sbs.local"
 entitlement_group_namespace: "urn:example:sbs"
@@ -69,8 +60,8 @@ collaboration_creation_allowed_entitlement: "urn:example:sbs:allow-create-co"
 environment_disclaimer: "local"
 
 mail:
-  host: localhost
-  port: 1025
+  host: mailcatcher
+  port: 25
   sender_name: SURF_ResearchAccessManagement
   sender_email: no-reply@surf.nl
   suppress_sending_mails: False
@@ -84,24 +75,26 @@ mail:
   send_exceptions: False
   send_js_exceptions: False
   send_exceptions_recipients: ["sram-support@surf.nl"]
-  environment: local
+  environment: dev.openconext.local
 
 manage:
-  enabled: false
-  base_url: ""
-  user: ""
-  password: ""
+  enabled: true
+  base_url: "https://manage.dev.openconext.local/"
+  user: "sram"
+  password: "secret"
+  verify_peer: False
 
 aup:
   version: 1
   url_aup_en: https://edu.nl/6wb63
   url_aup_nl: https://edu.nl/6wb63
 
-base_url: http://sbs.dev.openconext.local
-base_server_url: http://sbs.dev.openconext.local
+base_url: https://sbs.dev.openconext.local
+base_server_url: https://sbs.dev.openconext.local
 wiki_link: https://edu.nl/vw3jx
 
 admin_users:
+  - uid: "urn:collab:person:example.com:admin"
   - uid: "urn:john"
   - uid: "urn:rocky"
   - uid: "urn:mike"
@@ -134,6 +127,7 @@ retention:
 metadata:
   idp_url: https://metadata.surfconext.nl/idps-metadata.xml
   parse_at_startup: False
+  scope_override: {}
 
 service_bus:
   enabled: False
@@ -197,6 +191,15 @@ invitation_reminders:
   # How long before expiration of an invitation do we remind the user?
   invitation_reminders_threshold: 5
 
+invitation_expirations:
+  # Do we daily check for invitations that are expired / accepted and are eligible for deletion ?
+  enabled: True
+  cron_hour_of_day: 10
+  # How long after expiration of an invitation do we delete the invitation?
+  nbr_days_remove_expired_invitations: 10
+  # How long after expiration of an API created invitation do we delete the invitation?
+  nbr_days_remove_api_expired_invitations: 30
+
 orphan_users:
   # Do we daily check for users that are orphans?
   enabled: True
@@ -215,12 +218,14 @@ scim_sweep:
   # How often do we check if scim sweeps are needed per service
   cron_minutes_expression: "*/15"
 
+scim_schema_sram: "urn:mace:example.com:sram:scim:extension"
+
 ldap:
   url: ldap://localhost:1389/dc=example,dc=org
   bind_account: cn=admin,dc=example,dc=org
 
 # A MFA login in a different flow is valid for X minutes
-mfa_sso_time_in_minutes: 10
+mfa_sso_time_in_minutes: 1
 
 # whether to require TOTP for users form IdPs that match neither mfa_idp_allowed
 # nor ssid_identity_providers
@@ -255,3 +260,13 @@ rate_limit_totp_guesses_per_30_seconds: 10
 excluded_user_accounts:
   - uid: "urn:paul"
   - uid: "urn:peter"
+
+stress_test:
+  num_users: 1
+  num_orgs: 1
+  num_collaborations: 2
+  num_services: 1
+  num_groups: 1
+
+engine_block:
+  api_token: secret

@@ -173,7 +173,7 @@
         "invite",
         "manage",
         "orcid",
-        "sab",
+        "sabrest",
         "voot",
       ],
       "properties": {
@@ -271,7 +271,8 @@
             },
             "urn:mace:surf.nl:attribute-def:surf-autorisaties": {
               "$ref": "#/definitions/ArpAttribute",
-              "alias": "urn:oid:1.3.6.1.4.1.1076.20.100.10.50.10"
+              "alias": "urn:oid:1.3.6.1.4.1.1076.20.100.10.50.10",
+              "multiplicity": true
             },
             "urn:mace:dir:attribute-def:isMemberOf": {
               "$ref": "#/definitions/ArpAttribute",
@@ -434,7 +435,7 @@
         },
         "coin:institution_id": {
           "type": "string",
-          "info": "The defined client code. Generally an abbreviation of the name of the client."
+          "info": "Deprecated. Use coin:institution_guid. The defined client code. Generally an abbreviation of the name of the client."
         },
         "coin:institution_guid": {
           "type": "string",
@@ -643,6 +644,10 @@
           "default": "AO",
           "info": "Set the contractual base that underlies a production SP / RP entity."
         },
+        "coin:collab_enabled": {
+          "type": "boolean",
+          "info": "Set for SRAM services."
+        }
       },
       "patternProperties": {
         "^name:(en|nl)$": {

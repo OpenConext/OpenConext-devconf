@@ -1,11 +1,18 @@
 ---
+# This configuration uses a sub-mount for ./engine/parameters.yml
+# Make sure to NEVER write to parameters.yml in ${ENGINE_CODE_PATH} after starting
+# the container. It will destroy the sub-mount!!
 services:
   engine:
     image: ghcr.io/openconext/openconext-basecontainers/${ENGINE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
     volumes:
       - ${ENGINE_CODE_PATH}:/var/www/html
+      - ./engine/parameters.yml:/var/www/html/app/config/parameters.yml
       - ./engine/appconf.conf:/etc/apache2/sites-enabled/appconf.conf
     environment:
       - APP_ENV=${APP_ENV:-dev}
-      # - SYMFONY_ENV=${APP_ENV:-dev}
+      - SYMFONY_ENV=${APP_ENV:-dev}
       - APP_DEBUG=1
+    healthcheck:
+      test: ["CMD", "true"]
+      interval: 10s

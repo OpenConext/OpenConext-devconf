@@ -30,16 +30,17 @@ services:
       timeout: 5s
       retries: 10
     hostname: sbs-client.docker
-    command: "yarn start"
+    command:
+      - "sh"
+      - "-c"
+      - "yarn install && yarn build --disable-warning && yarn start"
     profiles:
       - "sbs"
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:main
     environment:
-      TESTING: 1
-      PROFILE: "local"
-      ALLOW_MOCK_USER_API: 1
+      - REQUESTS_CA_BUNDLE=/opt/sbs/config/haproxy.crt
     volumes:
       - ./sbs/config:/opt/sbs/config
       - ${SBS_CODE_PATH}/server:/opt/sbs/server
@@ -50,6 +51,23 @@ services:
       timeout: 5s
       retries: 10
     hostname: sbs-server.docker
+    depends_on:
+      sbs-server-migrate:
+        condition: service_completed_successfully
+    profiles:
+      - "sbs"
+
+  sbs-server-migrate:
+    image: ghcr.io/surfscz/sram-sbs-server:main
+    environment:
+      - MIGRATIONS_ONLY=1
+    volumes:
+      - ./sbs/config:/opt/sbs/config
+      - ${SBS_CODE_PATH}/server:/opt/sbs/server
+    networks:
+      coreconextdev:
+    command:
+      - "/usr/local/bin/gunicorn --worker-class eventlet --workers 1 --bind 0.0.0.0:8080 server.__main__:app"
     depends_on:
       redis:
         condition: service_healthy
