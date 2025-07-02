@@ -1,0 +1,35 @@
+{
+  "version": 0,
+  "type": "oidc10_rp",
+  "data": {
+    "entityid": "sbs.dev.openconext.local",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "allowedResourceServers": [
+      {
+        "name": "sbs.dev.openconext.local"
+      }
+    ],
+    "arp": {
+      "enabled": false,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "name:en": "SBS Server",
+      "name:nl": "SBS Server",
+      "description:en": "SRAM SBS server",
+      "OrganizationName:en": "OpenConext DEV",
+      "secret": "secretsecret",
+      "grants": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "redirectUrls": [
+        "https://sbs.dev.openconext.local/api/users/resume-session"
+      ]
+    },
+    "allowedEntities": [],
+    "revisionnote": "Initial import"
+  }
+}

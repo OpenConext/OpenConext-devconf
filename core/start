@@ -1,4 +1,0 @@
-#!/bin/sh
-#./start-dev-env.sh engine:../../OpenConext-engineblock
-export ENGINE_CODE_PATH=../../OpenConext-engineblock
-docker compose --profile oidc --profile sbs -f docker-compose.yml -f ./engine/docker-compose.override.yml -f ./sbs/docker-compose.override.yml  up

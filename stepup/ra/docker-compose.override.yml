@@ -1,9 +1,10 @@
 ---
 services:
   ra:
-    image: ghcr.io/openconext/openconext-basecontainers/${RA_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
+    image: ghcr.io/openconext/openconext-basecontainers/${RA_PHP_IMAGE:-php82-apache2-node14-composer2:latest}
     volumes:
       - ${RA_CODE_PATH}:/var/www/html
+      - ./ra/appconf.conf:/etc/apache2/sites-enabled/000-default.conf
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=true

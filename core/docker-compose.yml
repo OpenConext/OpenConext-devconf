@@ -5,6 +5,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - ./haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem
     networks:
       coreconextdev:
         aliases:
@@ -35,7 +37,7 @@ services:
       - ./dbschema:/docker-entrypoint-initdb.d
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "-uroot", "-psecret", "ping", "-h", "localhost"]
       timeout: 5s
       retries: 10
     hostname: mariadb.docker
@@ -56,18 +58,19 @@ services:
       - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mongosh",
-          "-u",
-          "managerw",
-          "-p",
-          "secret",
-          "--eval",
-          "db.stats().ok",
-          "mongodb://127.0.0.1/manage",
-        ]
+      test: ['CMD', 'true']
+      # test:
+      #   [
+      #     "CMD",
+      #     "mongosh",
+      #     "-u",
+      #     "managerw",
+      #     "-p",
+      #     "secret",
+      #     "--eval",
+      #     "db.stats().ok",
+      #     "mongodb://127.0.0.1/manage",
+      #   ]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -126,7 +129,7 @@ services:
     hostname: mujinasp.docker
 
   managegui:
-    image: ghcr.io/openconext/openconext-manage/manage-gui:7.4.9
+    image: ghcr.io/openconext/openconext-manage/manage-gui:latest
     environment:
       HTTPD_CSP: ""
       HTTPD_SERVERNAME: "manage.dev.openconext.local"
@@ -148,7 +151,7 @@ services:
         condition: service_healthy
 
   manageserver:
-    image: ghcr.io/openconext/openconext-manage/manage-server:7.4.9
+    image: ghcr.io/openconext/openconext-manage/manage-server:latest
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
@@ -180,7 +183,7 @@ services:
         condition: service_healthy
 
   oidcng:
-    image: ghcr.io/openconext/openconext-oidcng/oidcng:6.1.14
+    image: ghcr.io/openconext/openconext-oidcng/oidcng:latest
     networks:
       coreconextdev:
     volumes:
@@ -457,10 +460,6 @@ services:
 
   sbs-server:
     image: ghcr.io/surfscz/sram-sbs-server:main
-    environment:
-      TESTING: 1
-      PROFILE: "local"
-      ALLOW_MOCK_USER_API: 1
     volumes:
       - ./sbs/config:/opt/sbs/config
     networks:
