@@ -25,6 +25,7 @@ You will also need to tell your local machine where to find the hosts.
 Add the following line in your hosts file (/etc/hosts )
 ```
 127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local
+::1       engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local
 ```
 
 If all goes wel, you can now login. Please see the section below to find out where you can login.
@@ -69,7 +70,7 @@ Since the OpenConext suite is composed of multiple docker containers, you can us
 
 If you want to start all services, you can use extras. A profile can be started by using the --profile argument to the `docker compose up` command. For example:
 ```
-docker compose up -d --profile extras
+docker compose --profile extras up -d
 ```
 
 # Starting a PHP project in development mode (only lifecycle, profile and engineblock)
