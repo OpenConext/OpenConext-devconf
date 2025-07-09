@@ -29,6 +29,7 @@ services:
           - mujina-idp.dev.openconext.local
           - invite.dev.openconext.local
           - sbs.dev.openconext.local
+          - spdashboard.dev.openconext.local
     hostname: haproxy.docker
 
   mariadb:
@@ -112,6 +113,23 @@ services:
     networks:
       coreconextdev:
     hostname: profile.docker
+
+  spdashboard:
+    image: ghcr.io/surfnet/sp-dashboard/spdashboard:latest
+    environment:
+      APP_ENV: prod
+    volumes:
+      - ./:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      coreconextdev:
+    hostname: spdashboard.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
 
   mujina-idp:
     image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
