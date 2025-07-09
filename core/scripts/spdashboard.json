@@ -21,7 +21,7 @@
       "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
     },
     "allowedEntities": [],
-    "metadataurl": "https://teams.test2.surfconext.nl/saml/metadata",
+    "metadataurl": "https://teams.dev.surfconext.nl/saml/metadata",
     "revisionnote": "Initial import"
   }
 }

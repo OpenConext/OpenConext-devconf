@@ -62,19 +62,18 @@ services:
       - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
     healthcheck:
-      test: ['CMD', 'true']
-      # test:
-      #   [
-      #     "CMD",
-      #     "mongosh",
-      #     "-u",
-      #     "managerw",
-      #     "-p",
-      #     "secret",
-      #     "--eval",
-      #     "db.stats().ok",
-      #     "mongodb://127.0.0.1/manage",
-      #   ]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "-u",
+          "managerw",
+          "-p",
+          "secret",
+          "--eval",
+          "db.stats().ok",
+          "mongodb://127.0.0.1/manage",
+        ]
       interval: 10s
       timeout: 10s
       retries: 3
