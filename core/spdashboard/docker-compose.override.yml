@@ -1,0 +1,12 @@
+---
+services:
+  spdashboard:
+    image: ghcr.io/openconext/openconext-basecontainers/${SPDASHBOARD_PHP_IMAGE:-php82-apache2-node20-composer2:latest}
+    volumes:
+      - ${SPDASHBOARD_CODE_PATH}:/var/www/html
+    environment:
+      - APP_ENV=${APP_ENV:-dev}
+      - APP_DEBUG=true
+    extra_hosts:
+      # Ensure that host.docker.internal is correctly defined on Linux
+      - host.docker.internal:host-gateway

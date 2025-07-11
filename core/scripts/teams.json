@@ -20,7 +20,7 @@
       "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
     },
     "allowedEntities": [],
-    "metadataurl": "https://teams.test2.surfconext.nl/Shibboleth.sso/Metadata",
+    "metadataurl": "https://teams.dev.surfconext.nl/Shibboleth.sso/Metadata",
     "revisionnote": "Initial import"
   }
 }
