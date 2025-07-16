@@ -1,0 +1,217 @@
+logging:
+  level:
+    org.springframework: WARN
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    com.zaxxer.hikari: ERROR
+    access: DEBUG
+
+server:
+  port: 8080
+  error:
+    path: "/error"
+    include-message: always
+  forward-headers-strategy: native
+  servlet:
+    session:
+      cookie:
+        secure: true
+
+spring:
+  main:
+    banner-mode: "off"
+  session:
+    jdbc:
+      initialize-schema: always
+cleanup-cron: "0 */5 * * * *"
+store-type: jdbc
+timeout: 8h
+mvc:
+  log-request-details: false
+security:
+  oauth2:
+    client:
+      registration:
+        oidcng:
+          client-id: "{{ invite.oidc_client_id }}"
+          client-secret: "{{ invite.oidc_secret }}"
+          redirect-uri: "https://{baseHost}{basePort}{basePath}/login/oauth2/code/{registrationId}"
+          authorization-grant-type: "authorization_code"
+          scope: openid
+      provider:
+        oidcng:
+          authorization-uri: "https://connect.{{ base_domain }}/oidc/authorize"
+          token-uri: "https://connect.{{ base_domain }}/oidc/token"
+          user-info-uri: "https://connect.{{ base_domain }}/oidc/userinfo"
+          jwk-set-uri: "https://connect.{{ base_domain }}/oidc/certs"
+          user-name-attribute: sub
+          user-info-authentication-method: client_secret_basic
+jpa:
+  properties:
+    hibernate:
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      dialect: org.hibernate.dialect.MariaDBDialect
+  open-in-view: false
+datasource:
+  driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://{{ invite.db_host }}/invite?autoReconnect=true
+  username: {{ invite.db_user }}
+  password: {{ invite.db_secret }}
+flyway:
+  locations: classpath:db/mysql/migration
+  fail-on-missing-locations: true
+mail:
+  host: {{ smtp_server }}
+
+crypto:
+  development-mode: False
+  private-key-location: file:///private_key_pkcs8.pem
+
+cron:
+  node-cron-job-responsible: {{ invite_cronjobmaster }}
+  user-cleaner-expression: "0 0/30 * * * *"
+  last-activity-duration-days: 1000
+  role-expiration-notifier-expression: "0 0/30 * * * *"
+  # Set to -1 to suppress role expiry notifications
+  role-expiration-notifier-duration-days: 5
+  metadata-resolver-initial-delay-milliseconds: 1
+  metadata-resolver-fixed-rate-milliseconds: 86_400_000
+  metadata-resolver-url: "https://metadata.{{ base_domain }}/idps-metadata.xml"
+
+myconext:
+  uri: "https://login.{{ myconext_base_domain }}/myconext/api/invite/provision-eduid"
+  username: invite
+  password: "{{ myconext_api_invite_password }}"
+
+oidcng:
+  discovery-url: "https://connect.{{ base_domain }}/oidc/.well-known/openid-configuration"
+  introspect-url: "https://connect.{{ base_domain }}/oidc/introspect"
+  resource-server-id: {{ invite.resource_server_id }}
+  resource-server-secret: "{{ invite.resource_server_secret }}"
+  base-url: https://invite.{{ base_domain }}
+
+super-admin:
+  users: {{ invite.super_admins }}
+
+institution-admin:
+  entitlement: "urn:mace:surfnet.nl:surfnet.nl:sab:role:SURFconextverantwoordelijke"
+  organization-guid-prefix: "urn:mace:surfnet.nl:surfnet.nl:sab:organizationGUID:"
+
+gui:
+  disclaimer:
+    background-color: {{ environment_ribbon_colour }}
+    content: {{ environment_shortname }}
+
+config:
+  client-url: "https://invite.{{ base_domain }}"
+  welcome-url: "https://welcome.{{ base_domain }}"
+  server-url: "https://invite.{{ base_domain }}"
+  server-welcome-url: "https://welcome.{{ base_domain }}"
+  eduid-entity-id: "https://login.{{ myconext_base_domain }}"
+  role-search-required: false
+  past-date-allowed: {{ invite.past_date_allowed }}
+  performance-seed-allowed: {{ invite.performance_seed_allowed }}
+  eduid-idp-schac-home-organization: {{ invite.eduid_idp_schac_home_organization }}
+
+feature:
+  limit-institution-admin-role-visibility: {{ invite.limit_institution_admin_role_visibility }}
+  enable-performance-seed: False
+
+# We don't encode in-memory passwords, but they are reused so do NOT prefix them with {noop}
+external-api-configuration:
+  remote-users:
+    -
+      username: {{ invite.vootuser }}
+      password: "{{ invite.vootsecret }}"
+      scopes:
+        - voot
+    -
+      username: {{ invite.teamsuser}}
+      password: "{{ invite.teamssecret }}"
+      scopes:
+        - teams
+    -
+      username: {{ aa.invite_username }}
+      password: "{{ invite_attribute_aggregation_secret }}"
+      scopes:
+        - attribute_aggregation
+    -
+      username: {{ invite.lifecycle_user }}
+      password: "{{ invite.lifecycle_secret }}"
+      scopes:
+        - lifecycle
+    -
+      username: {{ invite.profile_user }}
+      password: "{{ invite.profile_secret }}"
+      scopes:
+        - profile
+    -
+      username: {{ invite.sp_dashboard_user }}
+      password: "{{ invite.sp_dashboard_secret }}"
+      scopes:
+        - sp_dashboard
+      applications:
+        - manageId: {{ invite.sp_dashboard_manage_id }}
+          manageType: SAML20_SP
+    -
+      username: {{ invite.access_user }}
+      password: "{{ invite.access_secret }}"
+      scopes:
+        - access
+      applications:
+        - manageId: {{ invite.access_manage_id }}
+          manageType: OIDC10_RP
+
+
+voot:
+  group_urn_domain: "{{ invite.group_urn_domain }}"
+
+email:
+  from: "{{ noreply_email }}"
+  contactEmail: "{{ support_email }}"
+  environment: "{{ environment_shortname }}"
+  enabled: true
+
+manage:
+  enabled: true
+  url: "https://manage.{{ base_domain }}"
+  user: {{ invite.manageuser }}
+  password: {{ invite.managesecret }}
+  local: False
+  # If manage is disabled (e.g. enabled: False) the staticManageDirectory is the directory where the {metadata_type}.json files
+  # are located. This can also be an absolute file path, e.g. file:///opt/openconext/oidc-playground/manage
+  staticManageDirectory: classpath:/manage
+  #  staticManageDirectory: file:///usr/local/etc/manage
+
+springdoc:
+  pathsToMatch: "/api/external/v1/**"
+  api-docs:
+    path: "/ui/api-docs"
+  swagger-ui:
+    path: "/ui/api-ui.html"
+    operationsSorter: method
+    oauth:
+      client-id: ${spring.security.oauth2.client.registration.oidcng.client-id}
+      client-secret: ${spring.security.oauth2.client.registration.oidcng.client-secret}
+      use-basic-authentication-with-access-code-grant: true
+
+
+management:
+  health:
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,mappings"
+      base-path: "/internal"
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    mappings:
+      enabled: true
+  info:
+    git:
+      mode: full

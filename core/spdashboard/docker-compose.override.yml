@@ -5,7 +5,7 @@ services:
     volumes:
       - ${SPDASHBOARD_CODE_PATH}:/var/www/html
     environment:
-      - APP_ENV=${APP_ENV:-dev}
+      - APP_ENV=dev
       - APP_DEBUG=true
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
