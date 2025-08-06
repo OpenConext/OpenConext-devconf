@@ -59,6 +59,11 @@ services:
       MONGODB_REPLICA_SET_MODE: primary
       MONGODB_REPLICA_SET_KEY: secretsecret
       MONGODB_ADVERTISED_HOSTNAME: mongodb
+      # Force QEMU emulation instead of Rosetta for x86_64 Apple Silicon Macs.
+      # Rosetta does not support AVX instructions, which this MongoD image requires, causing an
+      # "Illegal instruction" error when starting the container:
+      #     /opt/bitnami/scripts/libos.sh: line 346:    50 Illegal instruction     "$@" > /dev/null 2>&1
+      EXPERIMENTAL_DOCKER_DESKTOP_FORCE_QEMU: 1
     volumes:
       - ./mongo/:/docker-entrypoint-initdb.d/
       - openconext_mongodb:/bitnami/mongodb
