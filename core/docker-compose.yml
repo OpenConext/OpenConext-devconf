@@ -295,6 +295,7 @@ services:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
       - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
+      - ./invite/serverapplication.yml:/opt/openconext/invite/serverapplication.yml
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
