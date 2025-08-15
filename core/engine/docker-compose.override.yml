@@ -10,8 +10,8 @@ services:
       - ./engine/appconf.conf:/etc/apache2/sites-enabled/appconf.conf
     environment:
       - APP_ENV=${APP_ENV:-dev}
-      - SYMFONY_ENV=${APP_ENV:-dev}
-      - APP_DEBUG=1
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_SECRET=${APP_SECRET:-secret}
     healthcheck:
       test: ["CMD", "true"]
       interval: 10s
