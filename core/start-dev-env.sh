@@ -55,16 +55,16 @@ while true; do
 		# Use docker compose to start the environment but with the modified override file(s)
 		echo -e "\nStarting the ${MODE} environment with the following command:\n"
 
-		echo -e "docker compose --profile oidc --profile test -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}"\n"
-		docker compose --profile oidc --profile test -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}"
+		echo -e "docker compose --profile oidc --profile test -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up -d "${@:$number_of_dev_envs}" --pull always\n"
+		docker compose --profile oidc --profile test -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up -d "${@:$number_of_dev_envs}" --pull always
 		break
 		;;
 	*)
 		# Use docker compose to start the environment but with the modified override file(s)
 		echo -e "Starting the ${MODE} environment with the following command:\n"
 
-		echo -e "docker compose --profile oidc --profile test  -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}"\n"
-		docker compose --profile oidc --profile test -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}"
+		echo -e "docker compose --profile oidc --profile test  -f docker-compose.yml "${docker_compose_args[@]}" "${extra_compose_args}" up "${@:$number_of_dev_envs}" --pull always\n"
+		docker compose --profile oidc --profile test -f docker-compose.yml ${docker_compose_args[@]} ${extra_compose_args} up "${@:$number_of_dev_envs}" --pull always
 		break
 		;;
 	esac

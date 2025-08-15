@@ -453,6 +453,37 @@
           "sibblingIndependent": true,
           "info": "From the pull down, select the type of contact."
         },
+        "^logo:([0-9]{1}):url$": {
+          "type": "string",
+          "format": "url",
+          "multiplicity": 9,
+          "sibblingIndependent": true,
+          "info": "Enter the URL to the logo used for this service. e.g. https://static.example-logo.nl/media/sp/logo.png."
+        },
+        "^logo:([0-9]{1}):width$": {
+          "type": "number",
+          "multiplicity": 9,
+          "sibblingIndependent": true,
+          "info": "The width of the logo found at logo:x:url in pixels."
+        },
+        "^logo:([0-9]{1}):height$": {
+          "type": "number",
+          "multiplicity": 9,
+          "sibblingIndependent": true,
+          "info": "The height of the logo found at logo:x:url in pixels."
+        },
+        "^DiscoveryName:([0-9]{1}):en$": {
+          "type": "string",
+          "multiplicity": 9,
+          "sibblingIndependent": false,
+          "info": "The english discovery name(s) of the Identity Provider as displayed in applications."
+        },
+        "^DiscoveryName:([0-9]{1}):nl$": {
+          "type": "string",
+          "multiplicity": 9,
+          "sibblingIndependent": false,
+          "info": "The dutch discovery name(s) of the Identity Provider as displayed in applications."
+        },
         "^OrganizationName:(en|nl)$": {
           "type": "string"
         },
