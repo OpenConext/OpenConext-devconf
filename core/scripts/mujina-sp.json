@@ -1,0 +1,26 @@
+{
+  "version": 0,
+  "type": "saml20_sp",
+  "data": {
+    "entityid": "https://mujina-sp.dev.openconext.local/shibboleth",
+    "state": "prodaccepted",
+    "allowedall": true,
+    "arp": {
+      "enabled": false,
+      "attributes": {}
+    },
+    "metaDataFields": {
+      "name:en": "Mujina SP",
+      "name:nl": "Mujina SP",
+      "description:en": "Mujina SP",
+      "OrganizationName:en": "Mujina SP",
+      "AssertionConsumerService:0:Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+      "AssertionConsumerService:0:Location": "https://mujina-sp.dev.openconext.local/Shibboleth.sso/SAML2/POST",
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "coin:signature_method": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
+    },
+    "allowedEntities": [],
+    "metadataurl": "",
+    "revisionnote": "Initial import"
+  }
+}
