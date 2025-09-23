@@ -25,6 +25,9 @@ server:
 
 features: push, push_preview, validation, orphans, find_my_data
 
+feature_toggles:
+  allow_secret_public_rp: True
+
 push:
   eb:
     url: https://engine-api.dev.openconext.local/api/connections
@@ -42,8 +45,8 @@ push:
     enabled: True
   pdp:
     url: https://pdp.dev.openconext.local/pdp/api/manage/push
-    policy_url: https://pdp.dev.openconext.local/pdp/api/manage/policies
     decide_url: https://pdp.dev.openconext.local/pdp/api/manage/decide
+    parse_url: https://pdp.dev.openconext.local/pdp/api/manage/parse
     name: PdP
     user: pdp_admin
     password: "secret"
@@ -86,11 +89,6 @@ spring:
       uri: mongodb://managerw:secret@mongo:27017/manage?ssl=false
   main:
     banner-mode: "off"
-  datasource:
-    url: jdbc:mysql://mariadb:3306/pdp?permitMysqlScheme
-    username: pdprw
-    password: secret
-    driverClassName: org.mariadb.jdbc.Driver
 
 gui:
   disclaimer:
