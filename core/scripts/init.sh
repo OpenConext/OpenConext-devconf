@@ -18,16 +18,16 @@ docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/n
 
 echo -e "${ORANGE}First, we will initialise the EB database$NOCOLOR ${GREEN}\xE2\x9C\x94${NOCOLOR}"
 echo "Checking if the database is already present"
-if ! docker compose exec engine /var/www/html/app/console doctrine:schema:validate -q --skip-mapping --env=prod; then
+if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod; then
 	echo creating the database schema
-	echo "Executing docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod"
-	docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod
+	echo "Executing docker compose exec engine /var/www/html/bin/console doctrine:schema:create --env prod"
+	docker compose exec engine /var/www/html/bin/console doctrine:schema:create --env prod
 #	TODO: Use migrations instead of schema:create. Not both. @see https://github.com/OpenConext/OpenConext-engineblock/issues/1861
 fi
 echo "Clearing the cache"
-echo "Executing docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod"
-docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod
-docker compose exec engine chown -R www-data:www-data /var/www/html/app/cache/
+echo "Executing docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod"
+docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
+docker compose exec engine chown -R www-data:www-data /var/www/html/var/cache/
 
 # Now it's time to bootstrap manage
 # Bring up containers needed for bootstrapping manage
