@@ -8,8 +8,6 @@ manageurl=https://manage.dev.openconext.local/manage/api/internal/
 
 set -e
 
-# make sure the docker environment is up
-#docker compose up -d --wait
 # Bootstrapping engineblock means initialising the database
 printf "\n"
 echo "Bring up the engineblock container to bootstrap the database"
@@ -19,23 +17,16 @@ docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/n
 
 echo -e "${ORANGE}First, we will initialise the EB database$NOCOLOR ${GREEN}\xE2\x9C\x94${NOCOLOR}"
 echo "Checking if the database is already present"
-engineversion=$(docker compose exec engine /var/www/html/app/console doctrine:migrations:status --env=prod |
-	grep "Current Version" | awk '{print $4 }')
-if [[ $engineversion == "0" ]]; then
+if ! docker compose exec engine /var/www/html/app/console doctrine:schema:validate -q --skip-mapping --env=prod; then
 	echo creating the database schema
 	echo "Executing docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod"
 	docker compose exec engine /var/www/html/app/console doctrine:schema:create --env prod
-	echo "Updating engineblock to the latest migration"
-	echo "Executing docker compose exec engine /var/www/html/app/console doctrine:migrations:version -n --add --all --env=prod"
-	docker compose exec engine /var/www/html/app/console doctrine:migrations:version -n --add --all --env=prod
+#	TODO: Use migrations instead of schema:create. Not both. @see https://github.com/OpenConext/OpenConext-engineblock/issues/1861
 fi
-echo "making sure all migrations have been executed"
-echo "executing docker compose exec engine /var/www/html/app/console doctrine:migrations:migrate -n --env=prod"
-docker compose exec engine /var/www/html/app/console doctrine:migrations:migrate -n --env=prod
 echo "Clearing the cache"
 echo "Executing docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod"
 docker compose exec engine /var/www/html/app/console cache:clear -n --env=prod
-docker compose exec engine chown -R www-data /var/www/html/app/cache/
+docker compose exec engine chown -R www-data:www-data /var/www/html/app/cache/
 
 # Now it's time to bootstrap manage
 # Bring up containers needed for bootstrapping manage
