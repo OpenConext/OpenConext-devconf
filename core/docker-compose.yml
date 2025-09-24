@@ -231,7 +231,7 @@ services:
     image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
     networks:
       coreconextdev:
-    hostname: oidcplagroundgui.docker
+    hostname: oidcplaygroundgui.docker
     profiles:
       - "oidc"
       - "teams"
@@ -248,7 +248,7 @@ services:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
     command: "java -jar app.jar --spring.profiles.active=devconf"
-    hostname: oidcserver.docker
+    hostname: oidcplaygroundserver.docker
     working_dir: /
     profiles:
       - "oidc"
