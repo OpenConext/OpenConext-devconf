@@ -28,6 +28,7 @@ services:
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
           - invite.dev.openconext.local
+          - welcome.dev.openconext.local
           - sbs.dev.openconext.local
           - spdashboard.dev.openconext.local
     hostname: haproxy.docker
