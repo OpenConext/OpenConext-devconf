@@ -308,6 +308,9 @@ services:
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
+    depends_on:
+      oidcng:
+        condition: service_started
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: inviteserver.docker
     working_dir: /
@@ -315,6 +318,7 @@ services:
       - "php"
       - "teams"
       - "extras"
+      - "invite"
 
   inviteclient:
     image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.23
@@ -331,9 +335,12 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+      inviteserver:
+        condition: service_started
     profiles:
       - "extras"
       - "teams"
+      - "invite"
 
   invitewelcome:
     image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.23
@@ -350,9 +357,12 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+      inviteserver:
+        condition: service_started
     profiles:
       - "extras"
       - "teams"
+      - "invite"
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:6.2.0
