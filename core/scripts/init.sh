@@ -2,6 +2,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
 NOCOLOR='\033[0m'
 CWD=$(dirname $0)
 manageurl=https://manage.dev.openconext.local/manage/api/internal/
@@ -61,7 +62,7 @@ echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBloc
 docker compose exec managegui curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
 
 printf "\n"
-echo -e "${RED}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+echo -e "${BLUE}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
 printf "\n"
 
 echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local"
