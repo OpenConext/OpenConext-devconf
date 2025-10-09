@@ -98,7 +98,7 @@ services:
     hostname: mongodb
 
   engine:
-    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
+    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:6.18.0-beta4
     volumes:
       - ./:/config
     networks:
