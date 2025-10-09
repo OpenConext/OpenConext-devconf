@@ -307,13 +307,14 @@ services:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
       - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
-      - ./invite:/config
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
     depends_on:
       oidcng:
         condition: service_started
+      mariadb:
+        condition: service_healthy
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: inviteserver.docker
     working_dir: /
