@@ -65,6 +65,7 @@ Since the OpenConext suite is composed of multiple docker containers, you can us
 - No profile: Starts the core services: Engineblock, manage, mujina and profile (plus loadbalancer and databases).
 - oidc: Starts oidc as well.
 - teams: Starts services needed for teams (oidcng, voot and teams)
+- invite: Starts services needed for Openconext-Invite (oidcng, voot and teams)
 - extras: Starts extras (currently pdp)
 
 If you want to start all services, you can use extras. A profile can be started by using the --profile argument to the `docker compose up` command. For example:

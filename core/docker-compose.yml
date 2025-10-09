@@ -1,4 +1,5 @@
 ---
+#name: openconext-core
 services:
   haproxy:
     image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
@@ -28,6 +29,7 @@ services:
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
           - invite.dev.openconext.local
+          - welcome.dev.openconext.local
           - sbs.dev.openconext.local
           - spdashboard.dev.openconext.local
     hostname: haproxy.docker
@@ -226,6 +228,7 @@ services:
       - "oidc"
       - "teams"
       - "extras"
+      - "invite"
 
   oidcplaygroundgui:
     image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
@@ -304,9 +307,13 @@ services:
     volumes:
       - ./haproxy/haproxy.crt:/certificates/haproxy.crt
       - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
+      - ./invite:/config
     networks:
       coreconextdev:
     entrypoint: /__cacert_entrypoint.sh
+    depends_on:
+      oidcng:
+        condition: service_started
     command: "java -jar app.jar --spring.profiles.active=devconf"
     hostname: inviteserver.docker
     working_dir: /
@@ -314,6 +321,7 @@ services:
       - "php"
       - "teams"
       - "extras"
+      - "invite"
 
   inviteclient:
     image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.23
@@ -330,9 +338,12 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+      inviteserver:
+        condition: service_started
     profiles:
       - "extras"
       - "teams"
+      - "invite"
 
   invitewelcome:
     image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.23
@@ -349,9 +360,12 @@ services:
         condition: service_healthy
       mariadb:
         condition: service_healthy
+      inviteserver:
+        condition: service_started
     profiles:
       - "extras"
       - "teams"
+      - "invite"
 
   voot:
     image: ghcr.io/openconext/openconext-voot/voot:6.2.0
