@@ -1,4 +1,5 @@
 ---
+#name: openconext-core
 services:
   haproxy:
     image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
@@ -227,6 +228,7 @@ services:
       - "oidc"
       - "teams"
       - "extras"
+      - "invite"
 
   oidcplaygroundgui:
     image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
