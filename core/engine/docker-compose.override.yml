@@ -4,14 +4,14 @@
 # the container. It will destroy the sub-mount!!
 services:
   engine:
-    image: ghcr.io/openconext/openconext-basecontainers/${ENGINE_PHP_IMAGE:-php72-apache2-node14-composer2:latest}
+    image: ghcr.io/openconext/openconext-basecontainers/${ENGINE_PHP_IMAGE:-php82-apache2-node20-composer2:latest}
     volumes:
       - ${ENGINE_CODE_PATH}:/var/www/html
       - ./engine/appconf.conf:/etc/apache2/sites-enabled/appconf.conf
     environment:
       - APP_ENV=${APP_ENV:-dev}
-      - SYMFONY_ENV=${APP_ENV:-dev}
-      - APP_DEBUG=1
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_SECRET=${APP_SECRET:-secret}
     healthcheck:
       test: ["CMD", "true"]
       interval: 10s

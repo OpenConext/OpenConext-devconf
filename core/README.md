@@ -85,3 +85,18 @@ To mount the code in multiple containers:
 `start-dev-env.sh profile:../../OpenConext-profile userlifecycle:../../OpenConext-user-lifecycle`
 You can add as many services+local code paths that you need.
 The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
+
+# Tips
+
+To start engine in local development environment use from this directory;
+
+Ensure a file `.env` exists with:
+```shell
+APP_ENV=dev
+APP_DEBUG=true
+APP_SECRET=secret
+```
+```shell
+./start-dev-env.sh engine:../../OpenConext-engineblock/
+```
+To change the running env, just edit `APP_ENV=ci` for example and re-run `./start-dev-env.sh engine:../../OpenConext-engineblock/`. You do not have to recreate all services, only to reload engineblock.
