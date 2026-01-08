@@ -6,6 +6,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - ../core/haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem
     networks:
       openconextdev:
         aliases:
