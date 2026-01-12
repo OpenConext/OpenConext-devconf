@@ -35,6 +35,6 @@ GRANT ALL PRIVILEGES ON middleware.* TO 'mw_deploy_user'@'%' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON gateway_test.* TO 'mw_deploy_user'@'%' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON middleware_test.* TO 'mw_deploy_user'@'%' WITH GRANT OPTION;
 
-CREATE USER IF NOT EXISTS 'gw_deploy_user'@'%' IDENTIFIED BY 'gw_deploy_secret';
-GRANT ALL PRIVILEGES ON gateway.* TO 'gw_deploy_user'@'%';
-GRANT ALL PRIVILEGES ON gateway_test.* TO 'gw_deploy_user'@'%';
+CREATE USER IF NOT EXISTS 'gw_smoketest_schema_manager'@'%' IDENTIFIED BY 'gw_smoketest_schema_manager_secret';
+GRANT ALL PRIVILEGES ON gateway.* TO 'gw_smoketest_schema_manager'@'%';
+GRANT ALL PRIVILEGES ON gateway_test.* TO 'gw_smoketest_schema_manager'@'%';
