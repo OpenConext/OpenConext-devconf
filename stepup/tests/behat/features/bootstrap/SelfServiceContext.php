@@ -460,6 +460,35 @@ class SelfServiceContext implements Context
         }
     }
 
+
+    /**
+     * @When I remove the :recoveryTokenType recovery token
+     */
+    public function removeRecoveryToken(string $recoveryTokenType)
+    {
+        $this->minkContext->visit('/overview');
+        switch ($recoveryTokenType){
+            case 'SMS':
+                $page = $this->minkContext->getMink()->getSession()->getPage();
+                $deleteButtons = $page->findAll('css', 'a[data-test_revoketokentype="sms"]');
+
+                if (empty($deleteButtons)) {
+                    throw new Exception('No recovery token remove button(s) found on the page');
+                }
+                $deleteButtons[0]->click();
+                $this->minkContext->assertPageContainsText('Remove recovery token');
+                $this->minkContext->assertPageContainsText('Recovery phone number');
+
+                $this->minkContext->pressButton('Remove');
+
+                $this->minkContext->assertPageAddress('/overview');
+                $this->minkContext->assertPageContainsText('Your recovery token was removed successfully');
+                break;
+            default:
+                throw new Exception(sprintf('Recovery token type %s is not supported', $recoveryTokenType));
+        }
+    }
+
     private function performYubikeyAuthentication()
     {
         $this->minkContext->fillField('gateway_verify_yubikey_otp_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');

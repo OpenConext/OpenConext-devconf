@@ -31,3 +31,13 @@ Feature: A user manages his tokens in the SelfService portal
     And I vet my "Yubikey" second factor in selfservice
     Then I can add an "SMS" recovery token using "Yubikey"
     And "2" recovery tokens are activated
+
+  Scenario: A user can remove a recovery token
+    Given I am logged in into the selfservice portal as "user-a5"
+    When I register a new "Yubikey" token
+    And I verify my e-mail address and choose the "Self Asserted Token registration" vetting type
+    And I vet my "Yubikey" second factor in selfservice
+    Then I can add an "SMS" recovery token using "Yubikey"
+    And "2" recovery tokens are activated
+    When I remove the "SMS" recovery token
+    Then "1" recovery tokens are activated
