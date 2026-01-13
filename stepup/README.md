@@ -44,7 +44,7 @@ or use the included script:
 Initialise (bootstrap) the middleware, gateway and webauthn database schema's and push
 the configuration to the middleware. This is done by running the following script:
 ```
-./bootstrap.sh
+./bootstrap-database.sh
 ```
 
 Then, bootstrap the SRAA. For this, you will need to have a Yubikey.
