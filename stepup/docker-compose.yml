@@ -2,12 +2,14 @@
 services:
 
   haproxy:
-    image: ghcr.io/openconext/openconext-basecontainers/haproxy26:latest
+    image: ghcr.io/openconext/openconext-basecontainers/haproxy28:latest
     ports:
       - 80:80
       - 443:443
     volumes:
       - ../core/haproxy/haproxy.pem:/usr/local/etc/haproxy/haproxy.pem
+      - ../core/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ../core/haproxy/backends.map:/usr/local/etc/haproxy/backends.map:ro
     networks:
       openconextdev:
         aliases:
