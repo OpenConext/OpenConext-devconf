@@ -3,7 +3,9 @@ name: stepup-behat
 on:
   pull_request:
   push:
-    branches: [ main, feature/*, bugfix/* ]
+    branches:
+      - main
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
