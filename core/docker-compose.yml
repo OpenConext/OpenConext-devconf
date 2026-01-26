@@ -35,7 +35,7 @@ services:
     hostname: haproxy.docker
 
   mariadb:
-    image: mariadb:10.6
+    image: mariadb:10.11
     environment:
       MYSQL_ROOT_PASSWORD: secret
     networks:
