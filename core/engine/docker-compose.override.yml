@@ -13,5 +13,9 @@ services:
       - APP_DEBUG=${APP_DEBUG:-true}
       - APP_SECRET=${APP_SECRET:-secret}
     healthcheck:
-      test: ["CMD", "true"]
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost/internal/health"]
+      start_period: 30s
+      start_interval: 1s
       interval: 10s
+      timeout: 1s
+      retries: 20
