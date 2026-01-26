@@ -62,6 +62,7 @@ product:
 metadata_configuration_path: file:///config/metadata_configuration/
 metadata_templates_path: file:///config/metadata_templates/
 metadata_export_path: classpath:/metadata_export
+disabled_metadata_schemas: []
 
 security:
   backdoor_user_name: backdoor_api_user
