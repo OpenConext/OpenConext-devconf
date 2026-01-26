@@ -45,7 +45,10 @@ services:
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "-uroot", "-psecret", "ping", "-h", "localhost"]
-      timeout: 5s
+      start_period: 30s
+      start_interval: 1s
+      interval: 10s
+      timeout: 1s
       retries: 10
     hostname: mariadb.docker
     ports:
@@ -106,9 +109,11 @@ services:
     networks:
       coreconextdev:
     healthcheck:
-      test: ["CMD", "curl", "--fail", "-s", "http://localhost/health"]
+      test: ["CMD", "curl", "--fail", "-s", "http://localhost/internal/health"]
+      start_period: 30s
+      start_interval: 1s
       interval: 10s
-      timeout: 10s
+      timeout: 1s
       retries: 20
     hostname: engine.docker
     extra_hosts:
