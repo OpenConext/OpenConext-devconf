@@ -4,6 +4,7 @@ GREEN='\033[0;32m'
 ORANGE='\033[0;33m'
 BLUE='\033[0;34m'
 NOCOLOR='\033[0m'
+VINKJE="${GREEN}✔${NOCOLOR}"
 CWD=$(dirname $0)
 manageurl=https://manage.dev.openconext.local/manage/api/internal/
 
@@ -11,28 +12,45 @@ set -e
 
 # Bootstrapping engineblock means initialising the database
 printf "\n"
-echo "Bring up the engineblock container to bootstrap the database"
-docker compose up -d engine mariadb
-# Wait for engine to come up
-docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/info)" != "200" ]]; do sleep 5; done' || false
+echo -e "${ORANGE}Bring up the engineblock container to bootstrap the database${NOCOLOR}"
+echo
 
-echo -e "${ORANGE}First, we will initialise the EB database$NOCOLOR ${GREEN}\xE2\x9C\x94${NOCOLOR}"
+# Wait for engine to come up; not health yet because we might nee to initialialize db
+docker compose up -d engine mariadb
+docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/internal/info)" != "200" ]]; do sleep 5; done' || false
+
+echo
+echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
+echo
 echo "Checking if the database is already present"
-if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod; then
+if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod > /dev/null
+then
 	echo creating the database schema
-	echo "Executing docker compose exec engine /var/www/html/bin/console doctrine:schema:create --env prod"
-	docker compose exec engine /var/www/html/bin/console doctrine:schema:create --env prod
-#	TODO: Use migrations instead of schema:create. Not both. @see https://github.com/OpenConext/OpenConext-engineblock/issues/1861
+	cmd='docker compose exec engine /var/www/html/bin/console doctrine:schema:update --force -q'
+	#echo "Executing: ${cmd}"
+	${cmd}
 fi
 echo "Clearing the cache"
-echo "Executing docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod"
 docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
 docker compose exec engine chown -R www-data:www-data /var/www/html/var/cache/
 
+echo -ne "Waiting for EB to be healthy..."
+until [ "$(docker inspect -f {{.State.Health.Status}} $(docker compose ps -q engine))" == "healthy" ]
+do
+	echo -n "."
+	sleep 0.5;
+done
+echo -e " ${VINKJE}"
+
 # Now it's time to bootstrap manage
 # Bring up containers needed for bootstrapping manage
+echo
+echo -e "${ORANGE}Bring up the core containers${NOCOLOR} ${VINKJE}"
+echo
 docker compose --profile oidc up -d --wait
-echo -e "${ORANGE}Adding the manage entities${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+echo
+
+echo -e "${ORANGE}Adding the manage entities${NOCOLOR} ${VINKJE}"
 printf "\n"
 for i in "$CWD"/*.json; do
 	entityid=$(grep '"entityid":' "$i" | awk -F'"' '{print $4}')
@@ -58,11 +76,11 @@ for i in "$CWD"/*.json; do
 	fi
 done
 printf "\n"
-echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBlock and OIDCNG${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBlock and OIDCNG ${VINKJE}"
 docker compose exec managegui curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
 
 printf "\n"
-echo -e "${BLUE}Please add the following line to your /etc/hosts:${NOCOLOR}${GREEN} \xE2\x9C\x94${NOCOLOR}"
+echo -e "${BLUE}Please add the following line to your /etc/hosts: ${VINKJE}"
 printf "\n"
 
 echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local"
