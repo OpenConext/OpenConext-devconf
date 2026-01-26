@@ -132,7 +132,7 @@ services:
     hostname: profile.docker
 
   spdashboard:
-    image: ghcr.io/surfnet/sp-dashboard/spdashboard:latest
+    image: ghcr.io/surfnet/sp-dashboard/spdashboard:6.3.0-beta6
     environment:
       APP_ENV: prod
     volumes:
@@ -149,7 +149,7 @@ services:
         condition: service_healthy
 
   mujina-idp:
-    image: ghcr.io/openconext/mujina/mujina-idp:8.0.12
+    image: ghcr.io/openconext/mujina/mujina-idp:9.0.1
     volumes:
       - ./:/config
     networks:
@@ -232,7 +232,7 @@ services:
       - "invite"
 
   oidcplaygroundgui:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-gui:4.1.0
     networks:
       coreconextdev:
     hostname: oidcplaygroundgui.docker
@@ -242,7 +242,7 @@ services:
       - "extras"
 
   oidcplaygroundserver:
-    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:3.0.1
+    image: ghcr.io/openconext/openconext-oidc-playground/oidc-playground-server:4.1.0
     environment:
       USE_SYSTEM_CA_CERTS: true
     volumes:
