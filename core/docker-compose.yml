@@ -124,7 +124,7 @@ services:
     environment:
       - APP_ENV=${APP_ENV:-prod}
       - APP_DEBUG=${APP_ENV:-false}
-      - APP_SECRET=${APP_SECRET:?APP_SECRET is not set}
+      - APP_SECRET=${APP_SECRET:-secret78901234567890123456789012}
 
   profile:
     image: ghcr.io/openconext/openconext-profile/profile:prod
