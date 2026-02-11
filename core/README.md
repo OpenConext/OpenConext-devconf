@@ -100,3 +100,7 @@ APP_SECRET=secret
 ./start-dev-env.sh engine:../../OpenConext-engineblock/
 ```
 To change the running env, just edit `APP_ENV=ci` for example and re-run `./start-dev-env.sh engine:../../OpenConext-engineblock/`. You do not have to recreate all services, only to reload engineblock.
+
+## Pulling latest containers
+When experiencing weird errors, it can help to start the dev env using the `--pull always` and `--force-recreate` parameters, to ensure all containers are up-to-date.
+For example, use `./start-dev-env.sh engine:../../OpenConext-engineblock/ -- --pull always --force-recreate`.
