@@ -185,3 +185,7 @@ These tags match the `devconf` names given to the different components.
 After that we can use the tags to run only the tests that are relevant for a specific component.
 E.g.: `docker compose exec behat ./behat --filter=selfservice` will only run features marked with the `@selfservice` tag
 
+## Certificate error when accessing webauthn
+If you run into a problem with certificates its posible that the blob.json is oudated. You can get a new one from
+http://mds.fidoalliance.org/ this will automatically trigger a download.
+
