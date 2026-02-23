@@ -12,7 +12,8 @@ set -e
 
 # Bootstrapping engineblock means initialising the database
 printf "\n"
-echo -e "${ORANGE}Bring up the engineblock container to bootstrap the database${NOCOLOR}"
+echo -e "${ORANGE}Bring up the engineblock Production container to bootstrap the database using the Production container's migrations${NOCOLOR}"
+echo "Comment the two lines below to run the migrations from your own running engine container (ensure your EB is running)."
 echo
 
 # Wait for engine to come up; not health yet because we might nee to initialialize db
@@ -22,14 +23,10 @@ docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/n
 echo
 echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
 echo
-echo "Checking if the database is already present"
-if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod > /dev/null
-then
-	echo creating the database schema
-	cmd='docker compose exec engine /var/www/html/bin/console doctrine:schema:update --force -q'
-	#echo "Executing: ${cmd}"
-	${cmd}
-fi
+echo "Running database migrations"
+cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
+${cmd}
+
 echo "Clearing the cache"
 docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
 docker compose exec engine chown -R www-data:www-data /var/www/html/var/cache/
