@@ -12,12 +12,15 @@ set -e
 
 # Bootstrapping engineblock means initialising the database
 printf "\n"
-echo -e "${ORANGE}Bring up the engineblock Production container to bootstrap the database using the Production container's migrations${NOCOLOR}"
-echo "Comment the two lines below to run the migrations from your own running engine container (ensure your EB is running)."
-echo
 
 # Wait for engine to come up; not health yet because we might nee to initialialize db
-docker compose up -d engine mariadb
+engine_running=$(docker compose ps -q --status running engine mariadb | wc -l)
+if [[ "$engine_running" -lt 2 ]]; then
+    docker compose up -d engine mariadb
+    echo -e "${ORANGE}Bringing up the EB production container for migrations${NOCOLOR}"
+else
+    echo -e "${ORANGE}Using the currently running engine container for migrations${NOCOLOR}"
+fi
 docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/internal/info)" != "200" ]]; do sleep 5; done' || false
 
 echo
