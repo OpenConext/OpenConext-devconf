@@ -8,30 +8,36 @@ This repo contains a docker compose and some configuration to get you started wi
 ## Getting started
 
 ### The first time
-If you are doing this for the first time, you need to run a script to seed the environment:
+If you are doing this for the first time, first start the environment and then seed it:
 
+1. Start the environment:
+```
+./start-dev-env.sh
+```
+
+2. Once all containers are up, seed the environment:
 ```
 ./scripts/init.sh
 ```
 
 ### After initialisation
-To get all services up and running you must have docker compose installed. Enter this command to get things up and running:
+To start the environment again after the initial setup:
 
 ```
-docker compose up -d
+./start-dev-env.sh
 ```
 
 You will also need to tell your local machine where to find the hosts.
-Add the following line in your hosts file (/etc/hosts )
+Add the following line in your hosts file (/etc/hosts):
 ```
 127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local pdp.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local
 ```
 
-If all goes wel, you can now login. Please see the section below to find out where you can login.
+If all goes well, you can now login. Please see the section below to find out where you can login.
 
-*Please note that this starts the environment with the profile oidc. Bringing it down requires this command:*
+To bring the environment down:
 ```
-docker compose --profile oidc down
+./stop-dev-env.sh
 ```
 
 ## Services
@@ -68,10 +74,7 @@ Since the OpenConext suite is composed of multiple docker containers, you can us
 - invite: Starts services needed for Openconext-Invite (oidcng, voot and teams)
 - extras: Starts extras (currently pdp)
 
-If you want to start all services, you can use extras. A profile can be started by using the --profile argument to the `docker compose up` command. For example:
-```
-docker compose up -d --profile extras
-```
+Profiles are handled automatically by `./start-dev-env.sh`. The `oidc` and `test` profiles are enabled by default. To enable additional profiles, edit the script directly.
 
 # Starting a PHP project in development mode (only lifecycle, profile and engineblock)
 

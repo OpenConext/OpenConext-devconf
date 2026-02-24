@@ -13,14 +13,16 @@ set -e
 # Bootstrapping engineblock means initialising the database
 printf "\n"
 
-# Wait for engine to come up; not health yet because we might nee to initialialize db
+# Check that engine and mariadb are already running; containers must be started via ./start-dev-env.sh first
 engine_running=$(docker compose ps -q --status running engine mariadb | wc -l)
 if [[ "$engine_running" -lt 2 ]]; then
-    docker compose up -d engine mariadb
-    echo -e "${ORANGE}Bringing up the EB production container for migrations${NOCOLOR}"
-else
-    echo -e "${ORANGE}Using the currently running engine container for migrations${NOCOLOR}"
+    echo -e "${RED}ERROR: engine and/or mariadb are not running.${NOCOLOR}"
+    echo -e "${ORANGE}Please start the environment first by running:${NOCOLOR}"
+    echo -e "  ${GREEN}./start-dev-env.sh${NOCOLOR}"
+    echo -e "Then re-run this script once the containers are up."
+    exit 1
 fi
+echo -e "${ORANGE}Using the currently running engine container for migrations${NOCOLOR}"
 docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/internal/info)" != "200" ]]; do sleep 5; done' || false
 
 echo
@@ -41,14 +43,6 @@ do
 	sleep 0.5;
 done
 echo -e " ${VINKJE}"
-
-# Now it's time to bootstrap manage
-# Bring up containers needed for bootstrapping manage
-echo
-echo -e "${ORANGE}Bring up the core containers${NOCOLOR} ${VINKJE}"
-echo
-docker compose --profile oidc up -d --wait
-echo
 
 echo -e "${ORANGE}Adding the manage entities${NOCOLOR} ${VINKJE}"
 printf "\n"
@@ -87,5 +81,5 @@ echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.
 
 printf "\n"
 echo "You can now login. If you want to bring the environment down, use the command below"
-echo "docker compose --profile oidc down"
+echo "./stop-dev-env.sh"
 printf "\n"
