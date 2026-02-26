@@ -33,10 +33,8 @@ docker_compose_options=()    # Array to hold the options for docker compose
 # Set the docker compose file to use and default profiles for Core
 docker_compose_options+=("-f")
 docker_compose_options+=("${SCRIPT_DIR}/docker-compose.yml")
-docker_compose_options+=("--profile")
-docker_compose_options+=("oidc")
-docker_compose_options+=("--profile")
-docker_compose_options+=("test")
+docker_compose_options+=("--profile", "oidc")
+docker_compose_options+=("--profile", "test")
 
 # Show help hint if no arguments are given
 if [ $# -eq 0 ]; then
@@ -49,13 +47,14 @@ while [[ $# -gt 0 ]]; do
 
 	case $option in
 	-h | --help)
-	    echo "Usage: $0 [-h] [-d] [<app>:<path> ...] [-- <docker-compose-args>]"
+	    echo "Usage: $0 [-h] [-d] [-p <profile>] [<app>:<path> ...] [-- <docker-compose-args>]"
 	    echo "Start the Core development environment using docker compose up"
 	    echo "You can specify the apps for which you want to use the ${DOCKER_OVERRIDE_FILE} with your local code"
 	    echo ""
 	    echo "Options:"
 	    echo "  -h, --help       Show this help message"
 	    echo "  -d, --detach     Run docker compose up in detached mode (-d) with wait (--wait)"
+	    echo "  -p, --profile    Add a docker compose profile to enable (can be used multiple times, comma-separated profiles are supported)"
 	    echo "  <app>:<path>     The <app> to override followed by the <path> to the local code for the app"
 	    echo ""
 	    echo "  Any options after -- are passed to docker compose"
@@ -77,6 +76,19 @@ while [[ $# -gt 0 ]]; do
         shift
         # add "--wait" which implies -d but waits for healthchecks
         docker_compose_up_options+=("--wait")
+        ;;
+    -p | --profile)
+        shift
+        if [[ -z "$1" ]] || [[ "$1" == -* ]]; then
+            echo -e "${RED}Error: -p|--profile requires a profile name${ENDCOLOR}"
+            exit 1
+        fi
+        # Split the profile argument on commas into an array, allowing e.g. "foo,bar" to add two profiles
+        IFS=',' read -ra profiles <<< "$1"
+        for profile in "${profiles[@]}"; do
+            docker_compose_options+=("--profile" "$profile")
+        done
+        shift
         ;;
     --)
         shift
@@ -143,5 +155,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Run docker compose up command with the previously prepared options
-echo -e "docker compose ${docker_compose_options[*]} up ${docker_compose_up_options[*]}"
-docker compose "${docker_compose_options[@]}" up "${docker_compose_up_options[@]}"
+command="docker compose ${docker_compose_options[@]} up ${docker_compose_up_options[@]}"
+echo "Running: $command"
+exec $command
