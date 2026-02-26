@@ -1,4 +1,5 @@
 stepup/gateway/surfnet_yubikey.yaml
 stepup/.env
+stepup/tests/behat/temp.sql
 /.idea
 .env
