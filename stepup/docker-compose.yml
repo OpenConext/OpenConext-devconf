@@ -26,7 +26,7 @@ services:
     hostname: haproxy.docker
 
   mariadb:
-    image: mariadb:10.6
+    image: mariadb:10.11
     environment:
       MYSQL_ROOT_PASSWORD: secret
     ports:
@@ -38,6 +38,11 @@ services:
       - stepup_mariadb:/var/lib/mysql
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      start_interval: 1s
+      interval: 10s
+      timeout: 1s
+      retries: 10
     hostname: mariadb.docker
 
   behat:

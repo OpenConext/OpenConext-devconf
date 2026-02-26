@@ -44,7 +44,7 @@ services:
       - ./dbschema:/docker-entrypoint-initdb.d
       - openconext_mariadb:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "-uroot", "-psecret", "ping", "-h", "localhost"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       start_period: 30s
       start_interval: 1s
       interval: 10s
