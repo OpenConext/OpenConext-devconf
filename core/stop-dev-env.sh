@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Use docker compose to start the environment but with the modified override file(s)
-echo -e "Starting the dev environment with the following command:\n"
+echo -e "Stopping the dev environment with the following command:\n"
 
-echo -e "docker compose --profile \"*\" -f docker-compose.yml down\n"
-docker compose --profile "*" -f docker-compose.yml down
+command='docker compose --profile "*" -f docker-compose.yml down'
+echo "$command"
+exec $command
