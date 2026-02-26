@@ -34,7 +34,6 @@ docker_compose_options=()    # Array to hold the options for docker compose
 docker_compose_options+=("-f")
 docker_compose_options+=("${SCRIPT_DIR}/docker-compose.yml")
 docker_compose_options+=("--profile" "oidc")
-docker_compose_options+=("--profile" "test")
 
 # Show help hint if no arguments are given
 if [ $# -eq 0 ]; then

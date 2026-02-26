@@ -112,13 +112,13 @@ services:
     hostname: mailcatcher.docker
 
   engine:
-    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
+    image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:7.0.0-beta3
     volumes:
-      - ./:/config
+      - ./:/config:ro
     networks:
       coreconextdev:
     healthcheck:
-      test: ["CMD", "curl", "--fail", "-s", "http://localhost/internal/health"]
+      test: ["CMD-SHELL", "curl --fail -s http://localhost/internal/health | grep -q '\"status\":\"UP\"'"]
       start_period: 30s
       start_interval: 1s
       interval: 10s
@@ -525,21 +525,6 @@ services:
         condition: service_healthy
     profiles:
       - "sbs"
-
-  chrome:
-    image: alpeware/chrome-headless-trunk
-    ports:
-      - 9222:9222
-    environment:
-      - CHROME_OPTS=--ignore-certificate-errors --window-size=1920,1080 --ignore-ssl-errors
-    volumes:
-      - /tmp/chromedata/:/data
-    networks:
-      coreconextdev:
-        aliases:
-          - chrome.dev.openconext.local
-    profiles:
-      - "test"
 
 networks:
   coreconextdev:
