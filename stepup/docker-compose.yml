@@ -58,17 +58,17 @@ services:
       - "smoketest"
 
   chrome:
-    image: alpeware/chrome-headless-trunk
+    image: "lscr.io/linuxserver/chromium:latest"
     ports:
-      - 9222:9222
+      - "9222:9222"
     environment:
-      - CHROME_OPTS=--ignore-certificate-errors --window-size=1920,1080 --ignore-ssl-errors
+      CHROME_CLI: "--remote-debugging-port=9222 --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors"
     volumes:
-      - /tmp/chromedata/:/data
+      - "/tmp/chromedata/:/data"
     networks:
       openconextdev:
         aliases:
-          - chrome.dev.openconext.local
+          - "chrome.dev.openconext.local"
     profiles:
       - "smoketest"
 
