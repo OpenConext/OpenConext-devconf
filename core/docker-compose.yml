@@ -102,6 +102,15 @@ services:
       coreconextdev:
     hostname: mongodb
 
+  mailcatcher:
+    image: sj26/mailcatcher:latest
+    ports:
+      - 1080:1080
+    command: "--ip 0.0.0.0 --smtp-port 25"
+    networks:
+      coreconextdev:
+    hostname: mailcatcher.docker
+
   engine:
     image: ghcr.io/openconext/openconext-engineblock/openconext-engineblock:prod
     volumes:
@@ -135,23 +144,6 @@ services:
     networks:
       coreconextdev:
     hostname: profile.docker
-
-  spdashboard:
-    image: ghcr.io/surfnet/sp-dashboard/spdashboard:6.3.0-beta6
-    environment:
-      APP_ENV: prod
-    volumes:
-      - ./:/config
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      coreconextdev:
-    hostname: spdashboard.docker
-    depends_on:
-      engine:
-        condition: service_healthy
-      mariadb:
-        condition: service_healthy
 
   mujina-idp:
     image: ghcr.io/openconext/mujina/mujina-idp:9.0.1
@@ -470,14 +462,24 @@ services:
       - "extras"
       - "php"
 
-  mailcatcher:
-    image: sj26/mailcatcher:latest
-    ports:
-      - 1080:1080
-    command: "--ip 0.0.0.0 --smtp-port 25"
+  spdashboard:
+    image: ghcr.io/surfnet/sp-dashboard/spdashboard:6.3.0-beta6
+    environment:
+      APP_ENV: prod
+    volumes:
+      - ./:/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       coreconextdev:
-    hostname: mailcatcher.docker
+    hostname: spdashboard.docker
+    depends_on:
+      engine:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - "dashboard"
 
   redis:
     image: "redis"
