@@ -367,7 +367,7 @@ services:
       - "invite"
 
   voot:
-    image: ghcr.io/openconext/openconext-voot/voot:6.2.0
+    image: ghcr.io/openconext/openconext-voot/voot:7.0.1
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
