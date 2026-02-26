@@ -333,7 +333,7 @@ services:
     profiles:
       - "extras"
   aa:
-    image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:3.2.0
+    image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:5.1.2
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
