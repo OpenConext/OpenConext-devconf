@@ -57,21 +57,6 @@ services:
     profiles:
       - "smoketest"
 
-  chrome:
-    image: "lscr.io/linuxserver/chromium:latest"
-    ports:
-      - "9222:9222"
-    environment:
-      CHROME_CLI: "--remote-debugging-port=9222 --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors"
-    volumes:
-      - "/tmp/chromedata/:/data"
-    networks:
-      openconextdev:
-        aliases:
-          - "chrome.dev.openconext.local"
-    profiles:
-      - "smoketest"
-
   webauthn:
     image: ghcr.io/openconext/stepup-webauthn/stepup-webauthn:${STEPUP_VERSION:-prod}
     ports:
