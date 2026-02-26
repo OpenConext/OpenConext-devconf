@@ -350,7 +350,7 @@ services:
       - "php"
 
   pdpserver:
-    image: ghcr.io/openconext/openconext-pdp/pdp-server:5.1.0
+    image: ghcr.io/openconext/openconext-pdp/pdp-server:7.6.0
     environment:
       USE_SYSTEM_CA_CERTS: true
     networks:
@@ -367,7 +367,7 @@ services:
       - "extras"
 
   pdpgui:
-    image: ghcr.io/openconext/openconext-pdp/pdp-gui:5.1.0
+    image: ghcr.io/openconext/openconext-pdp/pdp-gui:7.6.0
     volumes:
       - ./:/config
     environment:
