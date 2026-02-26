@@ -25,7 +25,6 @@ services:
           - voot.dev.openconext.local
           - pdp.dev.openconext.local
           - aa.dev.openconext.local
-          - teams.dev.openconext.local
           - spdashboard.dev.openconext.local
           - mujina-idp.dev.openconext.local
           - invite.dev.openconext.local
@@ -224,7 +223,6 @@ services:
         condition: service_healthy
     profiles:
       - "oidc"
-      - "teams"
       - "extras"
       - "invite"
 
@@ -235,7 +233,6 @@ services:
     hostname: oidcplaygroundgui.docker
     profiles:
       - "oidc"
-      - "teams"
       - "extras"
 
   oidcplaygroundserver:
@@ -253,49 +250,6 @@ services:
     working_dir: /
     profiles:
       - "oidc"
-      - "teams"
-      - "extras"
-
-  teamsgui:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-gui:9.3.1
-    volumes:
-      - ./:/config
-    environment:
-      HTTPD_CSP: ""
-      HTTPD_SERVERNAME: "teams.dev.openconext.local"
-      OPENCONEXT_INSTANCENAME: "OpenConext dev"
-      OPENCONEXT_ENGINE_LOGOUT_URL: "https://engine.dev.openconext.local/logout"
-      OPENCONEXT_HELP_EMAIL: "support@openconext.org"
-      SHIB_ENTITYID: "https://teams.dev.openconext.local/shibboleth"
-      SHIB_REMOTE_ENTITYID: "https://engine.dev.openconext.local/authentication/idp/metadata"
-      SHIB_REMOTE_METADATA: "https://engine.dev.openconext.local/authentication/idp/metadata"
-    networks:
-      coreconextdev:
-    hostname: teamsgui.docker
-    depends_on:
-      engine:
-        condition: service_healthy
-      mariadb:
-        condition: service_healthy
-    profiles:
-      - "teams"
-      - "extras"
-
-  teamsserver:
-    image: ghcr.io/openconext/openconext-teams-ng/teams-server:9.3.1
-    environment:
-      USE_SYSTEM_CA_CERTS: true
-    volumes:
-      - ./haproxy/haproxy.crt:/certificates/haproxy.crt
-      - ./cacert/__cacert_entrypoint.sh:/__cacert_entrypoint.sh
-    networks:
-      coreconextdev:
-    entrypoint: /__cacert_entrypoint.sh
-    command: "java -jar app.jar --spring.profiles.active=devconf"
-    hostname: teamsserver.docker
-    working_dir: /
-    profiles:
-      - "teams"
       - "extras"
 
   inviteserver:
@@ -318,7 +272,6 @@ services:
     working_dir: /
     profiles:
       - "php"
-      - "teams"
       - "extras"
       - "invite"
 
@@ -341,7 +294,6 @@ services:
         condition: service_started
     profiles:
       - "extras"
-      - "teams"
       - "invite"
 
   invitewelcome:
@@ -363,7 +315,6 @@ services:
         condition: service_started
     profiles:
       - "extras"
-      - "teams"
       - "invite"
 
   voot:
@@ -380,7 +331,6 @@ services:
     hostname: voot.docker
     working_dir: /
     profiles:
-      - "teams"
       - "extras"
   aa:
     image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:3.2.0
@@ -396,7 +346,6 @@ services:
     hostname: aa.docker
     working_dir: /
     profiles:
-      - "teams"
       - "extras"
       - "php"
 
@@ -416,7 +365,6 @@ services:
     working_dir: /
     profiles:
       - "extras"
-      - "teams"
 
   pdpgui:
     image: ghcr.io/openconext/openconext-pdp/pdp-gui:5.1.0
@@ -441,7 +389,6 @@ services:
         condition: service_healthy
     profiles:
       - "extras"
-      - "teams"
 
   userlifecycle:
     image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:prod
