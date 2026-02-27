@@ -276,7 +276,7 @@ services:
       - "invite"
 
   inviteclient:
-    image: ghcr.io/openconext/openconext-invite/inviteclient:0.0.23
+    image: ghcr.io/openconext/openconext-invite/inviteclient:1.0.5
     volumes:
       - ./:/config
     environment:
@@ -297,7 +297,7 @@ services:
       - "invite"
 
   invitewelcome:
-    image: ghcr.io/openconext/openconext-invite/invitewelcome:0.0.23
+    image: ghcr.io/openconext/openconext-invite/invitewelcome:1.0.5
     volumes:
       - ./:/config
     environment:
@@ -332,6 +332,7 @@ services:
     working_dir: /
     profiles:
       - "extras"
+
   aa:
     image: ghcr.io/openconext/openconext-attribute-aggregation/aa-server:5.1.2
     environment:
