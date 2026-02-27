@@ -154,6 +154,5 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Run docker compose up command with the previously prepared options
-command="docker compose ${docker_compose_options[*]} up ${docker_compose_up_options[*]}"
-echo "Running: $command"
-exec $command
+echo "Running: docker compose ${docker_compose_options[*]} up ${docker_compose_up_options[*]}"
+exec docker compose "${docker_compose_options[@]}" up "${docker_compose_up_options[@]}"
