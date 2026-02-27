@@ -16,11 +16,16 @@ printf "\n"
 # Check that engine and mariadb are already running; containers must be started via ./start-dev-env.sh first
 engine_running=$(docker compose ps -q --status running engine mariadb | wc -l)
 if [[ "$engine_running" -lt 2 ]]; then
-    echo -e "${RED}ERROR: engine and/or mariadb are not running.${NOCOLOR}"
-    echo -e "${ORANGE}Please start the environment first by running:${NOCOLOR}"
-    echo -e "  ${GREEN}./start-dev-env.sh${NOCOLOR}"
-    echo -e "Then re-run this script once the containers are up."
-    exit 1
+    if [[ "${GITHUB_ACTIONS}" == "true" ]]; then
+        docker compose up -d engine mariadb
+        echo -e "${ORANGE}Bringing up the EB production container for migrations${NOCOLOR}"
+    else
+        echo -e "${RED}ERROR: engine and/or mariadb are not running.${NOCOLOR}"
+        echo -e "${ORANGE}Please start the environment first by running:${NOCOLOR}"
+        echo -e "  ${GREEN}./start-dev-env.sh${NOCOLOR}"
+        echo -e "Then re-run this script once the containers are up."
+        exit 1
+    fi
 fi
 echo -e "${ORANGE}Using the currently running engine container for migrations${NOCOLOR}"
 docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/internal/info)" != "200" ]]; do sleep 5; done' || false
@@ -28,9 +33,18 @@ docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/n
 echo
 echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
 echo
-echo "Running database migrations"
-cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
-${cmd}
+if [[ "${GITHUB_ACTIONS}" == "true" ]]; then
+    echo "Checking if the database is already present"
+    if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod > /dev/null 2>&1
+    then
+        echo "Creating the database schema"
+        docker compose exec engine /var/www/html/bin/console doctrine:schema:update --force -q
+    fi
+else
+    echo "Running database migrations"
+    cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
+    ${cmd}
+fi
 
 echo "Clearing the cache"
 docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
@@ -43,6 +57,14 @@ do
 	sleep 0.5;
 done
 echo -e " ${VINKJE}"
+
+if [[ "${GITHUB_ACTIONS}" == "true" ]]; then
+    echo
+    echo -e "${ORANGE}Bring up the core containers${NOCOLOR} ${VINKJE}"
+    echo
+    docker compose --profile oidc up -d --wait
+    echo
+fi
 
 echo -e "${ORANGE}Adding the manage entities${NOCOLOR} ${VINKJE}"
 printf "\n"
