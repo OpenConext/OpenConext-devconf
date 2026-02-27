@@ -366,30 +366,6 @@ services:
     profiles:
       - "extras"
 
-  pdpgui:
-    image: ghcr.io/openconext/openconext-pdp/pdp-gui:7.6.0
-    volumes:
-      - ./:/config
-    environment:
-      HTTPD_CSP: ""
-      HTTPD_SERVERNAME: "pdp.dev.openconext.local"
-      OPENCONEXT_INSTANCENAME: "OpenConext dev"
-      OPENCONEXT_ENGINE_LOGOUT_URL: "https://engine.dev.openconext.local/logout"
-      OPENCONEXT_HELP_EMAIL: "support@openconext.org"
-      SHIB_ENTITYID: "https://pdp.dev.openconext.local/shibboleth"
-      SHIB_REMOTE_ENTITYID: "https://engine.dev.openconext.local/authentication/idp/metadata"
-      SHIB_REMOTE_METADATA: "https://engine.dev.openconext.local/authentication/idp/metadata"
-    networks:
-      coreconextdev:
-    hostname: pdpgui.docker
-    depends_on:
-      engine:
-        condition: service_healthy
-      mariadb:
-        condition: service_healthy
-    profiles:
-      - "extras"
-
   userlifecycle:
     image: ghcr.io/openconext/openconext-user-lifecycle/user-lifecycle:prod
     environment:
