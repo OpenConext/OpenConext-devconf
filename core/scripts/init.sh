@@ -33,18 +33,15 @@ docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/n
 echo
 echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
 echo
-if [[ "${GITHUB_ACTIONS}" == "true" ]]; then
-    echo "Checking if the database is already present"
-    if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod > /dev/null 2>&1
-    then
-        echo "Creating the database schema"
-        docker compose exec engine /var/www/html/bin/console doctrine:schema:update --force -q
-    fi
-else
-    echo "Running database migrations"
-    cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
-    ${cmd}
-fi
+echo "Ensure database is created"
+cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=prod --if-not-exists --no-interaction'
+${cmd}
+cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=ci --if-not-exists --no-interaction'
+${cmd} 2>/dev/null || true
+
+echo "Running database migrations"
+cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
+${cmd}
 
 echo "Clearing the cache"
 docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
