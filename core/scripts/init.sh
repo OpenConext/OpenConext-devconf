@@ -31,17 +31,39 @@ echo -e "${ORANGE}Using the currently running engine container for migrations${N
 docker compose exec engine timeout 300 bash -c 'while [[ "$(curl -k -s -o /dev/null -w ''%{http_code}'' localhost/internal/info)" != "200" ]]; do sleep 5; done' || false
 
 echo
-echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
-echo
-echo "Ensure database is created"
-cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=prod --if-not-exists --no-interaction'
-${cmd}
-cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=ci --if-not-exists --no-interaction'
-${cmd} 2>/dev/null || true
 
-echo "Running database migrations"
-cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
-${cmd}
+### Uncomment block below after EB 7.0 becomes the prod image
+#echo -e "${ORANGE}Initializing EB database$NOCOLOR ${VINKJE}"
+#echo
+#echo "Ensure database is created"
+#cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=prod --if-not-exists --no-interaction'
+#${cmd}
+#cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=ci --if-not-exists --no-interaction'
+#${cmd} 2>/dev/null || true
+#
+#echo "Running database migrations"
+#cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
+#${cmd}
+### ENDBLOCK
+
+### Remove block below after EB 7.0 becomes the prod image
+if [[ "${GITHUB_ACTIONS}" == "true" ]]; then
+    echo "Checking if the database is already present"
+    if ! docker compose exec engine /var/www/html/bin/console doctrine:schema:validate -q --skip-mapping --env=prod > /dev/null 2>&1
+    then
+        echo "Creating the database schema"
+        docker compose exec engine /var/www/html/bin/console doctrine:schema:update --force -q
+    fi
+else
+    echo "Running database migrations"
+    cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=prod --if-not-exists --no-interaction'
+    ${cmd}
+    cmd='docker compose exec engine /var/www/html/bin/console doctrine:database:create --env=ci --if-not-exists --no-interaction'
+	${cmd} 2>/dev/null || true
+    cmd='docker compose exec engine /var/www/html/bin/console doctrine:migrations:migrate --no-interaction'
+    ${cmd}
+fi
+### ENDBLOCK
 
 echo "Clearing the cache"
 docker compose exec engine /var/www/html/bin/console cache:clear -n --env=prod
