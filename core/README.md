@@ -8,20 +8,23 @@ This repo contains a docker compose and some configuration to get you started wi
 ## Getting started
 
 ### The first time
-If you are doing this for the first time, first start the environment and then seed it:
+On first run, the `engine` service requires the database to be initialised before it can become healthy.
+Start the environment in one terminal, then run the init script in a second terminal.
 
-1. Start the environment:
+**Terminal 1** — start the environment (this will block while waiting for all services to become healthy):
 ```
-./start-dev-env.sh
+./start-dev-env.sh engine:/path/to/OpenConext-engineblock
 ```
 
-2. Once all containers are up, seed the environment:
+**Terminal 2** — once you see mariadb and engine starting in terminal 1, seed the environment (the script waits internally until they are ready before proceeding):
 ```
 ./scripts/init.sh
 ```
 
+After init completes, terminal 1 will finish and the environment is ready.
+
 ### After initialisation
-To start the environment again after the initial setup:
+To start the environment again after the initial setup, a single terminal is sufficient — engine will become healthy on its own because the database is already initialised:
 
 ```
 ./start-dev-env.sh
