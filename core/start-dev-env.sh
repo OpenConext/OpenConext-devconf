@@ -19,6 +19,15 @@ else
 	echo -e "${GREEN}No .env file was read.${ENDCOLOR}"
 fi
 
+# Define default paths of the apps
+declare -A default_app_paths
+default_app_paths["engine"]="../../OpenConext-engineblock"
+default_app_paths["profile"]="../../OpenConext-profile"
+default_app_paths["sbs"]="../../SBS"
+default_app_paths["spdashboard"]="../../sp-dashboard/"
+default_app_paths["userlifecycle"]="../../OpenConext-user-lifecycle"
+
+
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -113,9 +122,14 @@ while [[ $# -gt 0 ]]; do
 		path=$(echo "$arg" | cut -d ':' -f 2)
 
 		# Basic validation
-		if [[ -z "$app" ]] || [[ -z "$path" ]]; then
+		if [[ -z "$app" ]]; then
 			echo -e "${RED}Invalid argument format: '$arg'. Expected <app>:<path>${ENDCOLOR}"
 			exit 1
+		fi
+
+		if [[ -z "$path" || "$path" == "$app" ]]; then
+			path=${default_app_paths[$app]}
+			echo "Using default path '$path' for app '$app'"
 		fi
 
 		# Check if the app is a valid subdirectory in the APP_DIR directory
@@ -129,13 +143,19 @@ while [[ $# -gt 0 ]]; do
 			exit 1;
 		fi
 
-		# Replace "~/" with the user's home directory
-		path=${path/#\~/$HOME}
+		if [[ -z "$path" || "$path" == "$app" ]]; then
+			path=${default_app_paths[$app]}
+			echo "Using default path '$path' for app '$app'"
+		fi
+
+		# Canonicalize path
+		orig_path=path
+		path=$( readlink -f "$path" )
 
 		# Test if the specified path(s) exist.
-		if [ ! -d "${path}" ]; then
+		if [[ -z "$path" || ! -d "${path}" ]]; then
 			echo  -e "${RED}The specified path for app '${app}' is not a directory.";
-			echo  -e "Please verify that the '${path}' directory exists.${ENDCOLOR}\n";
+			echo  -e "Please verify that the '${orig_path}' directory exists.${ENDCOLOR}\n";
 			exit 1;
 		fi
 
