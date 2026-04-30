@@ -115,6 +115,16 @@ echo -e "${ORANGE}Send a PUSH in Manage, which pushes the entities to EngineBloc
 docker compose exec managegui curl -q -s -k -u sysadmin:secret $manageurl/push >/dev/null
 
 printf "\n"
+echo -e "${ORANGE}Restarting managegui to reload Shibboleth SP metadata${NOCOLOR}"
+docker compose restart managegui
+echo -ne "Waiting for managegui to be ready..."
+until docker compose exec managegui curl -s -o /dev/null -w '%{http_code}' http://localhost/ 2>/dev/null | grep -qE '^[^5]'; do
+	echo -n "."
+	sleep 1
+done
+echo -e " ${VINKJE}"
+
+printf "\n"
 echo -e "${BLUE}Please add the following line to your /etc/hosts: ${VINKJE}"
 printf "\n"
 
