@@ -94,7 +94,6 @@ services:
       '
     command: |
       mongod --bind_ip_all --replSet ${MONGODB_RS_NAME:-openconext} --keyFile /keyfile
-    restart: always
     ports:
       - "27017:27017"
     networks:
