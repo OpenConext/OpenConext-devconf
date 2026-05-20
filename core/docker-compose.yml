@@ -94,7 +94,6 @@ services:
       '
     command: |
       mongod --bind_ip_all --replSet ${MONGODB_RS_NAME:-openconext} --keyFile /keyfile
-    restart: always
     ports:
       - "27017:27017"
     networks:
@@ -449,6 +448,21 @@ services:
         condition: service_healthy
     profiles:
       - "sbs"
+
+  chrome:
+    image: alpeware/chrome-headless-trunk
+    ports:
+      - 9222:9222
+    environment:
+      - CHROME_OPTS=--ignore-certificate-errors --window-size=1920,1080 --ignore-ssl-errors
+    volumes:
+      - /tmp/chromedata/:/data
+    networks:
+      coreconextdev:
+        aliases:
+          - chrome.dev.openconext.local
+    profiles:
+      - "test"
 
 networks:
   coreconextdev:
