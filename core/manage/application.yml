@@ -50,12 +50,20 @@ push:
     name: PdP
     user: pdp_admin
     password: "secret"
-    enabled: False
+    enabled: false
+  stepup:
+    url: http://localhost:8082/stepup/api
+    user: manage
+    configuration_file: classpath:/stepup_config.json
+    password: secret
+    enabled: false
 
 product:
   name: Manage
   organization: OpenConext DEV
   service_provider_feed_url: http://mds.edugain.org/edugain-v2.xml
+  jira_base_url: https://servicedesk.surf.nl/jira/browse/
+  jira_ticket_prefixes: CXT,SD
   supported_languages: en,nl
   show_oidc_rp: true
 
