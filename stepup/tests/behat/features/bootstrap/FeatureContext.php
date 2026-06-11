@@ -450,4 +450,44 @@ class FeatureContext implements Context
         echo $this->minkContext->getSession()->getPage()->getContent();
         die;
     }
+
+    /** @var array<string, int> */
+    private array $recordedEventCounts = [];
+
+    /**
+     * @Given I record the event stream count for aggregate :uuid
+     */
+    public function iRecordEventStreamCount(string $uuid): void
+    {
+        $result = shell_exec(sprintf(
+            "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
+            $uuid,
+        ));
+        $this->recordedEventCounts[$uuid] = (int) trim((string) $result);
+    }
+
+    /**
+     * @Then the event stream count for aggregate :uuid should not have increased
+     */
+    public function eventStreamCountShouldNotHaveIncreased(string $uuid): void
+    {
+        $result = shell_exec(sprintf(
+            "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
+            $uuid,
+        ));
+        $current = (int) trim((string) $result);
+        $recorded = $this->recordedEventCounts[$uuid] ?? null;
+        if ($recorded === null) {
+            throw new RuntimeException(sprintf('No recorded event count for aggregate %s — call "I record the event stream count" first', $uuid));
+        }
+        if ($current !== $recorded) {
+            throw new RuntimeException(sprintf(
+                'Expected event stream count for aggregate %s to remain %d, but got %d — duplicate push added %d event(s)',
+                $uuid,
+                $recorded,
+                $current,
+                $current - $recorded,
+            ));
+        }
+    }
 }
