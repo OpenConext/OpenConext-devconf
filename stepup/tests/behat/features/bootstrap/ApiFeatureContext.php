@@ -138,6 +138,18 @@ class ApiFeatureContext implements Context
     }
 
     /**
+     * @Given /^I have the payload from file "([^"]*)"$/
+     */
+    public function iHaveThePayloadFromFile($path)
+    {
+        $payload = file_get_contents($path);
+        if ($payload === false) {
+            throw new Exception(sprintf('Unable to read payload file "%s"', $path));
+        }
+        $this->requestPayload = $payload;
+    }
+
+    /**
      * @param string $requestPayload
      */
     public function setPayload($requestPayload)

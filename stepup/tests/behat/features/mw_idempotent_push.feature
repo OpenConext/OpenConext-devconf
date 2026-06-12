@@ -60,27 +60,11 @@ Feature: Duplicate management pushes do not grow the event stream
 
   Scenario: Pushing the same configuration twice does not add events
     Given I authenticate to the Middleware API
-    And I have the payload
-      """
-      {
-        "gateway": {
-          "identity_providers": [],
-          "service_providers": []
-        }
-      }
-      """
+    And I have the payload from file "fixtures/middleware-config.json"
     When I request "POST /management/configuration"
     Then the api response status code should be 200
     And I record the event stream count for aggregate "12345678-abcd-4321-abcd-123456789012"
-    And I have the payload
-      """
-      {
-        "gateway": {
-          "identity_providers": [],
-          "service_providers": []
-        }
-      }
-      """
+    And I have the payload from file "fixtures/middleware-config.json"
     When I request "POST /management/configuration"
     Then the api response status code should be 200
     And the "status" property should equal "OK"
