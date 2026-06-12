@@ -1,4 +1,4 @@
-FROM ghcr.io/openconext/openconext-basecontainers/php72-apache2-node16-composer2:latest
+FROM ghcr.io/openconext/openconext-basecontainers/php85-apache2-node24:latest
 RUN apt-get update && \
   apt-get install -y mariadb-client && \
   apt-get install -y ca-certificates curl && \
@@ -11,5 +11,8 @@ RUN apt-get update && \
   tee /etc/apt/sources.list.d/docker.list > /dev/null && \
   apt-get update &&  \
   apt install -y docker-ce docker-ce-cli containerd.io
+
+# mariadb-client 11.4+ requires TLS by default; the dev mariadb server does not offer it
+RUN printf '[client]\nskip-ssl\n' > /etc/mysql/mariadb.conf.d/99-skip-ssl.cnf
 
 WORKDIR /config/tests/behat
