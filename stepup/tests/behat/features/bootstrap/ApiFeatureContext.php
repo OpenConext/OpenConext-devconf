@@ -22,10 +22,9 @@ use Behat\Testwork\Tester\Result\TestResult;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
-
-require_once __DIR__.'/../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
 
 /**
  * Class Adapted from: https://github.com/philsturgeon/build-apis-you-wont-hate/blob/master/chapter12/app/tests/behat/features/bootstrap/FeatureContext.php
@@ -221,7 +220,7 @@ class ApiFeatureContext implements Context
     {
         $response = $this->getLastResponse();
 
-        assertEquals($expectedHeaderValue, (string)$response->getHeader($headerName));
+        Assert::assertEquals($expectedHeaderValue, $response->getHeaderLine($headerName));
     }
 
     /**
@@ -231,7 +230,7 @@ class ApiFeatureContext implements Context
     {
         $response = $this->getLastResponse();
 
-        assertTrue($response->hasHeader($headerName));
+        Assert::assertTrue($response->hasHeader($headerName));
     }
 
     /**
@@ -242,7 +241,7 @@ class ApiFeatureContext implements Context
         $payload = $this->getScopePayload();
         $actualValue = $this->arrayGet($payload, $property);
 
-        assertEquals(
+        Assert::assertEquals(
             $expectedValue,
             $actualValue,
             "Asserting the [$property] property in current scope equals [$expectedValue]: ".json_encode($payload)
@@ -267,7 +266,7 @@ class ApiFeatureContext implements Context
 
         $actualValue = json_encode($instituteConfig[$property]);
 
-        assertEquals(
+        Assert::assertEquals(
             $expectedValue,
             $actualValue,
             sprintf(
@@ -286,7 +285,7 @@ class ApiFeatureContext implements Context
     {
         $response = $this->getLastResponse();
 
-        assertEquals(
+        Assert::assertEquals(
             $statusCode,
             $response->getStatusCode(),
             sprintf(
@@ -331,7 +330,7 @@ class ApiFeatureContext implements Context
 
         // if the property is actually an array, use JSON so we look in it deep
         $actualValue = is_array($actualValue) ? json_encode($actualValue, JSON_PRETTY_PRINT) : $actualValue;
-        assertContains(
+        Assert::assertStringContainsString(
             $expectedValue,
             $actualValue,
             "Asserting the [$property] property in current scope contains [$expectedValue]: ".json_encode($payload)
@@ -348,7 +347,7 @@ class ApiFeatureContext implements Context
 
         // if the property is actually an array, use JSON so we look in it deep
         $actualValue = is_array($actualValue) ? json_encode($actualValue, JSON_PRETTY_PRINT) : $actualValue;
-        assertNotContains(
+        Assert::assertStringNotContainsString(
             $expectedValue,
             $actualValue,
             "Asserting the [$property] property in current scope does not contain [$expectedValue]: ".json_encode(
@@ -371,7 +370,7 @@ class ApiFeatureContext implements Context
             json_encode($payload)
         );
 
-        assertTrue($this->arrayHas($payload, $property), $message);
+        Assert::assertTrue($this->arrayHas($payload, $property), $message);
     }
 
     /**
@@ -388,7 +387,7 @@ class ApiFeatureContext implements Context
             json_encode($payload)
         );
 
-        assertFalse($this->arrayHas($payload, $property), $message);
+        Assert::assertFalse($this->arrayHas($payload, $property), $message);
     }
 
     /**
@@ -400,7 +399,7 @@ class ApiFeatureContext implements Context
 
         $actualValue = $this->arrayGet($payload, $property);
 
-        assertTrue(
+        Assert::assertTrue(
             is_array($actualValue),
             "Asserting the [$property] property in current scope [{$this->scope}] is an array: ".json_encode($payload)
         );
@@ -415,7 +414,7 @@ class ApiFeatureContext implements Context
 
         $actualValue = $this->arrayGet($payload, $property);
 
-        assertTrue(
+        Assert::assertTrue(
             is_object($actualValue),
             "Asserting the [$property] property in current scope [{$this->scope}] is an object: ".json_encode($payload)
         );
@@ -429,7 +428,7 @@ class ApiFeatureContext implements Context
         $payload = $this->getScopePayload();
         $scopePayload = $this->arrayGet($payload, $property);
 
-        assertTrue(
+        Assert::assertTrue(
             is_array($scopePayload) and $scopePayload === array(),
             "Asserting the [$property] property in current scope [{$this->scope}] is an empty array: ".json_encode(
                 $payload
@@ -444,7 +443,7 @@ class ApiFeatureContext implements Context
     {
         $payload = $this->getScopePayload();
 
-        assertCount(
+        Assert::assertCount(
             (int) $count,
             $this->arrayGet($payload, $property),
             "Asserting the [$property] property contains [$count] items: ".json_encode($payload)
@@ -490,7 +489,7 @@ class ApiFeatureContext implements Context
 
         $actualValue = $this->arrayGet($payload, $property);
 
-        assertSame(
+        Assert::assertSame(
             $actualValue,
             $expectedValue,
             "Asserting the [$property] property in current scope [{$this->scope}] is a string equalling [$expectedValue]."
@@ -504,7 +503,7 @@ class ApiFeatureContext implements Context
     {
         $payload = $this->getScopePayload();
 
-        assertTrue(
+        Assert::assertTrue(
             gettype($this->arrayGet($payload, $property)) == 'boolean',
             "Asserting the [$property] property in current scope [{$this->scope}] is a boolean."
         );
@@ -524,7 +523,7 @@ class ApiFeatureContext implements Context
 
         $this->thePropertyIsABoolean($property);
 
-        assertSame(
+        Assert::assertSame(
             $actualValue,
             $expectedValue == 'true',
             "Asserting the [$property] property in current scope [{$this->scope}] is a boolean equalling [$expectedValue]."
@@ -541,7 +540,7 @@ class ApiFeatureContext implements Context
 
         $this->thePropertyIsAnInteger($property);
 
-        assertSame(
+        Assert::assertSame(
             $actualValue,
             (int)$expectedValue,
             "Asserting the [$property] property in current scope [{$this->scope}] is an integer equalling [$expectedValue]."
@@ -558,7 +557,7 @@ class ApiFeatureContext implements Context
 
         $valid = explode("\n", (string)$options);
 
-        assertTrue(
+        Assert::assertTrue(
             in_array($actualValue, $valid),
             sprintf(
                 "Asserting the [%s] property in current scope [{$this->scope}] is in array of valid options [%s].",

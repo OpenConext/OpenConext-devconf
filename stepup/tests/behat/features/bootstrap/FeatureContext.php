@@ -5,6 +5,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use PHPUnit\Framework\Assert;
 use Ramsey\Uuid\Uuid;
 use Surfnet\StepupBehat\Factory\CommandPayloadFactory;
 use Surfnet\StepupBehat\Repository\SecondFactorRepository;
@@ -151,7 +152,7 @@ class FeatureContext implements Context
             $uuid = (string)Uuid::uuid4();
             return $this->aUserIdentifiedByWithAVettedTokenAndTheRoleWithUuid($commonName, $nameId, $institution, $uuid);
         } catch (Exception $e) {
-            assertContains($errorMessage, $e->getMessage());
+            Assert::assertStringContainsString($errorMessage, $e->getMessage());
         }
     }
 
