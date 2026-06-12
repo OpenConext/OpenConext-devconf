@@ -1,4 +1,4 @@
-FROM ghcr.io/openconext/openconext-basecontainers/php72-apache2-node16-composer2:latest
+FROM ghcr.io/openconext/openconext-basecontainers/php85-apache2-node24:latest
 RUN apt-get update && \
   apt-get install -y mariadb-client && \
   apt-get install -y ca-certificates curl && \

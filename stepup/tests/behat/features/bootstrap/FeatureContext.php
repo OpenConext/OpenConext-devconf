@@ -452,7 +452,7 @@ class FeatureContext implements Context
     }
 
     /** @var array<string, int> */
-    private $recordedEventCounts = [];
+    private array $recordedEventCounts = [];
 
     /**
      * @Given I record the event stream count for aggregate :uuid
@@ -461,7 +461,7 @@ class FeatureContext implements Context
     {
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
-            $uuid
+            $uuid,
         ));
         $this->recordedEventCounts[$uuid] = (int) trim((string) $result);
     }
@@ -473,7 +473,7 @@ class FeatureContext implements Context
     {
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
-            $uuid
+            $uuid,
         ));
         $current = (int) trim((string) $result);
         $recorded = $this->recordedEventCounts[$uuid] ?? null;
@@ -486,7 +486,7 @@ class FeatureContext implements Context
                 $uuid,
                 $recorded,
                 $current,
-                $current - $recorded
+                $current - $recorded,
             ));
         }
     }
