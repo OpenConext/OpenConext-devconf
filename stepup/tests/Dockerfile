@@ -12,4 +12,7 @@ RUN apt-get update && \
   apt-get update &&  \
   apt install -y docker-ce docker-ce-cli containerd.io
 
+# mariadb-client 11.4+ requires TLS by default; the dev mariadb server does not offer it
+RUN printf '[client]\nskip-ssl\n' > /etc/mysql/mariadb.conf.d/99-skip-ssl.cnf
+
 WORKDIR /config/tests/behat
