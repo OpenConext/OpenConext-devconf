@@ -47,6 +47,7 @@ services:
 
   behat:
     image: ghcr.io/openconext/openconext-devconf/openconext-devconf:test
+    build: ./tests
     environment:
       - APP_ENV=${APP_ENV:-prod}
     networks:
