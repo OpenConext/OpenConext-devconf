@@ -28,13 +28,15 @@ default:
   extensions:
     Behat\MinkExtension:
       base_url: ~
-      goutte: ~
+      browserkit_http: ~
       sessions:
         default:
-          goutte:
-            guzzle_parameters:
-              verify: False
+          browserkit_http:
+            http_client_parameters:
+              verify_peer: false
+              verify_host: false
         second:
-          goutte:
-            guzzle_parameters:
-              verify: False
+          browserkit_http:
+            http_client_parameters:
+              verify_peer: false
+              verify_host: false

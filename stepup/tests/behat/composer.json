@@ -3,13 +3,16 @@
     "description": "Automated functional tests for Stepup",
     "type": "project",
     "require": {
-        "behat/behat": "^3.4",
-        "behat/mink-goutte-driver": "^1.2",
-        "behat/mink-extension": "^2.3",
-        "phpunit/phpunit": "^5.7",
-        "moontoast/math": "^1.1",
-        "ramsey/uuid": "~3.4",
-        "paragonie/random_compat": "v2.0.17"
+        "behat/behat": "^3.14",
+        "behat/mink": "^1.11",
+        "behat/mink-browserkit-driver": "^2.2",
+        "friends-of-behat/mink-extension": "^2.7",
+        "symfony/browser-kit": "^7.0",
+        "symfony/http-client": "^7.0",
+        "symfony/mime": "^7.0",
+        "guzzlehttp/guzzle": "^7.9",
+        "phpunit/phpunit": "^11.5 || ^12.0",
+        "ramsey/uuid": "^4.7"
     },
     "autoload": {
         "psr-4": {
