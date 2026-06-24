@@ -44,6 +44,7 @@ Feature: Duplicate management pushes do not grow the event stream
     When I request "POST /management/whitelist/replace"
     Then the api response status code should be 200
     And the "status" property should equal "OK"
+    And the event stream count for aggregate "125ccee5-d650-437a-a0b0-6bf17c8188fa" should have increased
     And I record the event stream count for aggregate "125ccee5-d650-437a-a0b0-6bf17c8188fa"
     And I have the payload
       """

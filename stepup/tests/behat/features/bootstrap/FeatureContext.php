@@ -460,6 +460,9 @@ class FeatureContext implements Context
      */
     public function iRecordEventStreamCount(string $uuid): void
     {
+        if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
+            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+        }
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
             $uuid,
@@ -472,6 +475,9 @@ class FeatureContext implements Context
      */
     public function eventStreamCountShouldNotHaveIncreased(string $uuid): void
     {
+        if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
+            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+        }
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
             $uuid,
@@ -488,6 +494,33 @@ class FeatureContext implements Context
                 $recorded,
                 $current,
                 $current - $recorded,
+            ));
+        }
+    }
+
+    /**
+     * @Then the event stream count for aggregate :uuid should have increased
+     */
+    public function eventStreamCountShouldHaveIncreased(string $uuid): void
+    {
+        if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
+            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+        }
+        $result = shell_exec(sprintf(
+            "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
+            $uuid,
+        ));
+        $current = (int) trim((string) $result);
+        $recorded = $this->recordedEventCounts[$uuid] ?? null;
+        if ($recorded === null) {
+            throw new RuntimeException(sprintf('No recorded event count for aggregate %s — call "I record the event stream count" first', $uuid));
+        }
+        if ($current <= $recorded) {
+            throw new RuntimeException(sprintf(
+                'Expected event stream count for aggregate %s to increase beyond %d, but got %d',
+                $uuid,
+                $recorded,
+                $current,
             ));
         }
     }
