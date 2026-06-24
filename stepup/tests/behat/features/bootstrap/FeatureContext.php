@@ -5,8 +5,10 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use InvalidArgumentException;
 use PHPUnit\Framework\Assert;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use Surfnet\StepupBehat\Factory\CommandPayloadFactory;
 use Surfnet\StepupBehat\Repository\SecondFactorRepository;
 use Surfnet\StepupBehat\ValueObject\ActivationContext;
@@ -461,7 +463,7 @@ class FeatureContext implements Context
     public function iRecordEventStreamCount(string $uuid): void
     {
         if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
-            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+            throw new InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
         }
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
@@ -476,7 +478,7 @@ class FeatureContext implements Context
     public function eventStreamCountShouldNotHaveIncreased(string $uuid): void
     {
         if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
-            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+            throw new InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
         }
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
@@ -504,7 +506,7 @@ class FeatureContext implements Context
     public function eventStreamCountShouldHaveIncreased(string $uuid): void
     {
         if (!preg_match('/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i', $uuid)) {
-            throw new \InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
+            throw new InvalidArgumentException(sprintf('Invalid UUID: "%s"', $uuid));
         }
         $result = shell_exec(sprintf(
             "mysql -h mariadb -u root -psecret middleware_test -se \"SELECT COUNT(*) FROM event_stream WHERE uuid='%s'\"",
