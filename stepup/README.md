@@ -88,7 +88,7 @@ The recommended way is to use absolute paths and the script requires the name of
 separated by a `:`.
 
 To mount the code in multiple containers:
-`start-dev-env.sh webauthn:/home/dan/Stepup-webauthn gateway:/home/dan/Stepup-gateway`
+`./start-dev-env.sh webauthn:/home/dan/Stepup-webauthn gateway:/home/dan/Stepup-gateway`
 You can add as many services+local code paths that you need.
 The recommended way is to use absolute paths and the script requires the name of the service and local code path to be separated by a `:`, for each service.
 
