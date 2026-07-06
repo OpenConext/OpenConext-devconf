@@ -138,6 +138,29 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @When I start an SFO authentication for :arg1 with service name :arg2
+     */
+    public function startASfoAuthenticationWithServiceName(string $userIdentifier, string $serviceName)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('subject', $userIdentifier);
+        $this->minkContext->fillField('mdui_displayname', $serviceName);
+        $this->minkContext->pressButton('Login');
+    }
+
+    /**
+     * @Then I see service name :arg1 on the GSSP authentication page
+     */
+    public function iSeeServiceNameOnTheGsspAuthenticationPage(string $serviceName)
+    {
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
+        $this->minkContext->assertPageContainsText($serviceName);
+    }
+
+    /**
      * @When I start an SFO authentication for :arg1
      */
     public function startASfoAuthenticationFor(string $userIdentifier)
