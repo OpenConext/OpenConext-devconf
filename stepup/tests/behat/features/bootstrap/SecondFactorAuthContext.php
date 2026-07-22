@@ -161,6 +161,15 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @Then I see service name :arg1 on the GSSP registration page
+     */
+    public function iSeeServiceNameOnTheGsspRegistrationPage(string $serviceName)
+    {
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/registration');
+        $this->minkContext->assertPageContainsText($serviceName);
+    }
+
+    /**
      * @When I start an SFO authentication for :arg1
      */
     public function startASfoAuthenticationFor(string $userIdentifier)
