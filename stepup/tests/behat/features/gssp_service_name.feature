@@ -1,6 +1,7 @@
-# Tagged SKIP until Stepup-Gateway PR #624 is merged and released in the test image
-# with enable_service_name_from_saml_authnrequest enabled, and the mdui-capable
-# sp.php is available. Run locally with:
+# Tagged SKIP until both of these are merged and released in their test images:
+#   - Stepup-Gateway PR #624 (enable_service_name_from_saml_authnrequest)
+#   - OpenConext-devssp PR adding the mdui_displayname field to sp.php
+# Until then, run locally with:
 #   ./start-dev-env.sh gateway:<Stepup-Gateway checkout> demogssp:<Stepup-gssp-example checkout>
 #   docker compose exec behat ./vendor/bin/behat --config config/behat.yml features/gssp_service_name.feature
 @SKIP

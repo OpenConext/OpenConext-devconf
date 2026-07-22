@@ -9,7 +9,7 @@ import { pushServiceName } from '../lib/middleware';
  * Flow under test: SP (ssp debug SP) --AuthnRequest w/ mdui:UIInfo--> Gateway
  * (SFO) --proxy AuthnRequest--> GSSP (demogssp) authentication page.
  *
- * Priority rule under test (see REFINEMENT_SERVICE_NAME.md):
+ * Priority rule under test:
  *   Middleware `service_name`, when configured for the SP, always wins over
  *   any mdui:DisplayName sent by the SP in the AuthnRequest.
  *
@@ -57,7 +57,6 @@ test.describe('Service name during authentication', () => {
     await startSfoAuthentication(page, 'Behat Test Service');
 
     await expect(page.getByText('Behat Test Service')).toBeVisible();
-    await page.screenshot({ path: 'screenshots/01-authnrequest-mdui-shown.png', fullPage: true });
   });
 
   test('Middleware service_name overrides the AuthnRequest mdui:DisplayName', async ({ page }) => {
@@ -67,7 +66,6 @@ test.describe('Service name during authentication', () => {
 
     await expect(page.getByText('Middleware Configured Name')).toBeVisible();
     await expect(page.getByText('Behat Test Service')).not.toBeVisible();
-    await page.screenshot({ path: 'screenshots/02-middleware-overrides-authnrequest.png', fullPage: true });
   });
 
   test('renders without error when neither Middleware service_name nor mdui:DisplayName is present', async ({ page }) => {
@@ -76,6 +74,5 @@ test.describe('Service name during authentication', () => {
     await startSfoAuthentication(page);
 
     await expect(page.getByText('Service name')).not.toBeVisible();
-    await page.screenshot({ path: 'screenshots/03-no-service-name-no-error.png', fullPage: true });
   });
 });

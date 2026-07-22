@@ -97,9 +97,6 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/ssp:/var/www/simplesaml/config/cert/
-      # Local sp.php with mdui:UIInfo (service name) extension support, pending upstream
-      # inclusion in OpenConext-devssp
-      - ${PWD}/ssp/sp.php:/var/www/simplesaml/public/sp.php
     hostname: ssp.docker
 
 
