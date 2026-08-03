@@ -1,9 +1,9 @@
-# Tagged SKIP until both of these are merged and released in their test images:
-#   - Stepup-Gateway PR #624 (enable_service_name_from_saml_authnrequest)
-#   - OpenConext-devssp PR adding the mdui_displayname field to sp.php
+# Tagged SKIP until Stepup-Gateway PR #624 (append_service_name_to_authnrequest) is merged
+# and released in the test image. (OpenConext-devssp's mdui_displayname field already merged
+# and is in the stock devssp image, so no local sp.php override is needed anymore.)
 # Until then, run locally with:
 #   ./start-dev-env.sh gateway:<Stepup-Gateway checkout> demogssp:<Stepup-gssp-example checkout>
-#   docker compose exec behat ./vendor/bin/behat --config config/behat.yml features/gssp_service_name.feature
+#   docker compose exec behat ./vendor/bin/behat --config config/behat.yml --tags='~@wip' features/gssp_service_name.feature
 @SKIP
 Feature: The GSSP shows the name of the service the user is authenticating for
   In order to know which service I am authenticating for
@@ -12,7 +12,7 @@ Feature: The GSSP shows the name of the service the user is authenticating for
 
   # Covers the cross-repo flow of the mdui:UIInfo service name:
   # the SP sends an AuthnRequest with an mdui:UIInfo/mdui:DisplayName extension,
-  # the Stepup-Gateway (feature flag enable_service_name_from_saml_authnrequest)
+  # the Stepup-Gateway (feature flag append_service_name_to_authnrequest)
   # reads it and forwards it in the proxy AuthnRequest to the GSSP, where the
   # GSSP (Stepup-gssp-example via Stepup-gssp-bundle and Stepup-saml-bundle)
   # displays it on the authentication page.

@@ -29,8 +29,23 @@ Stepup-gssp-bundle#49, Stepup-gssp-example#141.
      --tags='~@wip' features/gssp_service_name.feature
    ```
 
-4. In `Stepup-Gateway`, `enable_service_name_from_saml_authnrequest: true`
-   must be set (already the case in the devconf parameters).
+   Alternatively, skip the Behat dependency entirely and seed the same
+   `jane-a-ra` identity directly via Middleware's command API:
+
+   ```bash
+   cd ../.. && ./seed-test-identity.sh jane-a-ra institution-a.example.com
+   ```
+
+4. `append_service_name_to_authnrequest` defaults to `false`
+   (`Stepup-Gateway/config/openconext/parameters.yaml.dist`) and devconf does
+   not override it, so it must be enabled manually against the running
+   container, e.g.:
+
+   ```bash
+   docker compose exec gateway sed -i \
+     's/append_service_name_to_authnrequest: false/append_service_name_to_authnrequest: true/' \
+     config/openconext/parameters.yaml
+   ```
 
 ## Install & run
 
