@@ -6,7 +6,11 @@ const MIDDLEWARE_CONFIG_PATH = path.resolve(__dirname, '../../../middleware/midd
 const MANAGEMENT_USER = 'management';
 const MANAGEMENT_PASSWORD = 'secret';
 
-type ServiceProvider = { entity_id: string; service_name?: string | null; [key: string]: unknown };
+// service_name is a locale => name map (e.g. { en_GB: "Name" }), per
+// ServiceProviderConfigurationValidator / SamlEntity::fromConfiguration on the
+// Middleware and Gateway side. A bare string is silently coerced to `[]` by
+// `is_array($serviceName) ? $serviceName : []`, so it is never actually applied.
+type ServiceProvider = { entity_id: string; service_name?: Record<string, string> | null; [key: string]: unknown };
 type MiddlewareConfig = { gateway: { service_providers: ServiceProvider[]; [key: string]: unknown }; [key: string]: unknown };
 
 function loadBaseConfig(): MiddlewareConfig {
@@ -17,7 +21,8 @@ function loadBaseConfig(): MiddlewareConfig {
 /**
  * Pushes the devconf baseline middleware-config.json, optionally overriding
  * `service_name` on one SP entity. Pass `serviceName: null` to push the
- * baseline unmodified (no service_name key on that entity).
+ * baseline unmodified (no service_name key on that entity), or a plain string
+ * to set it for locale "en_GB" (Gateway's default_locale in this environment).
  */
 export async function pushServiceName(entityId: string, serviceName: string | null): Promise<void> {
   const config = loadBaseConfig();
@@ -28,7 +33,7 @@ export async function pushServiceName(entityId: string, serviceName: string | nu
   if (serviceName === null) {
     delete sp.service_name;
   } else {
-    sp.service_name = serviceName;
+    sp.service_name = { en_GB: serviceName };
   }
 
   const auth = Buffer.from(`${MANAGEMENT_USER}:${MANAGEMENT_PASSWORD}`).toString('base64');

@@ -121,6 +121,24 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @When I visit the service provider with service name :arg1
+     */
+    public function visitServiceProviderWithServiceName(string $serviceName)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('mdui_displayname', $serviceName);
+
+        if ($this->activeIdp === self::SFO_IDP) {
+            $this->minkContext->fillField('subject', self::TEST_NAMEID);
+        }
+        $this->minkContext->pressButton('Login');
+    }
+
+    /**
      * @When I start an SFO authentication for :arg1 with GSSP extension subject :arg2 and institution :arg3
      */
     public function startASfoAuthenticationWithGsspExtension(string $userIdentifier, string $subject, string $institution)
@@ -521,8 +539,20 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->fillField('password', $userName);
 
         $this->minkContext->pressButton('Login');
-        $this->minkContext->pressButton('Yes, continue');
+        $this->pressConsentIfShown();
+    }
 
+    /**
+     * SimpleSAMLphp's consent module remembers a given SP+attribute-set combination for the
+     * browser session, so a consent screen may or may not appear depending on what earlier
+     * scenarios in the same feature already consented to.
+     */
+    private function pressConsentIfShown(): void
+    {
+        try {
+            $this->minkContext->pressButton('Yes, continue');
+        } catch (ElementNotFoundException $e) {
+        }
     }
 
     public function authenticateWithIdentityProviderForWithStepup($userName)

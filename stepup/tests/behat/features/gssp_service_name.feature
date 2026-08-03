@@ -32,3 +32,18 @@ Feature: The GSSP shows the name of the service the user is authenticating for
     Then I should not see "Behat Test Service"
     When I verify the "demo-gssp" second factor
     Then I am logged on the service provider
+
+  # Gateway has three independent LoginService::singleSignOn implementations that each
+  # read the mdui:UIInfo extension behind the same feature flag: GatewayBundle (plain
+  # SSO, exercised here), SecondFactorOnlyBundle, and SamlStepupProviderBundle (both
+  # exercised by the SFO scenarios above). Without this scenario, a regression in the
+  # SSO copy specifically would go undetected even with the SFO scenarios passing.
+  Scenario: Service name from the AuthnRequest mdui:UIInfo is shown on the GSSP authentication page via the plain SSO flow
+    Given a service provider configured for single-signon
+    And a user "Jane Toppan" identified by "urn:collab:person:institution-a.example.com:jane-a2" from institution "institution-a.example.com"
+    And the user "urn:collab:person:institution-a.example.com:jane-a2" has a vetted "demo-gssp" with identifier "gssp-identifier-sso1"
+    When I visit the service provider with service name "SSO Flow Service Name"
+    And I authenticate as "jane-a2" with the identity provider
+    Then I see service name "SSO Flow Service Name" on the GSSP authentication page
+    When I verify the "demo-gssp" second factor
+    Then I am logged on the service provider
