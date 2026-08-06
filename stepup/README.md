@@ -19,7 +19,11 @@ First, you need to create an entry in your hosts file (/etc/hosts on *nix system
 
 ```
 127.0.0.1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local
+::1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local
 ```
+The `::1` line matters on macOS: without a local AAAA (IPv6) record,
+`.local` hostname lookups fall through to multicast DNS (Bonjour),
+which takes ~5s to time out before falling back to /etc/hosts.
 
 Secondly you need to create the `stepup/gateway/surfnet_yubikey.yaml` file with your Yubikey API credentials.
 If you do not have API credentials, you can get them at <https://upgrade.yubico.com/getapikey/>.

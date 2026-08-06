@@ -128,7 +128,11 @@ printf "\n"
 echo -e "${BLUE}Please add the following line to your /etc/hosts: ${VINKJE}"
 printf "\n"
 
+# The ::1 line avoids macOS's ~5s mDNS/Bonjour timeout for .local hostnames --
+# without a local AAAA (IPv6) record, macOS tries multicast DNS first for
+# every .local lookup before falling back to /etc/hosts.
 echo "127.0.0.1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local"
+echo "::1 engine.dev.openconext.local manage.dev.openconext.local profile.dev.openconext.local engine-api.dev.openconext.local mujina-idp.dev.openconext.local profile.dev.openconext.local connect.dev.openconext.local teams.dev.openconext.local voot.dev.openconext.local invite.dev.openconext.local welcome.dev.openconext.local"
 
 printf "\n"
 echo "You can now login. If you want to bring the environment down, use the command below"
