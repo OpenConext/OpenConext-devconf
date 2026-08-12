@@ -491,9 +491,9 @@ class SelfServiceContext implements Context
 
     private function performYubikeyAuthentication()
     {
-        $this->minkContext->fillField('gateway_verify_yubikey_otp_otp', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
+        $this->minkContext->fillField('gateway_verify_yubikey_yubikeyInput', 'ccccccdhgrbtfddefpkffhkkukbgfcdilhiltrrncmig');
         $page = $this->minkContext->getSession()->getPage();
-        $form = $page->find('css', 'form[name="gateway_verify_yubikey_otp"]');
+        $form = $page->find('css', 'form[name="gateway_verify_yubikey"]');
         $form->submit();
         $this->minkContext->pressButton('Submit');
     }

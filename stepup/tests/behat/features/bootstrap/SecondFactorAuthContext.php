@@ -121,6 +121,24 @@ class SecondFactorAuthContext implements Context
     }
 
     /**
+     * @When I visit the service provider with service name :arg1
+     */
+    public function visitServiceProviderWithServiceName(string $serviceName)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('mdui_displayname', $serviceName);
+
+        if ($this->activeIdp === self::SFO_IDP) {
+            $this->minkContext->fillField('subject', self::TEST_NAMEID);
+        }
+        $this->minkContext->pressButton('Login');
+    }
+
+    /**
      * @When I start an SFO authentication for :arg1 with GSSP extension subject :arg2 and institution :arg3
      */
     public function startASfoAuthenticationWithGsspExtension(string $userIdentifier, string $subject, string $institution)
@@ -135,6 +153,38 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->fillField('sho_extension', $institution);
 
         $this->minkContext->pressButton('Login');
+    }
+
+    /**
+     * @When I start an SFO authentication for :arg1 with service name :arg2
+     */
+    public function startASfoAuthenticationWithServiceName(string $userIdentifier, string $serviceName)
+    {
+        $this->minkContext->visit($this->spTestUrl);
+        $this->minkContext->fillField('idp', $this->activeIdp);
+        $this->minkContext->fillField('sp', $this->activeSp);
+        $this->minkContext->fillField('loa', $this->requiredLoa);
+        $this->minkContext->fillField('subject', $userIdentifier);
+        $this->minkContext->fillField('mdui_displayname', $serviceName);
+        $this->minkContext->pressButton('Login');
+    }
+
+    /**
+     * @Then I see service name :arg1 on the GSSP authentication page
+     */
+    public function iSeeServiceNameOnTheGsspAuthenticationPage(string $serviceName)
+    {
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/authentication');
+        $this->minkContext->assertPageContainsText($serviceName);
+    }
+
+    /**
+     * @Then I see service name :arg1 on the GSSP registration page
+     */
+    public function iSeeServiceNameOnTheGsspRegistrationPage(string $serviceName)
+    {
+        $this->minkContext->assertPageAddress('https://demogssp.dev.openconext.local/registration');
+        $this->minkContext->assertPageContainsText($serviceName);
     }
 
     /**
@@ -342,13 +392,13 @@ class SecondFactorAuthContext implements Context
             $this->minkContext->assertPageAddress('https://gateway.dev.openconext.local/verify-second-factor/sfo/yubikey');
         }
         // Give an OTP
-        $this->minkContext->fillField('gateway_verify_yubikey_otp_otp', 'ccccccdhgrbtucnfhrhltvfkchlnnrndcbnfnnljjdgf');
+        $this->minkContext->fillField('gateway_verify_yubikey_yubikeyInput', 'ccccccdhgrbtucnfhrhltvfkchlnnrndcbnfnnljjdgf');
         // Simulate the enter press the yubikey otp generator
-        $form = $this->minkContext->getSession()->getPage()->find('css', '[id="gateway_verify_yubikey_otp_otp"]');
+        $form = $this->minkContext->getSession()->getPage()->find('css', '[id="gateway_verify_yubikey_yubikeyInput"]');
         if (!$form) {
             throw new ElementNotFoundException('Yubikey OTP Submit form could not be found on the page');
         }
-        $this->minkContext->pressButton('gateway_verify_yubikey_otp_submit');
+        $this->minkContext->pressButton('gateway_verify_yubikey_submit');
         // Pass through the 'return to sp' redirection page.
         $this->minkContext->pressButton('Submit');
     }
@@ -489,8 +539,20 @@ class SecondFactorAuthContext implements Context
         $this->minkContext->fillField('password', $userName);
 
         $this->minkContext->pressButton('Login');
-        $this->minkContext->pressButton('Yes, continue');
+        $this->pressConsentIfShown();
+    }
 
+    /**
+     * SimpleSAMLphp's consent module remembers a given SP+attribute-set combination for the
+     * browser session, so a consent screen may or may not appear depending on what earlier
+     * scenarios in the same feature already consented to.
+     */
+    private function pressConsentIfShown(): void
+    {
+        try {
+            $this->minkContext->pressButton('Yes, continue');
+        } catch (ElementNotFoundException $e) {
+        }
     }
 
     public function authenticateWithIdentityProviderForWithStepup($userName)
