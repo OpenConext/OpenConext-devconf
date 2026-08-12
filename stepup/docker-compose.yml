@@ -24,6 +24,14 @@ services:
           - azuremfa.dev.openconext.local
           - mailcatcher.dev.openconext.local
     hostname: haproxy.docker
+    depends_on:
+      - gateway
+      - middleware
+      - ra
+      - selfservice
+      - tiqr
+      - webauthn
+      - ssp
 
   mariadb:
     image: mariadb:10.11
