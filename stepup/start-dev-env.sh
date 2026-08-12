@@ -181,6 +181,16 @@ if [ $# -gt 0 ]; then
 	docker_compose_up_options+=("$@")
 fi
 
+# Check if HAProxy certs exists, if not generate them
+if [[ ! -f "$SCRIPT_DIR/../core/haproxy/haproxy.crt" || ! -f "$SCRIPT_DIR/../core/haproxy/haproxy.crt" ]]; then
+	echo -e "${GREEN}Generating a new CA and HAProxy server certificate${NOCOLOR}"
+	"${SCRIPT_DIR}/../core/scripts/create_dev_ca.sh"
+	echo -e "${GREEN}Generated new CA and HAProxy server certificate${NOCOLOR}"
+fi
+
+# Sync haprocy CA cert used in stepup with the one used by core
+cp "$SCRIPT_DIR/../core/haproxy/haproxy.crt" "$SCRIPT_DIR/haproxy/haproxy.crt"
+
 # Run docker compose up command with the previously prepared options
 echo -e "docker compose ${docker_compose_options[*]} up ${docker_compose_up_options[*]}"
 docker compose "${docker_compose_options[@]}" up "${docker_compose_up_options[@]}"

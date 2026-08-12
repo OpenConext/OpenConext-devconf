@@ -3,3 +3,6 @@ stepup/.env
 stepup/tests/behat/temp.sql
 /.idea
 .env
+core/haproxy/haproxy.crt
+core/haproxy/haproxy.pem
+stepup/haproxy/haproxy.crt

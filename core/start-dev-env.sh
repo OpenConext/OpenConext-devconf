@@ -154,6 +154,13 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
+# Check if HAProxy certs exists, if not generate them
+if [[ ! -f "$SCRIPT_DIR/haproxy/haproxy.crt" || ! -f "$SCRIPT_DIR/haproxy/haproxy.crt" ]]; then
+	echo -e "${GREEN}Generating a new CA and HAProxy server certificate${NOCOLOR}"
+	"${SCRIPT_DIR}/scripts/create_dev_ca.sh"
+	echo -e "${GREEN}Generated new CA and HAProxy server certificate${NOCOLOR}"
+fi
+
 # Run docker compose up command with the previously prepared options
 echo "Running: docker compose ${docker_compose_options[*]} up ${docker_compose_up_options[*]}"
 exec docker compose "${docker_compose_options[@]}" up "${docker_compose_up_options[@]}"
