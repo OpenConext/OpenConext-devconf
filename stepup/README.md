@@ -6,12 +6,12 @@ The main configuration for each app can be found in each application repository.
 This repository contains the docker-compose.yml to get all containers that are used for development up and running.
 
 * The application containers
-* A loadbalancer in front of it
+* A loadbalancer in front of it (haproxy, shared with core)
 * A MariaDB container for the databases.
 
-A SQL in the directory dbschema  which creates databases and users needed for OpenConext Stepup development is mounted in the MariaDB container.
+A SQL in the directory dbschema which creates databases and users needed for OpenConext Stepup development is mounted in the MariaDB container.
 
-The application config directories contain the SAML key material. Those are not shipped with the application containers to prevent accidental usage of that key material in a production environment. The docker-compose mounts the application specific directory in /config.
+The application config directories contain the SAML key material. Those are not shipped with the application containers to prevent accidental usage of that key material in a production environment. The docker-compose mounts the application-specific directory in /config.
 
 # Getting everything up and running
 
@@ -27,7 +27,7 @@ which takes ~5s to time out before falling back to /etc/hosts.
 
 Secondly you need to create the `stepup/gateway/surfnet_yubikey.yaml` file with your Yubikey API credentials.
 If you do not have API credentials, you can get them at <https://upgrade.yubico.com/getapikey/>.
-You require a Yubikey to get an API key. There credential are used to verify the Yubikey OTP's.
+You require a Yubikey with Yubico OTP to get an API key. These credentials are used to verify the Yubikey OTP's.
 
 ```yaml
 surfnet_yubikey_api_client:
@@ -36,13 +36,18 @@ surfnet_yubikey_api_client:
     client_secret: 'YOUR_SECRET'
 ```
 
-Start the containers using docker compose:
-```
-docker compose up -d
-```
-or use the included script:
+Start the containers using included script. This will:
+- Create a CA and TLS server certificate
+- download latest (beta) images
+- Create the containers
 ```
 ./start-dev-env.sh
+```
+
+After this you can manage the containers using `docker compose`. E.g.:
+```
+docker compose up -d
+docker compose logs -f
 ```
 
 Initialise (bootstrap) the middleware, gateway and webauthn database schema's and push
@@ -51,14 +56,28 @@ the configuration to the middleware. This is done by running the following scrip
 ./bootstrap-database.sh
 ```
 
-Then, bootstrap the SRAA. For this, you will need to have a Yubikey.
+Then, bootstrap the SRAA. For this, you require a Yubikey with Yubico OTP.
 Use the following command to bootstrap the SRAA:
 ```
 ./bootstrap-admin-sraa.sh
 ```
 
-You can now login to the RA application using the admin account. The URL is:
-https://ra.dev.openconext.local
+You can now login to the RA application using the admin account.
+You will be prompted by the webbrowser to trust the server certificate for each host the first time you connect.
+Accept these. Alternatively, you can add the core/haproxy/haproxy.crt CA certificate to the trusted certificates of your webbrowser.
+This certificate was generated when you first started the containers using `./start-dev-env.sh`.
+Check the certificate using:
+```bash
+openssl x509 -in ../core/haproxy/haproxy.crt -noout -text
+```
+Note the Name Constraint in the output:
+```plain
+X509v3 Name Constraints: critical
+    Permitted:
+      DNS:.dev.openconext.local
+```
+
+The URL of the RA interface is: https://ra.dev.openconext.local
 The username and password for the admin account are:
 ```
 username: admin
