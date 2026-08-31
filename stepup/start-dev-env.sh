@@ -33,6 +33,15 @@ else
 	echo -e "${GREEN}No .env file was read.${ENDCOLOR}"
 fi
 
+# Define default paths of the apps
+declare -A default_app_paths
+default_app_paths["webauthn"]="../../Stepup-Webauthn"
+default_app_paths["middleware"]="../../Stepup-Middleware"
+default_app_paths["gateway"]="../../Stepup-Gateway"
+default_app_paths["ra"]="../../Stepup-RA"
+default_app_paths["tiqr"]="../../Stepup-tiqr"
+default_app_paths["azuremfa"]="../../Stepup-Azure-MFA"
+
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -153,8 +162,13 @@ while [[ $# -gt 0 ]]; do
 		exit 1;
 	fi
 
-	# Replace "~/" with the user's home directory
-	path=${path/#\~/$HOME}
+	if [[ -z "$path" || "$path" == "$app" ]]; then
+		path=${default_app_paths[$app]}
+		echo "Using default path '$path' for app '$app'"
+	fi
+
+	# Canonicalize path
+	path=$(readlink -f "$path")
 
 	# Test if the specified path(s) exist.
 	if [ ! -d "${path}" ]; then
