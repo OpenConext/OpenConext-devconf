@@ -70,7 +70,7 @@ services:
     ports:
       - "9222:9222"
     environment:
-      CHROME_CLI: "--remote-debugging-port=9222 --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors"
+      CHROME_CLI: "--remote-debugging-port=9222 --remote-allow-origins=* --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors"
     volumes:
       - "/tmp/chromedata/:/data"
     networks:
