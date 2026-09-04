@@ -28,6 +28,9 @@ jobs:
           cd stepup
           cp .env.test .env
           cp gateway/surfnet_yubikey.yaml.dist gateway/surfnet_yubikey.yaml
+          if [ ! -f ../core/haproxy/haproxy.pem ]; then
+            ../core/scripts/create_dev_ca.sh
+          fi
           ${DOCKER_COMPOSE} up -d
       - name: Install composer dependencies on the Behat container
         run: |
