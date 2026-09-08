@@ -31,6 +31,10 @@ jobs:
           if [ ! -f ../core/haproxy/haproxy.pem ]; then
             ../core/scripts/create_dev_ca.sh
           fi
+          # Distribute the dev CA to the app containers: the base image imports
+          # /config/haproxy/haproxy.crt on startup so services trust each other
+          # over HAProxy TLS. start-dev-env.sh does this copy; CI must too.
+          cp ../core/haproxy/haproxy.crt haproxy/haproxy.crt
           ${DOCKER_COMPOSE} up -d
       - name: Install composer dependencies on the Behat container
         run: |
