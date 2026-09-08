@@ -162,6 +162,7 @@ services:
       openconextdev:
     volumes:
       - ${PWD}/:/config
+      - ${PWD}/selfservice/parameters.yaml:/var/www/html/config/openconext/parameters.yaml:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: selfservice.docker
