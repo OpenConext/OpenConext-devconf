@@ -28,7 +28,7 @@ jobs:
           cd stepup
           cp .env.test .env
           cp gateway/surfnet_yubikey.yaml.dist gateway/surfnet_yubikey.yaml
-          if [ ! -f ../core/haproxy/haproxy.pem ]; then
+          if [ ! -f ../core/haproxy/haproxy.pem ] || [ ! -f ../core/haproxy/haproxy.crt ]; then
             ../core/scripts/create_dev_ca.sh
           fi
           # Distribute the dev CA to the app containers: the base image imports
