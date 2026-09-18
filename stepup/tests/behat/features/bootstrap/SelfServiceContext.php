@@ -78,9 +78,9 @@ class SelfServiceContext implements Context
 
         $this->minkContext->pressButton('Sign out');
 
-        $expectBaseUrl = 'https://www.surf.nl/';
+        $expectBaseUrl = 'https://ssp.dev.openconext.local/';
         if (substr($this->minkContext->getSession()->getCurrentUrl(), 0, strlen($expectBaseUrl)) !== $expectBaseUrl) {
-            throw new Exception("after logout we should be redirected to the surf domain");
+            throw new Exception("after logout we should be redirected to the local test SP domain");
         }
     }
 
