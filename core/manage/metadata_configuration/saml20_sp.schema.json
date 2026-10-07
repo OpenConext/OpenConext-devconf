@@ -447,6 +447,11 @@
           "default": false,
           "info": "Set if the service provider can act on behalf of connected services to this service."
         },
+        "coin:wayf_remember_choice": {
+          "type": "boolean",
+          "default": false,
+          "info": "Set if the service provider allows users to remember their chosen IdP (WAYF remember choice feature)."
+        },
         "coin:no_consent_required": {
           "type": "boolean",
           "info": "Select this option to skip the consent for a user.",
