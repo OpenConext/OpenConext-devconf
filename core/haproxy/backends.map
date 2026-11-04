@@ -25,3 +25,4 @@ spdashboard.dev.openconext.local spdashboard_be
 invite.dev.openconext.local invite_be
 welcome.dev.openconext.local welcome_be
 sbs.dev.openconext.local sbs_be
+mailcatcher.dev.openconext.local mailcatcher_be
