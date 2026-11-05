@@ -4,6 +4,10 @@ services:
     image: ghcr.io/openconext/openconext-basecontainers/${GATEWAY_PHP_IMAGE:-php82-apache2-node20-composer2:latest}
     volumes:
       - ${GATEWAY_CODE_PATH}:/var/www/html
+      # Local parameter overrides (gitignored, survives component upgrades), imported by
+      # config/services.yaml after config/openconext/parameters.yaml, e.g. to point
+      # spryng_base_url at the smscatcher: https://smscatcher.dev.openconext.local/v1
+      - ${PWD}/gateway/parameters.local.yaml:/var/www/html/config/openconext/parameters.local.yaml
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=true

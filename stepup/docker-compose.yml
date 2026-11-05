@@ -23,6 +23,7 @@ services:
           - tiqr.dev.openconext.local
           - azuremfa.dev.openconext.local
           - mailcatcher.dev.openconext.local
+          - smscatcher.dev.openconext.local
     hostname: haproxy.docker
     depends_on:
       - gateway
@@ -132,6 +133,7 @@ services:
     volumes:
       - ${PWD}/:/config
       - ${PWD}/gateway/surfnet_yubikey.yaml:/var/www/html/config/packages/surfnet_yubikey.yaml
+      - ${PWD}/gateway/parameters.local.yaml:/var/www/html/config/openconext/parameters.local.yaml
     extra_hosts:
       - "host.docker.internal:host-gateway"
     hostname: gateway.docker
@@ -223,6 +225,14 @@ services:
     networks:
       openconextdev:
     hostname: mailcatcher.docker
+
+  smscatcher:
+    build: ./smscatcher
+    ports:
+      - 1090:80
+    networks:
+      openconextdev:
+    hostname: smscatcher.docker
 
 networks:
   openconextdev:

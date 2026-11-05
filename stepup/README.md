@@ -18,8 +18,8 @@ The application config directories contain the SAML key material. Those are not 
 First, you need to create an entry in your hosts file (/etc/hosts on *nix systems)
 
 ```
-127.0.0.1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local
-::1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local
+127.0.0.1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local mailcatcher.dev.openconext.local smscatcher.dev.openconext.local
+::1 selfservice.dev.openconext.local ssp.dev.openconext.local gateway.dev.openconext.local middleware.dev.openconext.local ra.dev.openconext.local demogssp.dev.openconext.local tiqr.dev.openconext.local webauthn.dev.openconext.local azuremfa.dev.openconext.local mailcatcher.dev.openconext.local smscatcher.dev.openconext.local
 ```
 The `::1` line matters on macOS: without a local AAAA (IPv6) record,
 `.local` hostname lookups fall through to multicast DNS (Bonjour),
