@@ -69,11 +69,20 @@ services:
   chrome:
     image: "lscr.io/linuxserver/chromium:latest"
     ports:
+      # Chrome DevTools
       - "9222:9222"
     environment:
-      CHROME_CLI: "--remote-debugging-port=9222 --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors"
+      # Chromium >= M113 always binds the Chrome DevTools server to 127.0.0.1 and ignores --remote-debugging-address
+      # --remote-allow-origins is required for Chromium >= M111 for WebSocket connections from other hosts.
+      # --disable-popup-blocking is (now) required because otherwise "window.open()" without user activation is blocked
+      # by the Chrome popup blocker
+      CHROME_CLI: "--remote-debugging-port=9223 --remote-allow-origins=* --window-size=1920,1080 --ignore-certificate-errors --ignore-ssl-errors --disable-popup-blocking"
     volumes:
       - "/tmp/chromedata/:/data"
+      # Start an nginx server to proxy between 0.0.0.0:9222 and 127.0.0:9223 to expose the Chrome DevTools server
+      # The Chrome DevTools server is required by some behat tests
+      - ${PWD}/chrome/nginx-cdp-proxy.conf:/etc/nginx-cdp-proxy.conf:ro
+      - ${PWD}/chrome/custom-cont-init.d:/custom-cont-init.d:ro
     networks:
       openconextdev:
         aliases:
