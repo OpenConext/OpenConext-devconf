@@ -170,6 +170,23 @@ while [[ $# -gt 0 ]]; do
 	echo "export ${app^^}_CODE_PATH='${path}'"
 	eval "export ${app^^}_CODE_PATH='${path}'"
 
+	# When the gateway is started in development mode we need to add parameters.local.yaml with the
+	# the smscatcher configuration to the Steup-Gateway using a different method.
+	# A Docker bind-mount cannot be used because that bind would overlap with the source code bind.
+	if [ "${app}" == "gateway" ]; then
+		parameters_local_file="${path}/config/openconext/parameters.local.yaml"
+		if [ -s "${parameters_local_file}" ]; then
+			echo -e "${ORANGE}Not creating '${parameters_local_file}': it already exists.${ENDCOLOR}"
+		else
+			if ! mkdir -p "$(dirname "${parameters_local_file}")" || ! cp "${SCRIPT_DIR}/gateway/parameters.local.yaml" "${parameters_local_file}"; then
+				echo -e "${RED}Error: failed to create '${parameters_local_file}' in the gateway checkout '${path}'.${ENDCOLOR}"
+				exit 1
+			fi
+			echo -e "${ORANGE}Created '${parameters_local_file}' in the gateway checkout '${path}'.${ENDCOLOR}"
+		fi
+		echo "This file adds the smscatcher.dev.openconext.local configuration to the gateway so outgoing SMS messages are sent to the SMS catcher (https://smscatcher.dev.openconext.local/v1) instead of the Spryng API."
+	fi
+
 	# Add the DOCKER_OVERRIDE_FILE to the docker compose command
 	docker_compose_options+=("-f")
 	docker_compose_options+=("${APP_DIR}/${app}/${DOCKER_OVERRIDE_FILE}")

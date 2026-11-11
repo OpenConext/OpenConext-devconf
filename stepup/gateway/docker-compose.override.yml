@@ -4,10 +4,13 @@ services:
     image: ghcr.io/openconext/openconext-basecontainers/${GATEWAY_PHP_IMAGE:-php82-apache2-node20-composer2:latest}
     volumes:
       - ${GATEWAY_CODE_PATH}:/var/www/html
-      # Local parameter overrides (gitignored, survives component upgrades), imported by
-      # config/services.yaml after config/openconext/parameters.yaml, e.g. to point
-      # spryng_base_url at the smscatcher: https://smscatcher.dev.openconext.local/v1
-      - ${PWD}/gateway/parameters.local.yaml:/var/www/html/config/openconext/parameters.local.yaml
+      # Note: docker-compose.yml also bind-mounts gateway/parameters.local.yaml to
+      # /var/www/html/config/openconext/parameters.local.yaml.
+      # However, that bind conflicts with the "${GATEWAY_CODE_PATH}:/var/www/html" above that mounts
+      # the entire Stepup-Gateway source directory into the container's /var/www/html
+      # So instead, start-dev-env.sh copies gateway/parameters.local.yaml into
+      # ${GATEWAY_CODE_PATH}/config/openconext/ when the gateway is started in development
+      # mode.
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=true
