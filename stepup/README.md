@@ -244,7 +244,9 @@ You can use the override to run the tests against a local version of the code. E
 
 ### Prepare the behat container
 
-The first time you run the behat tests, you need to install the dependencies in the container
+The behat container installs its composer dependencies automatically when it is (re)created
+(the `command` override in `docker-compose.yml` runs `composer install` before starting apache),
+so there is nothing to prepare manually. If you ever need to reinstall them by hand:
 ```shell
 docker compose exec behat composer install
 ```

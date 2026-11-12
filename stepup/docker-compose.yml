@@ -58,6 +58,9 @@ services:
     image: ghcr.io/openconext/openconext-devconf/openconext-devconf:test
     environment:
       - APP_ENV=${APP_ENV:-prod}
+    # The image entrypoint (/entrypoint.sh) ends with `exec "$@"`, so this runs composer install on every (re)create
+    # of the container before starting apache2-foreground
+    command: sh -c "export HOME=/root; composer install --no-interaction --no-progress && exec apache2-foreground"
     networks:
       openconextdev:
     volumes:
