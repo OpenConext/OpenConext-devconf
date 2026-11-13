@@ -1,7 +1,7 @@
 ---
 services:
   gateway:
-    image: ghcr.io/openconext/openconext-basecontainers/${GATEWAY_PHP_IMAGE:-php82-apache2-node20-composer2:latest}
+    image: ghcr.io/openconext/openconext-basecontainers/${GATEWAY_PHP_IMAGE:-php85-apache2-node24:latest}
     volumes:
       - ${GATEWAY_CODE_PATH}:/var/www/html
       # Note: docker-compose.yml also bind-mounts gateway/parameters.local.yaml to
