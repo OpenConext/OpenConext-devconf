@@ -43,7 +43,7 @@ Feature: A RAA can view the institution configuration
         | Show RAA contact information?                                                              | Yes                              |
         | E-mail verification enabled?                                                               | Yes                              |
         | Single sign on on second factor authentications?                                           | Yes                               |
-        | Single sign on registration bypass?                                                        | Yes                               |
+        | GSSP Fallback enabled?                                                                     | Yes                               |
         | Token activation using an activated token                                                  | Allowed                      |
         | Activate a token without the service desk or an activated token                            | Allowed                      |
         | Allowed second factor tokens                                                               | All enabled tokens are available |
@@ -59,7 +59,7 @@ Feature: A RAA can view the institution configuration
         | Show RAA contact information?                                                              | No                               |
         | E-mail verification enabled?                                                               | No                               |
         | Single sign on on second factor authentications?                                           | No                               |
-        | Single sign on registration bypass?                                                        | No                               |
+        | GSSP Fallback enabled?                                                                     | No                               |
         | Token activation using an activated token                                                  | Not allowed                      |
         | Activate a token without the service desk or an activated token                            | Not allowed                      |
         | Allowed second factor tokens                                                               | sms                              |
