@@ -22,7 +22,7 @@ Feature: A RA(A) should only have access to certain pages
   # Token page
   Scenario: An anonymous user can not view the tokens page
     Given I visit the "second-factors" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can view the tokens page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
@@ -48,7 +48,7 @@ Feature: A RA(A) should only have access to certain pages
   # RA-management page
   Scenario: An anonymous user can not view the ra-management page
     Given I visit the "management/ra" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can not view the ra-management page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
@@ -74,7 +74,7 @@ Feature: A RA(A) should only have access to certain pages
   # RA-management create page
   Scenario: An anonymous user can not view the ra-management create page
     Given I visit the "management/create-ra/00000000-0000-4000-a000-000000000004" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can not view the ra-management create page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
@@ -100,7 +100,7 @@ Feature: A RA(A) should only have access to certain pages
   # RA-management amend page
   Scenario: An anonymous user can not view the ra-management amend page
     Given I visit the "management/amend-ra-information/00000000-0000-4000-a000-000000000001/dev.openconext.local" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can not view the ra-management amend page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
@@ -126,7 +126,7 @@ Feature: A RA(A) should only have access to certain pages
   # RA-management retract page
   Scenario: An anonymous user can not view the ra-management retract page
     Given I visit the "management/retract-registration-authority/00000000-0000-4000-a000-000000000001/dev.openconext.local" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can not view the ra-management retract page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
@@ -152,7 +152,7 @@ Feature: A RA(A) should only have access to certain pages
   # RA-candidate page
   Scenario: An anonymous user can not view the ra-candidate page
     Given I visit the "management/search-ra-candidate" page in the RA environment
-    Then I should see "Enter your username and password"
+    Then I should see "A service has requested you to authenticate yourself"
 
   Scenario: RA can not view the ra-candidate page
     Given I am logged in into the ra portal as "joe--ra" with a "yubikey" token
