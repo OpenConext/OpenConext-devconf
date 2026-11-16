@@ -490,8 +490,7 @@ class SecondFactorAuthContext implements Context
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
 
-        $this->minkContext->fillField('username', 'user-a1');
-        $this->minkContext->fillField('password', 'user-a1');
+        $this->fillIdentityProviderLoginForm('user-a1');
 
         $this->minkContext->pressButton('Login');
         $this->minkContext->pressButton('Yes, continue');
@@ -535,11 +534,26 @@ class SecondFactorAuthContext implements Context
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
 
-        $this->minkContext->fillField('username', $userName);
-        $this->minkContext->fillField('password', $userName);
+        $this->fillIdentityProviderLoginForm($userName);
 
         $this->minkContext->pressButton('Login');
         $this->pressConsentIfShown();
+    }
+
+    /**
+     * Fill the login form of the devssp IdP.
+     *
+     * Newer devssp images only ask for a username, older images also require a password that is equal to the username.
+     * This function works with both.
+     */
+    private function fillIdentityProviderLoginForm(string $userName): void
+    {
+        $this->minkContext->fillField('username', $userName);
+
+        // Only fill the password when that field is present
+        if ($this->minkContext->getSession()->getPage()->findField('password') !== null) {
+            $this->minkContext->fillField('password', $userName);
+        }
     }
 
     /**
@@ -559,8 +573,7 @@ class SecondFactorAuthContext implements Context
     {
         $this->minkContext->assertPageAddress('https://ssp.dev.openconext.local/simplesaml/module.php/core/loginuserpass');
 
-        $this->minkContext->fillField('username', $userName);
-        $this->minkContext->fillField('password', $userName);
+        $this->fillIdentityProviderLoginForm($userName);
 
         $this->minkContext->pressButton('Login');
         $this->minkContext->pressButton('Yes, continue');
@@ -583,22 +596,16 @@ class SecondFactorAuthContext implements Context
     {
         switch ($this->activeSp) {
             case 'second-sp':
-                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/second-sp');
+                $oldAcsPath = '/simplesaml/module.php/debugsp/acs/second-sp';
                 break;
             case 'default-sp':
-                $this->minkContext->assertPageAddress('/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp');
+                $oldAcsPath = '/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp';
                 break;
             default:
                 throw new Exception($this->activeSp . ' is not supported');
         }
 
-        $this->minkContext->assertPageContainsText(
-            sprintf('Unhandled exception')
-        );
-
-        $this->minkContext->assertPageNotContainsText(
-            sprintf('You are logged in to SP')
-        );
+        $this->assertSamlErrorResponseAtServiceProvider($oldAcsPath);
     }
 
     /**
@@ -608,36 +615,85 @@ class SecondFactorAuthContext implements Context
     {
         switch ($this->activeSp) {
             case 'second-sp':
-                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/second-sp');
-                break;
             case 'default-sp':
-                $this->minkContext->assertPageAddress('/simplesaml/module.php/debugsp/acs/default-sp');
+                $acsPath = '/simplesaml/module.php/debugsp/acs/' . $this->activeSp;
                 break;
             default:
                 throw new Exception($this->activeSp . ' is not supported');
         }
 
-        $this->minkContext->assertPageContainsText(
-            sprintf('Unhandled exception')
-        );
+        $this->assertSamlErrorResponseAtServiceProvider($acsPath);
 
-        $currentUrl = $this->minkContext->getSession()->getCurrentUrl();
         // With behat we can not verify if the Context and AuthMethod are present in the POST request data, but we can
-        // check if Gateway added back the original query string
+        // check if Gateway added back the original query string to the URL of the ACS.
+        // The newer devssp redirects from the ACS to the Test SP (sp.php), so look up the ACS request in the history.
         $expectedAdfsParams = '?SAMLRequest=request_that_must_be_kept&Context=context_value_that_must_be_kept';
+        $acsUrl = $this->findVisitedUrlContaining($acsPath);
         // The original parameters sent by the ADFS client should still be on the Url
-        if (strpos($currentUrl, $expectedAdfsParams) === false) {
+        if ($acsUrl === null || strpos($acsUrl, $expectedAdfsParams) === false) {
             throw new Exception(
                 sprintf(
-                    'The original Adfs parameters are not on the error page (expected: "%s")',
-                    $expectedAdfsParams
+                    'The original Adfs parameters are not on the ACS URL (expected: "%s", ACS URL: "%s")',
+                    $expectedAdfsParams,
+                    $acsUrl ?? 'not visited'
                 )
             );
         }
+    }
 
-        $this->minkContext->assertPageNotContainsText(
-            sprintf('You are logged in to SP')
-        );
+    /**
+     * Assert that the SP received a SAML error response.
+     *
+     * Older devssp images show an "Unhandled exception" page at the ACS location ($oldAcsPath).
+     * Newer devssp images redirect from the ACS to the Test SP (sp.php), which shows the SAML error status.
+     * Both are accepted so the tests work with both the old and the new devssp image.
+     */
+    private function assertSamlErrorResponseAtServiceProvider(string $oldAcsPath): void
+    {
+        $currentPath = parse_url($this->minkContext->getSession()->getCurrentUrl(), PHP_URL_PATH);
+
+        if ($currentPath === '/simplesaml/sp.php') {
+            $this->minkContext->assertPageContainsText('Last login failed');
+            $this->minkContext->assertPageContainsText('SAML Error Status');
+            return;
+        }
+
+        $this->minkContext->assertPageAddress($oldAcsPath);
+        $this->minkContext->assertPageContainsText('Unhandled exception');
+        $this->minkContext->assertPageNotContainsText('You are logged in to SP');
+    }
+
+    /**
+     * Find the most recent URL in the browser history (including followed redirects) that contains $needle.
+     * The history position is restored afterwards.
+     */
+    private function findVisitedUrlContaining(string $needle): ?string
+    {
+        $history = $this->minkContext->getSession()->getDriver()->getClient()->getHistory();
+        if ($history->isEmpty()) {
+            return null;
+        }
+
+        $found = null;
+        $request = $history->current();
+        $steps = 0;
+        while (true) {
+            if (strpos($request->getUri(), $needle) !== false) {
+                $found = $request->getUri();
+                break;
+            }
+            try {
+                $request = $history->back();
+                $steps++;
+            } catch (\LogicException $e) {
+                break;
+            }
+        }
+        for (; $steps > 0; $steps--) {
+            $history->forward();
+        }
+
+        return $found;
     }
 
     /**
